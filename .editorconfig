@@ -1,0 +1,39 @@
+# Indica que esta es la raíz de las configuraciones
+root = true
+
+# Archivos por defecto
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Archivos de markdown, no quitar espacios al final
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# Archivos JSON
+[*.json]
+indent_style = space
+indent_size = 2
+
+# Archivos HTML
+[*.html]
+indent_style = space
+indent_size = 2
+
+# Archivos TypeScript
+[*.ts]
+indent_style = space
+indent_size = 2
+quote_type = single
+
+
+# Archivos CSS/SCSS
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
+
