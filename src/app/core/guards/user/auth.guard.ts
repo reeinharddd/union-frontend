@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { TokenService } from '../../services/auth/token.service';
 
 export const authGuard: CanActivateFn = () => {
+  const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  // Aquí implementa tu lógica de autenticación
-  // Por ejemplo, verificar si hay un token en localStorage
-  const isAuthenticated = localStorage.getItem('auth_token') !== null;
+  const isAuthenticated = tokenService.isAuthenticated();
 
   if (!isAuthenticated) {
     router.navigate(['/login']);

@@ -1,46 +1,65 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { LoginRequest } from '@app/core/models/user/login-request';
-import { LoginService } from '@app/core/services/user/login.service';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LoginRequest } from '@app/core/models/auth/auth.interface';
+import { AuthService } from '@app/core/services/auth/auth.service';
+import { LoadingService } from '@app/core/services/ui/loading.service';
+import { ToastService } from '@app/core/services/ui/toast.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class LoginComponent {
-  loginService = inject(LoginService);
+  private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly fb = inject(FormBuilder);
 
-  // Variables para manejar estados del formulario
-  loginError = false;
-  isLoading = false;
-  errorMessage = '';
+  readonly isLoading = this.loadingService.isLoading;
+  readonly loginError = signal<string | null>(null);
 
-  login() {
-    this.loginError = false;
-    this.isLoading = true;
+  readonly loginForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
-    const email = (document.getElementById('email') as HTMLInputElement)?.value;
-    const password = (document.getElementById('password') as HTMLInputElement)?.value;
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.loginError.set(null);
+      const credentials: LoginRequest = this.loginForm.value;
 
-    if (email && password) {
-      const loginRequest: LoginRequest = { email, password };
-      const isValid = this.loginService.userValidation(loginRequest);
-
-      if (isValid) {
-        // Redirección dinámica según el rol
-        this.loginService.navigateByRole();
-      } else {
-        this.loginError = true;
-        this.errorMessage = 'Credenciales inválidas. Por favor intenta de nuevo.';
-      }
+      this.authService.login(credentials).subscribe({
+        next: () => {
+          this.toastService.showSuccess('¡Bienvenido de nuevo!');
+          this.authService.navigateByRole();
+        },
+        error: () => {
+          this.loginError.set('Credenciales inválidas. Por favor intenta de nuevo.');
+          this.toastService.showError('Error al iniciar sesión');
+        },
+      });
     } else {
-      this.loginError = true;
-      this.errorMessage = 'Por favor ingresa tu email y contraseña';
+      this.markFormGroupTouched();
     }
+  }
 
-    this.isLoading = false;
+  private markFormGroupTouched(): void {
+    Object.keys(this.loginForm.controls).forEach(key => {
+      this.loginForm.get(key)?.markAsTouched();
+    });
+  }
+
+  getFieldError(fieldName: string): string | null {
+    const field = this.loginForm.get(fieldName);
+    if (field?.touched && field?.errors) {
+      if (field.errors['required']) return `${fieldName} es requerido`;
+      if (field.errors['email']) return 'Email inválido';
+      if (field.errors['minlength'])
+        return `${fieldName} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
+    }
+    return null;
   }
 }
