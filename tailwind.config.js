@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{html,ts}'],
-
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
   theme: {
     // ---------------------------------------------------------------------
     // 1. ESCALAS DE COLORES PERSONALIZADAS
