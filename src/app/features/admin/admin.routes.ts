@@ -1,46 +1,25 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from '@app/layouts/admin-layout/admin-layout.component';
+import { roleGuard } from '@app/core/guards/user/role.guard';
+import { Roles } from '@app/core/enums/roles';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [roleGuard([Roles.ADMIN.toLowerCase()])],
     children: [
-      // Dashboard
-      // {
-      //   path: '',
-      //   loadComponent: () => import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
-      // },
-
-      // Gestión de usuarios
+      {
+        path: '',
+        redirectTo: 'users',
+        pathMatch: 'full',
+      },
       {
         path: 'users',
-        loadComponent: () => import('./users/user-list/user-list.component').then(m => m.UserListComponent)
+        loadComponent: () =>
+          import('./users/user-list/user-list.component').then(m => m.UserListComponent),
       },
-      // {
-      //   path: 'users/new',
-      //   loadComponent: () => import('./users/user-form/user-form.component').then(m => m.UserFormComponent)
-      // },
-      // {
-      //   path: 'users/:id',
-      //   loadComponent: () => import('./users/user-detail/user-detail.component').then(m => m.UserDetailComponent)
-      // },
-      // {
-      //   path: 'users/:id/edit',
-      //   loadComponent: () => import('./users/user-form/user-form.component').then(m => m.UserFormComponent)
-      // },
-
-      // // Configuraciones
-      // {
-      //   path: 'settings',
-      //   loadChildren: () => import('./settings/settings.routes').then(m => m.SETTINGS_ROUTES)
-      // },
-
-      // // Reportes
-      // {
-      //   path: 'reports',
-      //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES)
-      // }
-    ]
-  }
+      // Otras rutas de admin...
+    ],
+  },
 ];

@@ -6,8 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [],
   templateUrl: './not-found.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotFoundComponent {
-
-}
+export class NotFoundComponent {}

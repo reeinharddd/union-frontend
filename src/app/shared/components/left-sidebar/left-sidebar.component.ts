@@ -6,8 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [],
   templateUrl: './left-sidebar.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LeftSidebarComponent {
-
-}
+export class LeftSidebarComponent {}

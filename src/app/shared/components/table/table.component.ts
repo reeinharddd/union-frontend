@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -19,7 +20,7 @@ export interface TableAction {
   imports: [CommonModule],
   templateUrl: './table.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
   @Input() title: string = '';
@@ -27,7 +28,7 @@ export class TableComponent {
   @Input() columns: TableColumn[] = [];
   @Input() actions: TableAction[] = [];
 
-  @Output() rowAction = new EventEmitter<{action: TableAction, item: any}>();
+  @Output() rowAction = new EventEmitter<{ action: TableAction; item: any }>();
   @Output() rowClick = new EventEmitter<any>();
 
   handleAction(action: TableAction, item: any, event: Event) {

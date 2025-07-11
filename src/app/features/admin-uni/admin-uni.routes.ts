@@ -1,18 +1,16 @@
 import { Routes } from '@angular/router';
 
 import { PrivateLayoutComponent } from '@app/layouts/private-layout/private-layout.component';
+import { roleGuard } from '@app/core/guards/user/role.guard';
+import { Roles } from '@app/core/enums/roles';
 
 export const ADMIN_UNI_ROUTES: Routes = [
   {
     path: '',
     component: PrivateLayoutComponent,
+    canActivate: [roleGuard([Roles.ADMIN_UNI.toLowerCase()])],
     children: [
       // // Dashboard
-      // {
-      //   path: '',
-      //   loadComponent: () => import('./dashboard/admin-uni-dashboard.component').then(m => m.AdminUniDashboardComponent)
-      // },
-
       // // Estudiantes
       // {
       //   path: 'students',
@@ -22,7 +20,6 @@ export const ADMIN_UNI_ROUTES: Routes = [
       //   path: 'students/:id',
       //   loadComponent: () => import('./students/student-detail/student-detail.component').then(m => m.StudentDetailComponent)
       // },
-
       // // Cursos
       // {
       //   path: 'courses',
@@ -40,12 +37,11 @@ export const ADMIN_UNI_ROUTES: Routes = [
       //   path: 'courses/:id/edit',
       //   loadComponent: () => import('./courses/course-form/course-form.component').then(m => m.CourseFormComponent)
       // },
-
       // // Profesores
       // {
       //   path: 'teachers',
       //   loadComponent: () => import('./teachers/teacher-list/teacher-list.component').then(m => m.TeacherListComponent)
       // }
-    ]
-  }
+    ],
+  },
 ];

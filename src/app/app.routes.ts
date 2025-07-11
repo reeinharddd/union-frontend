@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@app/core/guards/user/auth.guard';
 import { PublicLayoutComponent } from '@app/layouts/public-layout/public-layout.component';
 import { LoginComponent } from '@features/public/login/login.component';
 
@@ -10,37 +11,14 @@ export const routes: Routes = [
   {
     path: '',
     component: PublicLayoutComponent,
-    children: [
-      { path: 'login', component: LoginComponent },
-      // Otras rutas públicas (registro, recuperación de contraseña, etc.)
-      // {
-      //   path: 'register',
-      //   loadComponent: () =>
-      //     import('@features/public/register/register.component').then(m => m.RegisterComponent),
-      // },
-      // {
-      //   path: 'forgot-password',
-      //   loadComponent: () =>
-      //     import('@features/public/forgot-password/forgot-password.component').then(
-      //       m => m.ForgotPasswordComponent,
-      //     ),
-      // },
-      // {
-      //   path: 'access-denied',
-      //   loadComponent: () =>
-      //     import('./shared/components/access-denied/access-denied.component').then(
-      //       m => m.AccessDeniedComponent,
-      //     ),
-      // },
-    ],
+    children: [{ path: 'login', component: LoginComponent }],
   },
 
   // Rutas privadas (protegidas por authGuard)
   {
     path: '',
-    canActivate: [],
+    canActivate: [authGuard],
     children: [
-      // Lazy loading de módulos/características
       {
         path: 'admin',
         loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
