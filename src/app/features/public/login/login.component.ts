@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LoginRequest } from '@app/core/models/auth/auth.interface';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LoadingService } from '@app/core/services/ui/loading.service';
@@ -10,7 +11,7 @@ import { ToastService } from '@app/core/services/ui/toast.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
 })
 export class LoginComponent {
   private readonly authService = inject(AuthService);
@@ -31,12 +32,20 @@ export class LoginComponent {
       this.loginError.set(null);
       const credentials: LoginRequest = this.loginForm.value;
 
+      console.log('Attempting login with:', credentials);
+
       this.authService.login(credentials).subscribe({
-        next: () => {
+        next: response => {
+          console.log('Login successful:', response);
           this.toastService.showSuccess('¡Bienvenido de nuevo!');
-          this.authService.navigateByRole();
+
+          // Pequeño delay para asegurar que todo se configure correctamente
+          setTimeout(() => {
+            this.authService.navigateByRole();
+          }, 100);
         },
-        error: () => {
+        error: error => {
+          console.error('Login failed:', error);
           this.loginError.set('Credenciales inválidas. Por favor intenta de nuevo.');
           this.toastService.showError('Error al iniciar sesión');
         },

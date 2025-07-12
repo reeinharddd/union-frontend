@@ -8,7 +8,7 @@ export interface Toast {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ToastService {
   private toastsSignal = signal<Toast[]>([]);

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { API_CONFIG } from '../../constants/api-endpoints';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiClientService {
   private readonly http = inject(HttpClient);

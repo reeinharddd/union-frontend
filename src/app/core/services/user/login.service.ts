@@ -4,7 +4,7 @@ import { Roles } from '@app/core/enums/roles';
 import { LoginRequest } from '@app/core/models/user/login-request';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
   router = inject(Router);
@@ -15,7 +15,6 @@ export class LoginService {
     [Roles.PROMOTER.toLowerCase()]: '/promoter',
     [Roles.STUDENTS.toLowerCase()]: '/student',
   };
-
 
   userValidation(loginRequest: LoginRequest): boolean {
     localStorage.setItem('auth_token', 'some_token_value');

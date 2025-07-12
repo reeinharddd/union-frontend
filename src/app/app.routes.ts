@@ -11,7 +11,14 @@ export const routes: Routes = [
   {
     path: '',
     component: PublicLayoutComponent,
-    children: [{ path: 'login', component: LoginComponent }],
+    children: [
+      { path: 'login', component: LoginComponent },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./features/public/register/register.component').then(m => m.RegisterComponent),
+      },
+    ],
   },
 
   // Rutas privadas (protegidas por authGuard)

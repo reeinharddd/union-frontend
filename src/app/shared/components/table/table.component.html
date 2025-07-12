@@ -16,7 +16,7 @@
             {{ column.label }}
           </th>
           <th
-            *ngIf="actions?.length"
+            *ngIf="actions.length > 0"
             class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-muted"
           >
             Actions
@@ -26,34 +26,33 @@
       <tbody class="divide-y divide-border bg-white">
         <tr
           *ngFor="let item of data"
+          class="hover:bg-neutral-50 cursor-pointer transition-colors"
           (click)="handleRowClick(item)"
-          class="cursor-pointer transition-colors hover:bg-neutral-50"
         >
-          <td *ngFor="let column of columns" class="whitespace-nowrap px-6 py-4">
-            <div class="text-sm text-text-base">{{ item[column.key] }}</div>
-          </td>
           <td
-            *ngIf="actions?.length"
-            class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium"
+            *ngFor="let column of columns"
+            class="whitespace-nowrap px-6 py-4 text-sm text-text-base"
           >
-            <button
-              *ngFor="let action of actions"
-              (click)="handleAction(action, item, $event)"
-              class="ml-2 rounded-md px-3 py-1 text-sm font-medium first:ml-0"
-              [ngClass]="action.cssClass || 'bg-neutral-100 text-text-base hover:bg-neutral-200'"
-            >
-              {{ action.label }}
-            </button>
+            {{ item[column.key] }}
+          </td>
+          <td *ngIf="actions.length > 0" class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+            <div class="flex items-center justify-end space-x-2">
+              <button
+                *ngFor="let action of actions"
+                (click)="handleAction(action, item, $event)"
+                [class]="'rounded px-3 py-1 text-xs font-medium transition-colors ' + (action.cssClass || 'bg-primary-50 text-primary-600 hover:bg-primary-100')"
+              >
+                {{ action.label }}
+              </button>
+            </div>
           </td>
         </tr>
-
-        <!-- Empty state -->
         <tr *ngIf="data.length === 0">
           <td
-            [attr.colspan]="columns.length + (actions?.length ? 1 : 0)"
-            class="px-6 py-10 text-center text-text-muted"
+            [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0)"
+            class="px-6 py-4 text-center text-sm text-text-muted"
           >
-            No data available
+            No hay datos disponibles
           </td>
         </tr>
       </tbody>

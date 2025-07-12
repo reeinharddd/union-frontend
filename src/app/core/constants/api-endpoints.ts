@@ -16,13 +16,13 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/users/${id}`,
   },
 
-  // Universidades
+  // Universidades - ✅ Corregidos según API
   UNIVERSITIES: {
     BASE: '/universidades',
     BY_ID: (id: number) => `/universidades/${id}`,
   },
 
-  // Eventos
+  // Eventos - ✅ Corregidos según API
   EVENTS: {
     BASE: '/eventos',
     BY_ID: (id: number) => `/eventos/${id}`,
@@ -56,17 +56,6 @@ export const API_ENDPOINTS = {
   MESSAGES: {
     BASE: '/mensajes',
     BY_ID: (id: number) => `/mensajes/${id}`,
-  },
-
-  // E-commerce
-  PRODUCTS: {
-    BASE: '/products',
-    BY_ID: (id: number) => `/products/${id}`,
-  },
-
-  ORDERS: {
-    BASE: '/orders',
-    BY_ID: (id: number) => `/orders/${id}`,
   },
 
   // Roles

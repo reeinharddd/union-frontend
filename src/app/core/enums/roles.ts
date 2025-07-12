@@ -1,6 +1,8 @@
-export enum Roles {
-  PROMOTER = 'PROMOTER',
-  ADMIN_UNI = 'ADMIN_UNI',
-  ADMIN = 'ADMIN',
-  STUDENTS = 'STUDENTS',
-}
+export const Roles = {
+  ADMIN: 'admin', // ← Minúsculas para consistencia
+  ADMIN_UNI: 'admin_uni',
+  PROMOTER: 'promoter',
+  USER: 'user', // ← Consistente con la API
+} as const;
+
+export type UserRole = (typeof Roles)[keyof typeof Roles];
