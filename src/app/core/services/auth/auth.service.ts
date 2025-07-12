@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, tap, throwError, of, delay } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { Roles } from '../../enums/roles';
 import {
@@ -82,56 +82,11 @@ export class AuthService {
         this.toastService.showSuccess(`¡Bienvenido ${response.user.name || response.user.email}!`);
       }),
       catchError(error => {
-        console.warn('⚠️ API login failed, attempting mock validation:', error.message);
-
-        // Fallback a validación mock
-        return this.mockLogin(credentials).pipe(
-          tap(response => {
-            this.setAuthData(response);
-            this.toastService.showSuccess(`¡Bienvenido ${response.user.name}! (Modo Demo)`);
-          }),
-          catchError(mockError => {
-            console.error('❌ Mock login also failed:', mockError);
-            this.toastService.showError('Error al iniciar sesión. Verifica tus credenciales.');
-            return throwError(() => mockError);
-          })
-        );
+        console.error('❌ Login failed:', error);
+        this.toastService.showError('Error al iniciar sesión. Verifica tus credenciales.');
+        return throwError(() => error);
       }),
     );
-  }
-
-  // Mock login para desarrollo sin backend
-  private mockLogin(credentials: LoginRequest): Observable<AuthResponse> {
-    console.log('🎭 Using mock login for development');
-
-    // Usuarios mock para desarrollo
-    const mockUsers = [
-      { email: 'admin@union.com', password: 'admin123', role: 'admin', name: 'Admin Usuario' },
-      { email: 'user@universidad.edu', password: 'user123', role: 'user', name: 'Estudiante Demo' },
-      { email: 'promoter@union.com', password: 'promoter123', role: 'promoter', name: 'Promotor Demo' },
-      { email: 'admin_uni@universidad.edu', password: 'uni123', role: 'admin_uni', name: 'Admin Universitario' }
-    ];
-
-    const user = mockUsers.find(u =>
-      u.email === credentials.email && u.password === credentials.password
-    );
-
-    if (user) {
-      const mockResponse: AuthResponse = {
-        user: {
-          id: Math.floor(Math.random() * 1000),
-          email: user.email,
-          name: user.name,
-          role: user.role
-        },
-        // ✅ IMPORTANTE: Generar un token que simule el formato real del backend
-        token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIke3VzZXIuaWR9Iiwicm9sZSI6IiR7dXNlci5yb2xlfSIsImlhdCI6JHtEYXRlLm5vdygpfX0.mock_signature_${user.role}`
-      };
-
-      return of(mockResponse).pipe(delay(1000)); // Simular latencia de red
-    } else {
-      return throwError(() => new Error('Credenciales inválidas'));
-    }
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
@@ -143,22 +98,9 @@ export class AuthService {
         this.toastService.showSuccess('¡Cuenta creada exitosamente!');
       }),
       catchError(error => {
-        console.warn('⚠️ API registration failed, simulating success:', error.message);
-
-        // Fallback a registro mock
-        const mockResponse: AuthResponse = {
-          user: {
-            id: Math.floor(Math.random() * 1000),
-            email: userData.email,
-            name: userData.name || 'Usuario Demo',
-            role: 'user'
-          },
-          token: `mock_token_${Date.now()}_user`
-        };
-
-        this.setAuthData(mockResponse);
-        this.toastService.showSuccess('¡Cuenta creada exitosamente! (Modo Demo)');
-        return of(mockResponse).pipe(delay(1000));
+        console.error('❌ Registration failed:', error);
+        this.toastService.showError('Error al crear la cuenta. Intenta nuevamente.');
+        return throwError(() => error);
       }),
     );
   }

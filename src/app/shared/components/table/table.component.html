@@ -26,7 +26,7 @@
       <tbody class="divide-y divide-border bg-white">
         <tr
           *ngFor="let item of data"
-          class="hover:bg-neutral-50 cursor-pointer transition-colors"
+          class="cursor-pointer transition-colors hover:bg-neutral-50"
           (click)="handleRowClick(item)"
         >
           <td
@@ -35,12 +35,18 @@
           >
             {{ item[column.key] }}
           </td>
-          <td *ngIf="actions.length > 0" class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+          <td
+            *ngIf="actions.length > 0"
+            class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium"
+          >
             <div class="flex items-center justify-end space-x-2">
               <button
                 *ngFor="let action of actions"
                 (click)="handleAction(action, item, $event)"
-                [class]="'rounded px-3 py-1 text-xs font-medium transition-colors ' + (action.cssClass || 'bg-primary-50 text-primary-600 hover:bg-primary-100')"
+                [class]="
+                  'rounded px-3 py-1 text-xs font-medium transition-colors ' +
+                  (action.cssClass || 'bg-primary-50 text-primary-600 hover:bg-primary-100')
+                "
               >
                 {{ action.label }}
               </button>

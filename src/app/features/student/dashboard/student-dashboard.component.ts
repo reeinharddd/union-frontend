@@ -12,14 +12,16 @@ import { AuthService } from '@app/core/services/auth/auth.service';
   template: `
     <div class="space-y-6">
       <!-- Welcome Header -->
-      <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl shadow-hover p-6 text-white">
+      <div
+        class="rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 p-6 text-white shadow-hover"
+      >
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-bold">¡Hola, {{ getUserName() }}! 👋</h1>
-            <p class="text-primary-100 mt-1">Bienvenido de vuelta a Union</p>
+            <p class="mt-1 text-primary-100">Bienvenido de vuelta a Union</p>
           </div>
           <div class="hidden md:block">
-            <div class="p-4 bg-white/20 rounded-lg backdrop-blur">
+            <div class="rounded-lg bg-white/20 p-4 backdrop-blur">
               <span class="text-3xl">🎓</span>
             </div>
           </div>
@@ -27,8 +29,8 @@ import { AuthService } from '@app/core/services/auth/auth.service';
       </div>
 
       <!-- Quick Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg shadow-soft p-6 border-l-4 border-blue-500">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="border-blue-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Mis Cursos</p>
@@ -38,7 +40,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-soft p-6 border-l-4 border-green-500">
+        <div class="border-green-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Eventos Próximos</p>
@@ -48,7 +50,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-soft p-6 border-l-4 border-purple-500">
+        <div class="border-purple-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Oportunidades</p>
@@ -60,63 +62,73 @@ import { AuthService } from '@app/core/services/auth/auth.service';
       </div>
 
       <!-- Main Content Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <!-- Recent Activities -->
-        <div class="lg:col-span-2 bg-white rounded-lg shadow-soft p-6">
-          <h3 class="text-lg font-semibold text-text-base mb-4 flex items-center">
+        <div class="rounded-lg bg-white p-6 shadow-soft lg:col-span-2">
+          <h3 class="mb-4 flex items-center text-lg font-semibold text-text-base">
             <span class="mr-2">📊</span>
             Mi Actividad Reciente
           </h3>
           <div class="space-y-4">
             @for (activity of recentActivities(); track activity.id) {
-              <div class="flex items-start space-x-3 p-3 bg-neutral-50 rounded-lg">
-                <div class="p-2 bg-primary-100 rounded-full flex-shrink-0">
+              <div class="flex items-start space-x-3 rounded-lg bg-neutral-50 p-3">
+                <div class="flex-shrink-0 rounded-full bg-primary-100 p-2">
                   <span class="text-sm">{{ activity.icon }}</span>
                 </div>
-                <div class="flex-1 min-w-0">
+                <div class="min-w-0 flex-1">
                   <p class="text-sm font-medium text-text-base">{{ activity.title }}</p>
                   <p class="text-xs text-text-muted">{{ activity.description }}</p>
-                  <p class="text-xs text-neutral-500 mt-1">{{ activity.time }}</p>
+                  <p class="mt-1 text-xs text-neutral-500">{{ activity.time }}</p>
                 </div>
               </div>
             }
           </div>
-          <button class="w-full mt-4 py-2 text-sm text-primary-600 hover:text-primary-700 font-medium">
+          <button
+            class="mt-4 w-full py-2 text-sm font-medium text-primary-600 hover:text-primary-700"
+          >
             Ver toda la actividad →
           </button>
         </div>
 
         <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow-soft p-6">
-          <h3 class="text-lg font-semibold text-text-base mb-4 flex items-center">
+        <div class="rounded-lg bg-white p-6 shadow-soft">
+          <h3 class="mb-4 flex items-center text-lg font-semibold text-text-base">
             <span class="mr-2">⚡</span>
             Acciones Rápidas
           </h3>
           <div class="space-y-3">
-            <button class="w-full p-3 border border-border rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-colors text-left group">
+            <button
+              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
+            >
               <div class="flex items-center space-x-3">
-                <span class="text-xl group-hover:scale-110 transition-transform">📚</span>
+                <span class="text-xl transition-transform group-hover:scale-110">📚</span>
                 <span class="text-sm font-medium">Ver Mis Cursos</span>
               </div>
             </button>
-            
-            <button class="w-full p-3 border border-border rounded-lg hover:bg-secondary-50 hover:border-secondary-300 transition-colors text-left group">
+
+            <button
+              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-secondary-300 hover:bg-secondary-50"
+            >
               <div class="flex items-center space-x-3">
-                <span class="text-xl group-hover:scale-110 transition-transform">📅</span>
+                <span class="text-xl transition-transform group-hover:scale-110">📅</span>
                 <span class="text-sm font-medium">Explorar Eventos</span>
               </div>
             </button>
-            
-            <button class="w-full p-3 border border-border rounded-lg hover:bg-accent-50 hover:border-accent-300 transition-colors text-left group">
+
+            <button
+              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-accent-300 hover:bg-accent-50"
+            >
               <div class="flex items-center space-x-3">
-                <span class="text-xl group-hover:scale-110 transition-transform">💼</span>
+                <span class="text-xl transition-transform group-hover:scale-110">💼</span>
                 <span class="text-sm font-medium">Buscar Oportunidades</span>
               </div>
             </button>
-            
-            <button class="w-full p-3 border border-border rounded-lg hover:bg-info-50 hover:border-info-300 transition-colors text-left group">
+
+            <button
+              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-info-300 hover:bg-info-50"
+            >
               <div class="flex items-center space-x-3">
-                <span class="text-xl group-hover:scale-110 transition-transform">👥</span>
+                <span class="text-xl transition-transform group-hover:scale-110">👥</span>
                 <span class="text-sm font-medium">Conectar con Estudiantes</span>
               </div>
             </button>
@@ -125,38 +137,36 @@ import { AuthService } from '@app/core/services/auth/auth.service';
       </div>
 
       <!-- Upcoming Events -->
-      <div class="bg-white rounded-lg shadow-soft p-6">
-        <h3 class="text-lg font-semibold text-text-base mb-4 flex items-center">
+      <div class="rounded-lg bg-white p-6 shadow-soft">
+        <h3 class="mb-4 flex items-center text-lg font-semibold text-text-base">
           <span class="mr-2">📅</span>
           Próximos Eventos
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           @for (event of upcomingEvents(); track event.id) {
-            <div class="border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div class="flex items-start justify-between mb-2">
-                <h4 class="font-semibold text-text-base text-sm">{{ event.titulo }}</h4>
-                <span class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full">
+            <div class="rounded-lg border border-border p-4 transition-shadow hover:shadow-md">
+              <div class="mb-2 flex items-start justify-between">
+                <h4 class="text-sm font-semibold text-text-base">{{ event.titulo }}</h4>
+                <span class="rounded-full bg-primary-100 px-2 py-1 text-xs text-primary-700">
                   {{ event.tipo }}
                 </span>
               </div>
-              <p class="text-xs text-text-muted mb-3 line-clamp-2">{{ event.descripcion }}</p>
+              <p class="mb-3 line-clamp-2 text-xs text-text-muted">{{ event.descripcion }}</p>
               <div class="flex items-center justify-between text-xs text-neutral-500">
                 <span>📍 {{ formatDate(event.fecha_inicio) }}</span>
-                <button class="text-primary-600 hover:text-primary-700 font-medium">
-                  Ver más
-                </button>
+                <button class="font-medium text-primary-600 hover:text-primary-700">Ver más</button>
               </div>
             </div>
           } @empty {
-            <div class="col-span-full text-center py-8 text-neutral-500">
-              <span class="text-4xl mb-2 block">📅</span>
+            <div class="col-span-full py-8 text-center text-neutral-500">
+              <span class="mb-2 block text-4xl">📅</span>
               <p>No hay eventos próximos</p>
             </div>
           }
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class StudentDashboardComponent implements OnInit {
   private readonly eventService = inject(EventService);
@@ -166,7 +176,7 @@ export class StudentDashboardComponent implements OnInit {
   readonly studentStats = signal({
     enrolledCourses: 4,
     upcomingEvents: 0,
-    newOpportunities: 0
+    newOpportunities: 0,
   });
 
   readonly recentActivities = signal([
@@ -175,22 +185,22 @@ export class StudentDashboardComponent implements OnInit {
       icon: '📚',
       title: 'Nuevo curso inscrito',
       description: 'Te inscribiste en "Desarrollo Web Avanzado"',
-      time: 'Hace 2 horas'
+      time: 'Hace 2 horas',
     },
     {
       id: 2,
       icon: '💬',
       title: 'Nuevo mensaje',
       description: 'Carlos te envió un mensaje sobre el proyecto final',
-      time: 'Hace 4 horas'
+      time: 'Hace 4 horas',
     },
     {
       id: 3,
       icon: '🏆',
       title: 'Insignia desbloqueada',
       description: 'Completaste el módulo de JavaScript',
-      time: 'Ayer'
-    }
+      time: 'Ayer',
+    },
   ]);
 
   readonly upcomingEvents = signal<any[]>([]);
@@ -206,11 +216,11 @@ export class StudentDashboardComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', { 
-      day: 'numeric', 
-      month: 'short', 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 
@@ -218,27 +228,23 @@ export class StudentDashboardComponent implements OnInit {
     // Cargar eventos próximos
     this.eventService.getAll().subscribe(events => {
       const now = new Date();
-      const upcoming = events
-        .filter(event => new Date(event.fecha_inicio) > now)
-        .slice(0, 6);
-      
+      const upcoming = events.filter(event => new Date(event.fecha_inicio) > now).slice(0, 6);
+
       this.upcomingEvents.set(upcoming);
       this.studentStats.update(stats => ({
         ...stats,
-        upcomingEvents: upcoming.length
+        upcomingEvents: upcoming.length,
       }));
     });
 
     // Cargar oportunidades
     this.opportunityService.getAll().subscribe(opportunities => {
       const now = new Date();
-      const newOpportunities = opportunities
-        .filter(opp => new Date(opp.fecha_limite) > now)
-        .length;
-      
+      const newOpportunities = opportunities.filter(opp => new Date(opp.fecha_limite) > now).length;
+
       this.studentStats.update(stats => ({
         ...stats,
-        newOpportunities
+        newOpportunities,
       }));
     });
   }

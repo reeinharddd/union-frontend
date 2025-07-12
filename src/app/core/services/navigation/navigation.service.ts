@@ -17,18 +17,19 @@ type NavigationConfig = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NavigationService {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   private readonly navigationConfig: NavigationConfig = {
-    ADMIN: [ // ✅ Cambiado de [Roles.ADMIN] a ADMIN
+    ADMIN: [
+      // ✅ Cambiado de [Roles.ADMIN] a ADMIN
       {
         label: 'Dashboard',
         icon: 'home',
-        route: '/admin/dashboard'
+        route: '/admin/dashboard',
       },
       {
         label: 'Gestión de Usuarios',
@@ -37,8 +38,8 @@ export class NavigationService {
         children: [
           { label: 'Lista de Usuarios', icon: 'list', route: '/admin/users' },
           { label: 'Nuevo Usuario', icon: 'user-plus', route: '/admin/users/new' },
-          { label: 'Roles y Permisos', icon: 'shield', route: '/admin/roles' }
-        ]
+          { label: 'Roles y Permisos', icon: 'shield', route: '/admin/roles' },
+        ],
       },
       {
         label: 'Universidades',
@@ -46,8 +47,8 @@ export class NavigationService {
         route: '/admin/universities',
         children: [
           { label: 'Lista de Universidades', icon: 'list', route: '/admin/universities' },
-          { label: 'Nueva Universidad', icon: 'plus', route: '/admin/universities/new' }
-        ]
+          { label: 'Nueva Universidad', icon: 'plus', route: '/admin/universities/new' },
+        ],
       },
       {
         label: 'Eventos',
@@ -56,8 +57,8 @@ export class NavigationService {
         children: [
           { label: 'Todos los Eventos', icon: 'list', route: '/admin/events' },
           { label: 'Crear Evento', icon: 'plus', route: '/admin/events/new' },
-          { label: 'Asistencias', icon: 'check-circle', route: '/admin/events/attendances' }
-        ]
+          { label: 'Asistencias', icon: 'check-circle', route: '/admin/events/attendances' },
+        ],
       },
       {
         label: 'Foros',
@@ -65,8 +66,8 @@ export class NavigationService {
         route: '/admin/forums',
         children: [
           { label: 'Lista de Foros', icon: 'list', route: '/admin/forums' },
-          { label: 'Nuevo Foro', icon: 'plus', route: '/admin/forums/new' }
-        ]
+          { label: 'Nuevo Foro', icon: 'plus', route: '/admin/forums/new' },
+        ],
       },
       {
         label: 'Oportunidades',
@@ -74,41 +75,41 @@ export class NavigationService {
         route: '/admin/opportunities',
         children: [
           { label: 'Lista de Oportunidades', icon: 'list', route: '/admin/opportunities' },
-          { label: 'Nueva Oportunidad', icon: 'plus', route: '/admin/opportunities/new' }
-        ]
+          { label: 'Nueva Oportunidad', icon: 'plus', route: '/admin/opportunities/new' },
+        ],
       },
       {
         label: 'Tags',
         icon: 'tag',
-        route: '/admin/tags'
+        route: '/admin/tags',
       },
       {
         label: 'Conversaciones',
         icon: 'message-circle',
-        route: '/admin/conversations'
-      }
+        route: '/admin/conversations',
+      },
     ],
     ADMIN_UNI: [
       {
         label: 'Dashboard Universitario',
         icon: 'home',
-        route: '/admin-uni/dashboard'
-      }
+        route: '/admin-uni/dashboard',
+      },
     ],
     PROMOTER: [
       {
         label: 'Dashboard Promotor',
         icon: 'home',
-        route: '/promoter/dashboard'
-      }
+        route: '/promoter/dashboard',
+      },
     ],
     USER: [
       {
         label: 'Mi Dashboard',
         icon: 'home',
-        route: '/student/dashboard'
-      }
-    ]
+        route: '/student/dashboard',
+      },
+    ],
   };
 
   readonly currentNavigation = computed(() => {

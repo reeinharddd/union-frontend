@@ -37,7 +37,10 @@ export class TokenService {
 
   getToken(): string | null {
     const token = this.tokenSignal();
-    console.log('🔍 TokenService - Getting token:', token ? `${token.substring(0, 20)}...` : 'null');
+    console.log(
+      '🔍 TokenService - Getting token:',
+      token ? `${token.substring(0, 20)}...` : 'null',
+    );
     return token;
   }
 

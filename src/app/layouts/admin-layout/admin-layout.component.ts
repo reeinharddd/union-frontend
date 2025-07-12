@@ -18,8 +18,8 @@ import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/
         <app-header class="flex-shrink-0"></app-header>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-auto p-6 bg-neutral-50">
-          <div class="max-w-7xl mx-auto">
+        <main class="flex-1 overflow-auto bg-neutral-50 p-6">
+          <div class="mx-auto max-w-7xl">
             <router-outlet></router-outlet>
           </div>
         </main>

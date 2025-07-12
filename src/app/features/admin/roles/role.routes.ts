@@ -24,16 +24,22 @@ export const ROLE_ROUTES: Routes = [
   {
     path: 'project-roles',
     loadComponent: () =>
-      import('./project-role-list/project-role-list.component').then(m => m.ProjectRoleListComponent),
+      import('./project-role-list/project-role-list.component').then(
+        m => m.ProjectRoleListComponent,
+      ),
   },
   {
     path: 'project-roles/new',
     loadComponent: () =>
-      import('./project-role-form/project-role-form.component').then(m => m.ProjectRoleFormComponent),
+      import('./project-role-form/project-role-form.component').then(
+        m => m.ProjectRoleFormComponent,
+      ),
   },
   {
     path: 'project-roles/:id/edit',
     loadComponent: () =>
-      import('./project-role-form/project-role-form.component').then(m => m.ProjectRoleFormComponent),
+      import('./project-role-form/project-role-form.component').then(
+        m => m.ProjectRoleFormComponent,
+      ),
   },
 ];

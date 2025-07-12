@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {  RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { ToastService } from '@app/core/services/ui/toast.service';
 import { LoadingService } from '@app/core/services/ui/loading.service';
@@ -22,18 +22,21 @@ export class RegisterComponent {
   readonly isLoading = this.loadingService.isLoading;
   readonly registerError = signal<string | null>(null);
 
-  readonly registerForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', [Validators.required]],
-    name: [''],
-    address: ['']
-  }, { validators: this.passwordMatchValidator });
+  readonly registerForm: FormGroup = this.fb.group(
+    {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
+      name: [''],
+      address: [''],
+    },
+    { validators: this.passwordMatchValidator },
+  );
 
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.registerError.set(null);
-      const {  ...userData } = this.registerForm.value;
+      const { ...userData } = this.registerForm.value;
       const registerData: RegisterRequest = userData;
 
       this.authService.register(registerData).subscribe({
@@ -41,11 +44,12 @@ export class RegisterComponent {
           this.toastService.showSuccess('¡Cuenta creada exitosamente! Bienvenido a Union.');
           this.authService.navigateByRole();
         },
-        error: (error) => {
-          const errorMessage = error.error?.message || 'Error al crear la cuenta. Por favor intenta de nuevo.';
+        error: error => {
+          const errorMessage =
+            error.error?.message || 'Error al crear la cuenta. Por favor intenta de nuevo.';
           this.registerError.set(errorMessage);
           this.toastService.showError(errorMessage);
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -75,7 +79,8 @@ export class RegisterComponent {
     if (field?.touched && field?.errors) {
       if (field.errors['required']) return `${this.getFieldLabel(fieldName)} es requerido`;
       if (field.errors['email']) return 'Email inválido';
-      if (field.errors['minlength']) return `${this.getFieldLabel(fieldName)} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
+      if (field.errors['minlength'])
+        return `${this.getFieldLabel(fieldName)} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
       if (field.errors['passwordMismatch']) return 'Las contraseñas no coinciden';
     }
     return null;
@@ -87,7 +92,7 @@ export class RegisterComponent {
       password: 'Contraseña',
       confirmPassword: 'Confirmar contraseña',
       name: 'Nombre',
-      address: 'Dirección'
+      address: 'Dirección',
     };
     return labels[fieldName] || fieldName;
   }

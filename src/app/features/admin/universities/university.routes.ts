@@ -19,6 +19,8 @@ export const UNIVERSITY_ROUTES: Routes = [
   {
     path: ':id',
     loadComponent: () =>
-      import('./university-detail/university-detail.component').then(m => m.UniversityDetailComponent),
+      import('./university-detail/university-detail.component').then(
+        m => m.UniversityDetailComponent,
+      ),
   },
 ];
