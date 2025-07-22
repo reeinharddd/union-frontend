@@ -1,0 +1,50 @@
+<div class="flex min-h-screen bg-neutral-100 px-6 py-12">
+  <!-- Columna izquierda -->
+  <div class="flex-1 flex flex-col justify-center">
+    <h1 class="text-4xl font-bold text-black mb-4">Activa tu cuenta en UniOn</h1>
+    <p class="text-lg text-neutral-600 mb-8">
+      Regístrate con tu correo institucional, ID de estudiante y token de acceso
+    </p>
+   <a class="login-link" routerLink="/login">Ya tengo cuenta</a>
+  </div>
+
+  <!-- Columna derecha -->
+  <div class="flex-1 flex justify-center items-center">
+    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+      <!-- Header de "ventana" - Modificado para mostrar mejor los puntos -->
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-sm font-semibold text-black">Validación de Token</span>
+        <div class="flex space-x-2">
+          <span class="w-3 h-3 rounded-full bg-red-500"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500"></span>
+        </div>
+      </div>
+
+      <!-- Texto informativo -->
+      <p class="text-center font-semibold text-sm text-neutral-800 mb-6">
+        Tu token fue entregado por tu universidad.
+      </p>
+
+      <!-- Formulario -->
+      <form [formGroup]="tokenForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center">
+        <input
+          type="text"
+          formControlName="token"
+          placeholder="Ingresa tu token"
+          class="w-4/5 px-4 py-2 border border-orange-400 rounded-full text-sm focus:outline-none mb-4"
+        />
+        <button
+          type="submit"
+          class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Validar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="text-right px-6 py-4 text-xs text-neutral-600">
+  © 2025 UniON, todos los derechos reservados
+</footer>

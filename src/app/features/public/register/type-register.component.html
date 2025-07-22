@@ -1,0 +1,48 @@
+<div class="union-container"> 
+  <header class="union-header">
+    <img src="assets/images/logo.png" alt="UNION" class="union-logo" />
+    <a class="login-link" routerLink="/login">Iniciar Sesión</a>
+  </header>
+
+  <main class="union-content">
+    <section class="card">
+      <div class="card-icon">★</div>
+      <h1>Instituciones Académicas</h1>
+      <p>
+        Únete como institución y valida a tus estudiantes y egresados. Gestiona oportunidades académicas, 
+        eventos y verifica proyectos que representen el talento de tu comunidad universitaria.
+      </p>
+      <button class="union-button" (click)="navigateToRegister('institucion')">Saber más y aplicar</button>
+    </section>
+
+    <section class="card">
+      <div class="card-icon">★</div>
+      <h2>Estudiantes</h2>
+      <p>
+        Conéctate con otros estudiantes, participa en foros, crea proyectos colaborativos y postúlate 
+        a oportunidades académicas o laborales validadas por tu universidad.
+      </p>
+      <button class="union-button" (click)="navigateToRegister('estudiante')">Saber más y aplicar</button>
+    </section>
+
+    <section class="card">
+      <div class="card-icon">★</div>
+      <h2>Promotores</h2>
+      <p>
+        Publica ofertas de empleo, prácticas o colaboración dirigidas a estudiantes y egresados verificados. 
+        Encuentra talento académico alineado con los objetivos profesionales.
+      </p>
+      <button class="union-button" (click)="navigateToRegister('promotor')">Saber más y aplicar</button>
+    </section>
+  </main>
+
+  <footer class="union-footer">
+    <p>© 2025 UniON, todos los derechos reservados.</p>
+    <div class="footer-links">
+      <a href="#">Condiciones de uso</a>
+      <a href="#">Política de privacidad (actualizada 07/2025)</a>
+      <a href="#">¿Qué es UniON?</a>
+      <a href="#">No vender ni compartir mi información personal</a>
+    </div>
+  </footer>
+</div>
