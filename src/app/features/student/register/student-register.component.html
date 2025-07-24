@@ -1,28 +1,28 @@
 <div class="flex min-h-screen bg-neutral-100 px-6 py-12">
   <!-- Columna izquierda -->
-  <div class="flex-1 flex flex-col justify-center">
-    <h1 class="text-4xl font-bold text-black mb-4">Activa tu cuenta en UniOn</h1>
-    <p class="text-lg text-neutral-600 mb-8">
+  <div class="flex flex-1 flex-col justify-center">
+    <h1 class="mb-4 text-4xl font-bold text-black">Activa tu cuenta en UniOn</h1>
+    <p class="mb-8 text-lg text-neutral-600">
       Regístrate con tu correo institucional, ID de estudiante y token de acceso
     </p>
-   <a class="login-link" routerLink="/login">Ya tengo cuenta</a>
+    <a class="login-link" routerLink="/login">Ya tengo cuenta</a>
   </div>
 
   <!-- Columna derecha -->
-  <div class="flex-1 flex justify-center items-center">
-    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+  <div class="flex flex-1 items-center justify-center">
+    <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
       <!-- Header de "ventana" - Modificado para mostrar mejor los puntos -->
-      <div class="flex justify-between items-center mb-6">
+      <div class="mb-6 flex items-center justify-between">
         <span class="text-sm font-semibold text-black">Validación de Token</span>
         <div class="flex space-x-2">
-          <span class="w-3 h-3 rounded-full bg-red-500"></span>
-          <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-          <span class="w-3 h-3 rounded-full bg-green-500"></span>
+          <span class="bg-red-500 h-3 w-3 rounded-full"></span>
+          <span class="bg-yellow-500 h-3 w-3 rounded-full"></span>
+          <span class="bg-green-500 h-3 w-3 rounded-full"></span>
         </div>
       </div>
 
       <!-- Texto informativo -->
-      <p class="text-center font-semibold text-sm text-neutral-800 mb-6">
+      <p class="mb-6 text-center text-sm font-semibold text-neutral-800">
         Tu token fue entregado por tu universidad.
       </p>
 
@@ -32,7 +32,7 @@
           type="text"
           formControlName="token"
           placeholder="Ingresa tu token"
-          class="w-4/5 px-4 py-2 border border-orange-400 rounded-full text-sm focus:outline-none mb-4"
+          class="border-orange-400 mb-4 w-4/5 rounded-full border px-4 py-2 text-sm focus:outline-none"
         />
         <button
           type="submit"
@@ -45,6 +45,6 @@
   </div>
 </div>
 
-<footer class="text-right px-6 py-4 text-xs text-neutral-600">
+<footer class="px-6 py-4 text-right text-xs text-neutral-600">
   © 2025 UniON, todos los derechos reservados
 </footer>

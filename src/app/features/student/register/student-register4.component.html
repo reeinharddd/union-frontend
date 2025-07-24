@@ -1,59 +1,73 @@
 <div class="flex min-h-screen bg-neutral-100 px-6 py-12">
   <!-- Columna izquierda -->
-  <div class="flex-1 flex flex-col justify-center">
-    <h1 class="text-4xl font-bold text-black mb-4">Activa tu cuenta en UniOn</h1>
-    <p class="text-lg text-neutral-600 mb-8">
+  <div class="flex flex-1 flex-col justify-center">
+    <h1 class="mb-4 text-4xl font-bold text-black">Activa tu cuenta en UniOn</h1>
+    <p class="mb-8 text-lg text-neutral-600">
       Regístrate con tu correo institucional, ID de estudiante y token de acceso
     </p>
-    <a class="text-primary hover:underline cursor-pointer" routerLink="/login">Ya tengo cuenta</a>
+    <a class="cursor-pointer text-primary hover:underline" routerLink="/login">Ya tengo cuenta</a>
   </div>
 
   <!-- Columna derecha -->
-  <div class="flex-1 flex justify-center items-center">
-    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+  <div class="flex flex-1 items-center justify-center">
+    <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
       <!-- Sección de Seguridad -->
       <div class="mb-6">
-        <h2 class="text-lg font-semibold text-black mb-2">Seguridad</h2>
-        <div class="h-1 bg-gray-200 rounded-full mb-4"></div>
+        <h2 class="mb-2 text-lg font-semibold text-black">Seguridad</h2>
+        <div class="bg-gray-200 mb-4 h-1 rounded-full"></div>
       </div>
 
       <!-- Instrucciones -->
-      <p class="text-sm text-neutral-800 mb-6">
-        La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un símbolo.
+      <p class="mb-6 text-sm text-neutral-800">
+        La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un
+        número y un símbolo.
       </p>
 
       <!-- Formulario -->
       <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-4">
         <!-- Contraseña -->
         <div>
-          <label class="block text-sm font-medium text-neutral-700 mb-1">Contraseña</label>
+          <label class="mb-1 block text-sm font-medium text-neutral-700">Contraseña</label>
           <input
             type="password"
             formControlName="password"
             placeholder="Ingresa tu contraseña"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             (input)="checkPasswordStrength()"
           />
-          <div *ngIf="passwordForm.get('password')?.touched && passwordForm.get('password')?.errors" class="text-red-500 text-xs mt-1">
-            <div *ngIf="passwordForm.get('password')?.errors?.['required']">La contraseña es requerida</div>
-            <div *ngIf="passwordForm.get('password')?.errors?.['minlength']">Mínimo 8 caracteres</div>
+          <div
+            *ngIf="passwordForm.get('password')?.touched && passwordForm.get('password')?.errors"
+            class="text-red-500 mt-1 text-xs"
+          >
+            <div *ngIf="passwordForm.get('password')?.errors?.['required']">
+              La contraseña es requerida
+            </div>
+            <div *ngIf="passwordForm.get('password')?.errors?.['minlength']">
+              Mínimo 8 caracteres
+            </div>
             <div *ngIf="passwordForm.get('password')?.errors?.['pattern']">
               Debe incluir mayúscula, minúscula, número y símbolo
             </div>
           </div>
           <div class="mt-2">
-            <div class="flex items-center mb-1">
-              <span class="w-3 h-3 rounded-full mr-2" [ngClass]="{
-                'bg-red-500': passwordStrength < 1,
-                'bg-green-500': passwordStrength >= 1
-              }"></span>
+            <div class="mb-1 flex items-center">
+              <span
+                class="mr-2 h-3 w-3 rounded-full"
+                [ngClass]="{
+                  'bg-red-500': passwordStrength < 1,
+                  'bg-green-500': passwordStrength >= 1,
+                }"
+              ></span>
               <span class="text-xs">Al menos 8 caracteres</span>
             </div>
             <div class="flex items-center">
-              <span class="w-3 h-3 rounded-full mr-2" [ngClass]="{
-                'bg-red-500': !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar,
-                'bg-green-500': hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar
-              }"></span>
+              <span
+                class="mr-2 h-3 w-3 rounded-full"
+                [ngClass]="{
+                  'bg-red-500': !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar,
+                  'bg-green-500': hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar,
+                }"
+              ></span>
               <span class="text-xs">Mayúscula, minúscula, número y símbolo</span>
             </div>
           </div>
@@ -61,14 +75,21 @@
 
         <!-- Confirmar Contraseña -->
         <div>
-          <label class="block text-sm font-medium text-neutral-700 mb-1">Confirmar contraseña</label>
+          <label class="mb-1 block text-sm font-medium text-neutral-700"
+            >Confirmar contraseña</label
+          >
           <input
             type="password"
             formControlName="confirmPassword"
             placeholder="Confirma tu contraseña"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-          <div *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
+          <div
+            *ngIf="
+              passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched
+            "
+            class="text-red-500 mt-1 text-xs"
+          >
             Las contraseñas no coinciden
           </div>
         </div>
@@ -77,7 +98,7 @@
         <button
           type="submit"
           [disabled]="passwordForm.invalid"
-          class="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white transition-colors hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Registrar
         </button>
@@ -86,6 +107,6 @@
   </div>
 </div>
 
-<footer class="text-right px-6 py-4 text-xs text-neutral-600">
+<footer class="px-6 py-4 text-right text-xs text-neutral-600">
   © 2023 UniON, todos los derechos reservados
 </footer>
