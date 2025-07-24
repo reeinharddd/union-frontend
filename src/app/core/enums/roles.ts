@@ -1,8 +1,8 @@
 export const Roles = {
   ADMIN: 'admin', // ← Minúsculas para consistencia
-  ADMIN_UNI: 'admin_uni',
+  ADMIN_UNI: 'profesor',
   PROMOTER: 'promoter',
-  USER: 'user', // ← Consistente con la API
+  USER: 'estudiante', // ← Consistente con la API
 } as const;
 
 export type UserRole = (typeof Roles)[keyof typeof Roles];

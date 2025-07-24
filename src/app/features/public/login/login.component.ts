@@ -23,8 +23,8 @@ export class LoginComponent {
   readonly loginError = signal<string | null>(null);
 
   readonly loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    correo: ['', [Validators.required, Validators.email]],
+    contrasena: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   onSubmit(): void {
@@ -65,7 +65,7 @@ export class LoginComponent {
     const field = this.loginForm.get(fieldName);
     if (field?.touched && field?.errors) {
       if (field.errors['required']) return `${fieldName} es requerido`;
-      if (field.errors['email']) return 'Email inválido';
+      if (field.errors['correo']) return 'Email inválido';
       if (field.errors['minlength'])
         return `${fieldName} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
     }

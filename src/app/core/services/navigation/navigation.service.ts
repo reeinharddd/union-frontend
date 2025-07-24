@@ -113,13 +113,13 @@ export class NavigationService {
   };
 
   readonly currentNavigation = computed(() => {
-    const userRole = this.authService.userRole();
+     const userRole = this.authService.userRole();
     console.log('🧭 NavigationService - Current role:', userRole);
 
     if (!userRole) return [];
 
-    // Convertir a mayúsculas para buscar en el config
-    const roleKey = userRole.toUpperCase() as keyof typeof Roles;
+    // Convertir a string y mayúsculas para buscar en el config
+    const roleKey = String(userRole).toUpperCase() as keyof typeof Roles;
     const navigation = this.navigationConfig[roleKey] || [];
 
     console.log('🗺️ NavigationService - Found navigation:', navigation.length, 'items');

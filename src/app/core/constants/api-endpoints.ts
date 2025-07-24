@@ -12,8 +12,8 @@ export const API_ENDPOINTS = {
 
   // Usuarios
   USERS: {
-    BASE: '/users',
-    BY_ID: (id: number) => `/users/${id}`,
+    BASE: '/usuarios',
+    BY_ID: (id: number) => `/usuarios/${id}`,
   },
 
   // Universidades - ✅ Corregidos según API

@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
-import { Roles } from '../../enums/roles';
+//import { Roles } from '../../enums/roles';
 import {
   AuthResponse,
   LoginRequest,
@@ -30,17 +30,11 @@ export class AuthService {
 
   // Mapeo de roles a rutas - actualizado según API
   private readonly roleRoutes: Record<string, string> = {
-    // Roles principales según API
-    admin: '/admin/dashboard',
-    user: '/student/dashboard',
-    promoter: '/promoter/dashboard',
-    admin_uni: '/admin-uni/dashboard',
-
-    // Variantes adicionales por compatibilidad
-    administrator: '/admin/dashboard',
-    student: '/student/dashboard',
-    universidad: '/admin-uni/dashboard',
-    promotor: '/promoter/dashboard',
+    1: '/student/dashboard',
+    2: '/admin-uni/dashboard',
+    3: '/admin/dashboard',
+    4: '/promoter/dashboard',
+    5: '/student/dashboard', // Rol 5 es administrador (compatibilidad con API)
   };
 
   private readonly TOKEN_KEY = 'auth_token';
@@ -63,9 +57,9 @@ export class AuthService {
       // Si hay token y rol, crear usuario básico
       this.currentUserSignal.set({
         id: 0,
-        email: '',
-        role: role,
-        name: '',
+        correo: '',
+        rol_id: Number(role),
+        nombre: '',
       });
       console.log('✅ User initialized with role:', role);
     } else {
@@ -79,7 +73,7 @@ export class AuthService {
       tap(response => {
         console.log('✅ Login successful via API:', response);
         this.setAuthData(response);
-        this.toastService.showSuccess(`¡Bienvenido ${response.user.name || response.user.email}!`);
+        this.toastService.showSuccess(`¡Bienvenido ${response.user.nombre || response.user.correo}!`);
       }),
       catchError(error => {
         console.error('❌ Login failed:', error);
@@ -106,7 +100,7 @@ export class AuthService {
   }
 
   logout(): void {
-    const userName = this.currentUser()?.name || 'Usuario';
+    const userName = this.currentUser()?.nombre || 'Usuario';
     this.clearAuthData();
     this.toastService.showInfo(`¡Hasta luego ${userName}!`);
     this.router.navigate(['/login']);
@@ -118,8 +112,8 @@ export class AuthService {
     console.log('🗺️ Available routes:', this.roleRoutes);
 
     if (userRole) {
-      const normalizedRole = userRole.toLowerCase();
-      const route = this.roleRoutes[normalizedRole];
+      //const normalizedRole = userRole;
+       const route = this.roleRoutes[userRole] || this.roleRoutes[userRole];
 
       if (route) {
         console.log('✅ Route found, navigating to:', route);
@@ -136,32 +130,34 @@ export class AuthService {
     }
   }
 
-  getRoleLayout(role?: string): string {
-    const userRole = role || this.tokenService.getUserRole();
+  getRoleLayout(role?: string | number): string {
+    const userRole = role ?? this.tokenService.getUserRole();
+    // Si es número, conviértelo a string
+    const normalizedRole = String(userRole);
+    // Si tienes layouts por número, agrégalos aquí si es necesario
     const roleLayouts: Record<string, string> = {
-      [Roles.ADMIN.toLowerCase()]: 'admin',
-      [Roles.ADMIN_UNI.toLowerCase()]: 'private',
-      [Roles.PROMOTER.toLowerCase()]: 'admin',
-      [Roles.USER.toLowerCase()]: 'private',
-      // Variantes adicionales
+      '1': 'private', // estudiante
+      '2': 'private', // admin-uni
+      '3': 'admin',   // admin
+      '4': 'admin',   // promoter
+      '5': 'private', // admin (compatibilidad)
       admin: 'admin',
       admin_uni: 'private',
       promoter: 'admin',
       user: 'private',
       student: 'private',
     };
-
-    return userRole ? roleLayouts[userRole.toLowerCase()] || 'private' : 'public';
+    return roleLayouts[normalizedRole] || 'public';
   }
 
-  hasPermission(requiredRole: string): boolean {
+  hasPermission(requiredRole: string | number): boolean {
     const userRole = this.tokenService.getUserRole();
-    return userRole === requiredRole;
+    return String(userRole) === String(requiredRole);
   }
 
-  hasAnyPermission(requiredRoles: string[]): boolean {
+  hasAnyPermission(requiredRoles: (string | number)[]): boolean {
     const userRole = this.tokenService.getUserRole();
-    return userRole ? requiredRoles.includes(userRole.toLowerCase()) : false;
+    return requiredRoles.map(String).includes(String(userRole));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -174,14 +170,14 @@ export class AuthService {
 
     // ✅ NUEVO: Actualizar TokenService con token y rol
     this.tokenService.setToken(data.token);
-    this.tokenService.setUserRole(data.user.role);
+    this.tokenService.setUserRole(data.user.rol_id);
 
     // Actualizar el signal del usuario actual
     this.currentUserSignal.set(data.user);
 
     console.log('🔄 Token and role set in TokenService:', {
       token: data.token ? 'Present' : 'Missing',
-      role: data.user.role,
+      role: data.user.rol_id,
     });
   }
 

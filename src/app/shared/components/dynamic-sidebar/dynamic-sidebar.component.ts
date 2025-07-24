@@ -23,7 +23,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
           </div>
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium text-text-base">
-              {{ currentUser()?.name || currentUser()?.email }}
+              {{ currentUser()?.nombre || currentUser()?.correo }}
             </p>
             <p class="text-xs capitalize text-text-muted">
               {{ getRoleDisplayName() }}
@@ -257,15 +257,15 @@ export class DynamicSidebarComponent {
 
   getUserInitials(): string {
     const user = this.currentUser();
-    if (user?.name) {
-      return user.name
+    if (user?.nombre) {
+      return user.nombre
         .split(' ')
         .map(word => word[0])
         .join('')
         .toUpperCase()
         .slice(0, 2);
     }
-    return user?.email?.slice(0, 2).toUpperCase() || 'US';
+    return user?.correo?.slice(0, 2).toUpperCase() || 'US';
   }
 
   getRoleDisplayName(): string {

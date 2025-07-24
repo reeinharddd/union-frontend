@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { AuthService } from '@app/core/services/auth/auth.service';
 import { EventService } from '@app/core/services/event/event.service';
 import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
-import { AuthService } from '@app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -211,7 +211,7 @@ export class StudentDashboardComponent implements OnInit {
 
   getUserName(): string {
     const user = this.authService.currentUser();
-    return user?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Estudiante';
+    return user?.nombre?.split(' ')[0] || user?.correo?.split('@')[0] || 'Estudiante';
   }
 
   formatDate(dateString: string): string {
