@@ -1,1 +1,249 @@
-<p>student-profile works!</p>
+<div class="min-h-screen bg-[#f2f2f200] p-6 font-sans">
+  <!-- Encabezado -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-[#1d1d1d]">
+        {{ userProfile()?.nombre || 'Cargando...' }}
+      </h1>
+      <p class="text-sm text-[#5a5a5a]">{{ followerCount() || 0 }} seguidores</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <!-- Íconos redes sociales -->
+      @if (userProfile()?.github_url) {
+        <a
+          [href]="userProfile()?.github_url"
+          target="_blank"
+          class="bg-gray-800 hover:bg-gray-700 flex h-6 w-6 items-center justify-center rounded-md transition-colors"
+        >
+          <svg class="h-10 w-10 fill-current text-black" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.6.113.793-.26.793-.577v-2.234c-3.338.726-4.033-1.61-4.033-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.745.083-.729.083-.729 1.205.084 1.84 1.238 1.84 1.238 1.07 1.834 2.809 1.304 3.495.997.108-.775.42-1.305.763-1.605-2.665-.304-5.466-1.332-5.466-5.931 0-1.31.47-2.381 1.236-3.221-.124-.303-.536-1.527.117-3.181 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 013.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.654 1.654.242 2.878.118 3.181.77.84 1.235 1.911 1.235 3.221 0 4.61-2.804 5.625-5.475 5.921.43.37.815 1.102.815 2.222v3.293c0 .32.192.694.8.576C20.565 21.796 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+            ></path>
+          </svg>
+        </a>
+      } @else {
+        <div class="bg-gray-300 flex h-6 w-6 items-center justify-center rounded-md">
+          <span class="text-gray-500 text-xs"></span>
+        </div>
+      }
+
+      @if (userProfile()?.linkedin_url) {
+        <a
+          [href]="userProfile()?.linkedin_url"
+          target="_blank"
+          class="bg-blue-600 hover:bg-blue-700 flex h-6 w-6 items-center justify-center rounded-md transition-colors"
+        >
+          <svg class="h-10 w-10 fill-current text-black" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.039-1.85-3.039-1.853 0-2.136 1.445-2.136 2.939v5.669h-3.554V9h3.414v1.561h.049c.475-.899 1.637-1.85 3.368-1.85 3.6 0 4.266 2.368 4.266 5.451v6.29zM5.337 7.433a2.062 2.062 0 110-4.123 2.062 2.062 0 010 4.123zM6.992 20.452H3.683V9h3.309v11.452zM22.225 0H1.771C.792 0 0 .771 0 1.723v20.554C0 23.229.792 24 1.771 24h20.451C23.2 24 24 23.229 24 22.277V1.723C24 .771 23.2 0 22.225 0z"
+            />
+          </svg>
+        </a>
+      } @else {
+        <div class="bg-gray-300 flex h-6 w-6 items-center justify-center rounded-md">
+          <span class="text-gray-500 text-xs"></span>
+        </div>
+      }
+
+      <div class="bg-gray-300 flex h-6 w-6 items-center justify-center rounded-md">
+        <a
+          [href]="userProfile()?.cv_url"
+          target="_blank"
+          class="bg-gray-300 hover:bg-gray-400 flex h-6 w-6 items-center justify-center rounded-md transition-colors"
+        >
+          <svg class="text-gray-600 h-10 w-10 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M6 2a2 2 0 00-2 2v16c0 1.104.895 2 2 2h12a2 2 0 002-2V8.828a2 2 0 00-.586-1.414l-5.828-5.828A2 2 0 0012.172 1H6zm7 1.414L18.586 7H14a1 1 0 01-1-1V3.414zM8 13h8v2H8v-2zm0 4h5v2H8v-2z"
+            />
+          </svg>
+        </a>
+      </div>
+      <!-- Botón editar -->
+      <button
+        class="rounded-md bg-[#EF6C34] px-4 py-1 font-medium text-white hover:bg-[#e25e2a]"
+        (click)="startEditProfile()"
+      >
+        Editar
+      </button>
+      @if (isEditing()) {
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          (click)="isEditing.set(false)"
+        >
+          <div
+            class="relative w-full max-w-md rounded-xl bg-white px-6 py-8 shadow-xl"
+            (click)="$event.stopPropagation()"
+          >
+            <!-- Botón de cerrar en esquina -->
+            <button
+              class="text-gray-400 hover:text-gray-600 absolute right-4 top-4 text-xl font-bold"
+              (click)="isEditing.set(false)"
+              aria-label="Cerrar"
+            >
+              &times;
+            </button>
+
+            <h2 class="text-gray-800 mb-6 text-center text-2xl font-semibold">✏️ Editar Perfil</h2>
+
+            <form class="flex flex-col gap-4" (submit)="onSaveProfile($event)">
+              <input
+                type="text"
+                placeholder="Nombre"
+                class="border-gray-300 focus:ring-orange-400 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+                [value]="editProfile().nombre"
+                (input)="updateEditProfile('nombre', $any($event.target).value)"
+              />
+
+              <textarea
+                placeholder="Biografía"
+                class="border-gray-300 focus:ring-orange-400 h-24 resize-none rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+                [value]="editProfile().biografia"
+                (input)="updateEditProfile('biografia', $any($event.target).value)"
+              ></textarea>
+
+              <input
+                type="text"
+                placeholder="GitHub URL"
+                class="border-gray-300 focus:ring-orange-400 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+                [value]="editProfile().github_url"
+                (input)="updateEditProfile('github_url', $any($event.target).value)"
+              />
+
+              <input
+                type="text"
+                placeholder="LinkedIn URL"
+                class="border-gray-300 focus:ring-orange-400 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+                [value]="editProfile().linkedin_url"
+                (input)="updateEditProfile('linkedin_url', $any($event.target).value)"
+              />
+
+              <input
+                type="text"
+                placeholder="CV URL"
+                class="border-gray-300 focus:ring-orange-400 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+                [value]="editProfile().cv_url"
+                (input)="updateEditProfile('cv_url', $any($event.target).value)"
+              />
+
+              <div class="mt-4 flex gap-3">
+                <button
+                  type="submit"
+                  class="w-full rounded-md bg-[#EF6C34] px-4 py-2 font-medium text-white hover:bg-[#e25e2a]"
+                >
+                  Guardar
+                </button>
+
+                <button
+                  type="button"
+                  class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-full rounded-md px-4 py-2 font-medium"
+                  (click)="isEditing.set(false)"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Info general -->
+  <div class="mb-6 flex items-start justify-between rounded-lg bg-white p-4 shadow-md">
+    <div class="flex items-center gap-4">
+      <div class="h-16 w-16 rounded-full bg-black"></div>
+      <div>
+        <p class="font-semibold text-[#333]">
+          {{ userUniversity()?.nombre || 'Universidad no disponible' }}
+        </p>
+        <p class="text-[#666]">
+          {{ userProfile()?.carrera || 'Carrera no especificada' }}
+        </p>
+      </div>
+    </div>
+    <div class="w-1/2 rounded-md border border-[#ccc] bg-[#fafafa] p-4 text-sm text-[#333]">
+      "{{ userProfile()?.biografia || 'Sin descripción disponible' }}"
+    </div>
+  </div>
+
+  <!-- Participaciones -->
+  <h2 class="mb-3 text-lg font-semibold text-[#1d1d1d]">Participaciones (Públicos)</h2>
+
+  <!-- Loading state para proyectos -->
+  @if (isLoadingProjects()) {
+    <div class="py-8 text-center">
+      <p class="text-gray-500">Cargando proyectos...</p>
+    </div>
+  } @else if (userProjects().length === 0) {
+    <div class="py-8 text-center">
+      <p class="text-gray-500">No hay proyectos para mostrar</p>
+    </div>
+  } @else {
+    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @for (project of userProjects(); track project.id) {
+        <div class="rounded-lg bg-white p-4 shadow-md">
+          <div class="mb-2 flex items-center justify-between">
+            <div class="h-10 w-10 rounded-full bg-black"></div>
+            @if (project.es_destacado) {
+              <div class="text-yellow-400 text-xl font-bold">★</div>
+            }
+          </div>
+          <p class="font-semibold text-[#333]">{{ project.nombre }}</p>
+          <p class="mb-3 text-sm text-[#666]">{{ project.descripcion || 'Sin descripción' }}</p>
+          <button class="rounded bg-[#EF6C34] px-3 py-1 text-xs text-white hover:bg-[#e25e2a]">
+            Más detalles
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Experiencias -->
+  <h2 class="mb-2 text-lg font-semibold text-[#1d1d1d]">Experiencias</h2>
+
+  <!-- Loading state para experiencias -->
+  @if (isLoadingExperiences()) {
+    <div class="py-8 text-center">
+      <p class="text-gray-500">Cargando experiencias...</p>
+    </div>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse text-left text-sm">
+        <thead>
+          <tr class="border-gray-300 border-b text-[#555]">
+            <th class="px-4 py-2 font-semibold">Tipo</th>
+            <th class="px-4 py-2 font-semibold">Titulo</th>
+            <th class="px-4 py-2 font-semibold">Descripcion</th>
+            <th class="px-4 py-2 font-semibold">Fecha inicio</th>
+            <th class="px-4 py-2 font-semibold">Fecha fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (userExperiences().length === 0) {
+            <tr class="border-gray-200 border-t text-[#777]">
+              <td class="px-4 py-2 text-center" colspan="5">No hay experiencias registradas</td>
+            </tr>
+          } @else {
+            @for (experience of userExperiences(); track experience.id) {
+              <tr class="border-gray-200 border-t text-[#777]">
+                <td class="px-4 py-2">{{ experience.tipo }}</td>
+                <td class="px-4 py-2">{{ experience.titulo }}</td>
+                <td class="px-4 py-2">{{ experience.descripcion }}</td>
+                <td class="px-4 py-2">{{ experience.fecha_inicio }}</td>
+                <td class="px-4 py-2">{{ experience.fecha_fin }}</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Estados de error -->
+  @if (errorMessage()) {
+    <div class="bg-red-100 border-red-400 text-red-700 mb-4 rounded border px-4 py-3">
+      <p>{{ errorMessage() }}</p>
+    </div>
+  }
+</div>

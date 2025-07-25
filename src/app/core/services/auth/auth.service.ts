@@ -53,29 +53,35 @@ export class AuthService {
   private initializeFromStorage(): void {
     const token = this.tokenService.getToken();
     const role = this.tokenService.getUserRole();
+    const storedUser = localStorage.getItem('currentUser');
 
     console.log('🔄 Initializing from storage:', {
       hasToken: !!token,
       role: role || 'No role found',
+      hasStoredUser: !!storedUser,
     });
 
-    if (token && role) {
-      // Si hay token y rol, crear usuario básico
-      this.currentUserSignal.set({
-        id: 0,
-        email: '',
-        role: role,
-        name: '',
-      });
-      console.log('✅ User initialized with role:', role);
+    if (token && role && storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        this.currentUserSignal.set(userData);
+        console.log('✅ User initialized from storage:', userData);
+      } catch (error) {
+        console.error('❌ Error parsing stored user data:', error);
+        this.clearAuthData();
+      }
     } else {
-      console.log('❌ Missing token or role during initialization');
+      console.log('❌ Missing token, role, or stored user during initialization');
     }
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     console.log('🔄 AuthService - Attempting login with API');
-    return this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials).pipe(
+    const backendCredentials = {
+      correo: credentials.email,
+      contrasena: credentials.password,
+    };
+    return this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, backendCredentials).pipe(
       tap(response => {
         console.log('✅ Login successful via API:', response);
         this.setAuthData(response);
@@ -165,8 +171,38 @@ export class AuthService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // setAuthData(data: { token: string; user: any }): void {
+  //   console.log('💾 Setting auth data:', data);
+
+  //   // Guardar en localStorage (mantener compatibilidad)
+  //   localStorage.setItem(this.TOKEN_KEY, data.token);
+  //   localStorage.setItem('currentUser', JSON.stringify(data.user));
+
+  //   // ✅ NUEVO: Actualizar TokenService con token y rol
+  //   this.tokenService.setToken(data.token);
+  //   this.tokenService.setUserRole(data.user.role);
+
+  //   // Actualizar el signal del usuario actual
+  //   this.currentUserSignal.set(data.user);
+
+  //   console.log('🔄 Token and role set in TokenService:', {
+  //     token: data.token ? 'Present' : 'Missing',
+  //     role: data.user.role,
+  //   });
+  // }
   setAuthData(data: { token: string; user: any }): void {
     console.log('💾 Setting auth data:', data);
+
+    // 🔥 AGREGAR: Mapeo de rol_id a role string
+    const roleMapping: Record<number, string> = {
+      1: 'admin',
+      2: 'admin_uni',
+      3: 'user',
+      4: 'promoter',
+    };
+
+    // Convertir rol_id a role string
+    const userRole = data.user.rol_id ? roleMapping[data.user.rol_id] || 'user' : 'user';
 
     // Guardar en localStorage (mantener compatibilidad)
     localStorage.setItem(this.TOKEN_KEY, data.token);
@@ -174,14 +210,14 @@ export class AuthService {
 
     // ✅ NUEVO: Actualizar TokenService con token y rol
     this.tokenService.setToken(data.token);
-    this.tokenService.setUserRole(data.user.role);
+    this.tokenService.setUserRole(userRole);
 
     // Actualizar el signal del usuario actual
     this.currentUserSignal.set(data.user);
 
     console.log('🔄 Token and role set in TokenService:', {
       token: data.token ? 'Present' : 'Missing',
-      role: data.user.role,
+      role: userRole,
     });
   }
 

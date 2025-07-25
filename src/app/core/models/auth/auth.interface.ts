@@ -20,6 +20,6 @@ export interface User {
   id: number;
   email: string;
   name?: string;
-  role: string;
+  rol_id: string;
   address?: string;
 }
