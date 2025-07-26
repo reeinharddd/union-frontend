@@ -68,6 +68,11 @@ export const STUDENT_ROUTES: Routes = [
           ),
       },
       {
+        path: 'Addprojects',
+        loadComponent: () =>
+          import('./projects/add-project.component').then(m => m.AddProyectoComponent),
+      },
+      {
         path: 'grades',
         loadComponent: () =>
           import('./grades/grades-list/grades-list.component').then(m => m.GradesListComponent),

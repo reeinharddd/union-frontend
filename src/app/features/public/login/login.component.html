@@ -32,12 +32,12 @@
             <label for="email" class="mb-1 block text-sm font-medium text-neutral-700">Email</label>
             <div class="relative">
               <input
-                id="email"
-                formControlName="email"
-                type="email"
+                id="correo"
+                formControlName="correo"
+                type="correo"
                 placeholder="tu@email.com"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-800 shadow-soft transition-all duration-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300"
-                [class.border-accent-400]="getFieldError('email')"
+                [class.border-accent-400]="getFieldError('correo')"
               />
               @if (getFieldError('email')) {
                 <p class="mt-1 text-sm text-accent-600">{{ getFieldError('email') }}</p>
@@ -47,14 +47,14 @@
 
           <!-- Password -->
           <div>
-            <label for="password" class="mb-1 block text-sm font-medium text-neutral-700"
+            <label for="contrasena" class="mb-1 block text-sm font-medium text-neutral-700"
               >Contraseña</label
             >
             <div class="relative">
               <input
-                id="password"
-                formControlName="password"
-                type="password"
+                id="contrasena"
+                formControlName="contrasena"
+                type="contrasena"
                 placeholder="••••••••"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-800 shadow-soft transition-all duration-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300"
                 [class.border-accent-400]="getFieldError('password')"

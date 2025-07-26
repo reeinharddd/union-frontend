@@ -1,0 +1,61 @@
+<div class="bg-gray-50 flex min-h-screen items-center justify-center px-4 py-8">
+  <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-md">
+    <h2 class="text-gray-800 mb-6 text-center text-xl font-semibold">Registro de Proyecto</h2>
+
+    <form [formGroup]="proyectoForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <input
+        type="text"
+        formControlName="nombre"
+        placeholder="Nombre del Proyecto"
+        class="border-orange-400 focus:ring-orange-500 w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
+      />
+      <div
+        *ngIf="proyectoForm.get('nombre')?.touched && proyectoForm.get('nombre')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        Requerido (máx 200 caracteres)
+      </div>
+
+      <textarea
+        formControlName="descripcion"
+        placeholder="Descripción del Proyecto"
+        rows="3"
+        class="border-orange-400 focus:ring-orange-500 w-full resize-none rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
+      ></textarea>
+      <div
+        *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        Descripción requerida
+      </div>
+
+      <input
+        type="text"
+        formControlName="estado_verificacion"
+        placeholder="Estado de Verificación"
+        class="border-orange-400 focus:ring-orange-500 w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
+      />
+      <div
+        *ngIf="
+          proyectoForm.get('estado_verificacion')?.touched &&
+          proyectoForm.get('estado_verificacion')?.invalid
+        "
+        class="text-red-500 text-sm"
+      >
+        Requerido (máx 50 caracteres)
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" formControlName="vista_publica" class="text-orange-500 h-4 w-4" />
+        <label class="text-gray-700 text-sm">Hacer proyecto público</label>
+      </div>
+
+      <button
+        type="submit"
+        class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Registrar Proyecto
+      </button>
+    </form>
+  </div>
+</div>
