@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-type-register',
   templateUrl: './type-register.component.html',
-   styleUrls: ['./type-register.component.scss'],
+  styleUrls: ['./type-register.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink] // Añade los módulos necesarios
+  imports: [CommonModule, RouterLink], // Añade los módulos necesarios
 })
 export class TypeRegisterComponent {
   constructor(private router: Router) {}

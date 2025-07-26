@@ -20,7 +20,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
     }
 
     // Obtener el rol del usuario
-   const userRole = tokenService.getUserRole();
+    const userRole = tokenService.getUserRole();
     console.log('User role:', userRole);
     console.log('Allowed roles:', allowedRoles);
 
@@ -47,7 +47,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
     // Si el rol es numérico y su nombre lógico está en allowedRoles, permitir acceso
     const logicalRoles = roleMap[normalizedUserRole] || [];
     const hasLogicalPermission = logicalRoles.some(logical =>
-      normalizedAllowedRoles.includes(logical)
+      normalizedAllowedRoles.includes(logical),
     );
 
     const hasPermission =

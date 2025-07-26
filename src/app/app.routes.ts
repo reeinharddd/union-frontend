@@ -16,29 +16,39 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () =>
-          import('./features/public/register/type-register.component').then(m => m.TypeRegisterComponent),
-      },
-        {
-        path: 'register/estudiante',
-        loadComponent: () =>
-          import('./features/student/register/student-register.component').then(m => m.StudentRegisterComponent),
+          import('./features/public/register/type-register.component').then(
+            m => m.TypeRegisterComponent,
+          ),
       },
       {
-       path: 'register/estudiante/step2', // Nueva ruta para el segundo paso
-      loadComponent: () =>
-        import('./features/student/register/student-register2.component').then(m => m.StudentRegister2Component),
-    },
-     {
-       path: 'register/estudiante/step3', // Nueva ruta para el paso
-      loadComponent: () =>
-        import('./features/student/register/student-register3.component').then(m => m.StudentRegister3Component),
-    },
-    {
-       path: 'register/estudiante/step4', // Nueva ruta para el paso
-      loadComponent: () =>
-        import('./features/student/register/student-register4.component').then(m => m.StudentRegister4Component),
-    },
-        {
+        path: 'register/estudiante',
+        loadComponent: () =>
+          import('./features/student/register/student-register.component').then(
+            m => m.StudentRegisterComponent,
+          ),
+      },
+      {
+        path: 'register/estudiante/step2', // Nueva ruta para el segundo paso
+        loadComponent: () =>
+          import('./features/student/register/student-register2.component').then(
+            m => m.StudentRegister2Component,
+          ),
+      },
+      {
+        path: 'register/estudiante/step3', // Nueva ruta para el paso
+        loadComponent: () =>
+          import('./features/student/register/student-register3.component').then(
+            m => m.StudentRegister3Component,
+          ),
+      },
+      {
+        path: 'register/estudiante/step4', // Nueva ruta para el paso
+        loadComponent: () =>
+          import('./features/student/register/student-register4.component').then(
+            m => m.StudentRegister4Component,
+          ),
+      },
+      {
         path: 'register/promotor',
         loadComponent: () =>
           import('./features/public/register/register.component').then(m => m.RegisterComponent),

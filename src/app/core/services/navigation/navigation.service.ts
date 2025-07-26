@@ -113,7 +113,7 @@ export class NavigationService {
   };
 
   readonly currentNavigation = computed(() => {
-     const userRole = this.authService.userRole();
+    const userRole = this.authService.userRole();
     console.log('🧭 NavigationService - Current role:', userRole);
 
     if (!userRole) return [];
