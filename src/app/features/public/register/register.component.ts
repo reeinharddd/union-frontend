@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '@app/core/services/auth/auth.service';
-import { ToastService } from '@app/core/services/ui/toast.service';
-import { LoadingService } from '@app/core/services/ui/loading.service';
 import { RegisterRequest } from '@app/core/models/auth/auth.interface';
+import { AuthService } from '@app/core/services/auth/auth.service';
+import { LoadingService } from '@app/core/services/ui/loading.service';
+import { ToastService } from '@app/core/services/ui/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -81,7 +81,7 @@ export class RegisterComponent {
       if (field.errors['email']) return 'Email inválido';
       if (field.errors['minlength'])
         return `${this.getFieldLabel(fieldName)} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
-      if (field.errors['passwordMismatch']) return 'Las contraseñas no coinciden';
+      if (field.errors['passwordMismatch']) return 'Las contrasenas no coinciden';
     }
     return null;
   }
@@ -89,8 +89,8 @@ export class RegisterComponent {
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
       email: 'Email',
-      password: 'Contraseña',
-      confirmPassword: 'Confirmar contraseña',
+      password: 'contrasena',
+      confirmPassword: 'Confirmar contrasena',
       name: 'Nombre',
       address: 'Dirección',
     };

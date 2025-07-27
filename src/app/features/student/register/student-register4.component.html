@@ -19,19 +19,19 @@
 
       <!-- Instrucciones -->
       <p class="mb-6 text-sm text-neutral-800">
-        La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un
+        La contrasena debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un
         número y un símbolo.
       </p>
 
       <!-- Formulario -->
       <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-4">
-        <!-- Contraseña -->
+        <!-- contrasena -->
         <div>
-          <label class="mb-1 block text-sm font-medium text-neutral-700">Contraseña</label>
+          <label class="mb-1 block text-sm font-medium text-neutral-700">contrasena</label>
           <input
             type="password"
             formControlName="password"
-            placeholder="Ingresa tu contraseña"
+            placeholder="Ingresa tu contrasena"
             class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             (input)="checkPasswordStrength()"
           />
@@ -40,7 +40,7 @@
             class="text-red-500 mt-1 text-xs"
           >
             <div *ngIf="passwordForm.get('password')?.errors?.['required']">
-              La contraseña es requerida
+              La contrasena es requerida
             </div>
             <div *ngIf="passwordForm.get('password')?.errors?.['minlength']">
               Mínimo 8 caracteres
@@ -73,15 +73,15 @@
           </div>
         </div>
 
-        <!-- Confirmar Contraseña -->
+        <!-- Confirmar contrasena -->
         <div>
           <label class="mb-1 block text-sm font-medium text-neutral-700"
-            >Confirmar contraseña</label
+            >Confirmar contrasena</label
           >
           <input
             type="password"
             formControlName="confirmPassword"
-            placeholder="Confirma tu contraseña"
+            placeholder="Confirma tu contrasena"
             class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <div
@@ -90,7 +90,7 @@
             "
             class="text-red-500 mt-1 text-xs"
           >
-            Las contraseñas no coinciden
+            Las contrasenas no coinciden
           </div>
         </div>
 

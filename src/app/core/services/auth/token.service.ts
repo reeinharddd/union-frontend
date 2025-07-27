@@ -1,69 +1,110 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { User } from '@app/core/models/auth/auth.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_ROLE_KEY = 'user_role';
-
-  private tokenSignal = signal<string | null>(this.getStoredToken());
-  private userRoleSignal = signal<string | null>(this.getStoredUserRole());
-
-  readonly isAuthenticated = computed(() => !!this.tokenSignal());
-  readonly userRole = computed(() => this.userRoleSignal());
-
-  private getStoredToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(this.TOKEN_KEY);
-    }
-    return null;
-  }
-
-  private getStoredUserRole(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(this.USER_ROLE_KEY);
-    }
-    return null;
-  }
+  private readonly TOKEN_KEY = 'authToken';
+  private readonly USER_KEY = 'currentUser';
 
   setToken(token: string): void {
-    console.log('🔐 TokenService - Setting token:', token?.substring(0, 20) + '...');
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, token);
-    }
-    this.tokenSignal.set(token);
+    localStorage.setItem(this.TOKEN_KEY, token);
+    console.log('🔐 Token stored');
   }
 
   getToken(): string | null {
-    const token = this.tokenSignal();
-    console.log(
-      '🔍 TokenService - Getting token:',
-      token ? `${token.substring(0, 20)}...` : 'null',
-    );
-    return token;
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  getUserRole(): string | null {
-    const role = this.userRoleSignal();
-    console.log('👤 TokenService - Getting user role:', role);
-    return role;
+  setStoredUser(user: User): void {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    console.log('👤 User data stored');
   }
 
-  setUserRole(role: string): void {
-    console.log('👤 TokenService - Setting user role:', role);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.USER_ROLE_KEY, role);
+  getStoredUser(): User | null {
+    const userData = localStorage.getItem(this.USER_KEY);
+    if (userData) {
+      try {
+        return JSON.parse(userData) as User;
+      } catch (error) {
+        console.error('❌ Error parsing stored user data:', error);
+        return null;
+      }
     }
-    this.userRoleSignal.set(role);
+    return null;
   }
 
-  clearAll(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(this.TOKEN_KEY);
-      localStorage.removeItem(this.USER_ROLE_KEY);
+  isValidToken(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      // Verificar si el token tiene el formato básico de JWT
+      const parts = token.split('.');
+      if (parts.length !== 3) return false;
+
+      // Decodificar el payload para verificar expiración
+      const payload = JSON.parse(atob(parts[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      return payload.exp > currentTime;
+    } catch (error) {
+      console.error('❌ Invalid token format:', error);
+      return false;
     }
-    this.tokenSignal.set(null);
-    this.userRoleSignal.set(null);
+  }
+
+  // ✅ AGREGAR: Método isAuthenticated que faltaba
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    const user = this.getStoredUser();
+
+    // Verificar que tenemos tanto token como usuario, y que el token es válido
+    return !!(token && user && this.isValidToken());
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    console.log('🗑️ Token cleared');
+  }
+
+  clearStoredUser(): void {
+    localStorage.removeItem(this.USER_KEY);
+    console.log('🗑️ User data cleared');
+  }
+
+  hasValidToken(): boolean {
+    return this.isValidToken();
+  }
+
+  getUserRole(): string {
+    const user = this.getStoredUser();
+    return user?.rol_id?.toString() || '';
+  }
+
+  // ✅ AGREGAR: Método adicional para obtener el rol como número
+  getUserRoleId(): number | null {
+    const user = this.getStoredUser();
+    return user?.rol_id || null;
+  }
+
+  // ✅ AGREGAR: Método para obtener el ID del usuario
+  getUserId(): number | null {
+    const user = this.getStoredUser();
+    return user?.id || null;
+  }
+
+  // ✅ AGREGAR: Método para verificar si el usuario tiene un rol específico
+  hasRole(roleId: number): boolean {
+    const userRoleId = this.getUserRoleId();
+    return userRoleId === roleId;
+  }
+
+  // ✅ AGREGAR: Método para limpiar toda la sesión
+  clearSession(): void {
+    this.clearToken();
+    this.clearStoredUser();
+    console.log('🧹 Complete session cleared');
   }
 }

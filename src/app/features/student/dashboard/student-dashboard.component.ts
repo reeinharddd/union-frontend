@@ -227,8 +227,10 @@ export class StudentDashboardComponent implements OnInit {
   private loadDashboardData(): void {
     // Cargar eventos próximos
     this.eventService.getAll().subscribe(events => {
-      const now = new Date();
-      const upcoming = events.filter(event => new Date(event.fecha_inicio) > now).slice(0, 6);
+     const upcoming = (events.data || []).filter(
+       (event: any) => new Date(event.fecha_inicio) > new Date(),
+     );
+
 
       this.upcomingEvents.set(upcoming);
       this.studentStats.update(stats => ({

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '@app/core/models/auth/auth.interface';
 import { ToastService } from '@app/core/services/ui/toast.service';
-import { User, UserService } from '@app/core/services/user/user.service';
+import { UserService } from '@app/core/services/user/user.service';
 import { ErrorHandlerComponent } from '@app/shared/components/error-handler/error-handler.component';
 import {
   TableAction,
@@ -152,7 +153,9 @@ export class UserListComponent implements OnInit {
   }
 
   private deleteUser(user: User): void {
-    if (confirm(`¿Estás seguro de que deseas eliminar al usuario "${user.name || user.email}"?`)) {
+    if (
+      confirm(`¿Estás seguro de que deseas eliminar al usuario "${user.nombre || user.correo}"?`)
+    ) {
       this.userService.delete(user.id).subscribe({
         next: () => {
           this.toastService.showSuccess('Usuario eliminado exitosamente');

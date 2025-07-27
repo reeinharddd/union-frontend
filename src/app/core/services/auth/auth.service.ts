@@ -1,239 +1,127 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, tap, throwError } from 'rxjs';
-import { API_ENDPOINTS } from '../../constants/api-endpoints';
-//import { Roles } from '../../enums/roles';
-import {
-  AuthResponse,
-  LoginRequest,
-  RegisterRequest,
-  User,
-} from '../../models/auth/auth.interface';
-import { ApiClientService } from '../base/api-client.service';
-import { ToastService } from '../ui/toast.service';
+import { Observable, tap } from 'rxjs';
+import { BaseService } from '../base/base.service';
 import { TokenService } from './token.service';
-
+import { API_ENDPOINTS } from '../../constants/api-endpoints';
+import { AuthResponse, LoginRequest, RegisterRequest } from '@app/core/models/auth/auth.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
-  private readonly apiClient = inject(ApiClientService);
-  private readonly tokenService = inject(TokenService);
+export class AuthService extends BaseService {
+  protected readonly serviceName = 'AuthService';
   private readonly router = inject(Router);
-  private readonly toastService = inject(ToastService);
+  private readonly tokenService = inject(TokenService);
 
-  private currentUserSignal = signal<User | null>(null);
+  // Estado local
+  private readonly _isAuthenticated = signal(false);
+  readonly isAuthenticated = this._isAuthenticated.asReadonly();
 
-  readonly currentUser = computed(() => this.currentUserSignal());
-  readonly isAuthenticated = computed(() => this.tokenService.isAuthenticated());
-  readonly userRole = computed(() => this.tokenService.userRole());
-
-  // Mapeo de roles a rutas - actualizado según API
-  private readonly roleRoutes: Record<string, string> = {
-    1: '/student/dashboard',
-    2: '/admin-uni/dashboard',
-    3: '/admin/dashboard',
-    4: '/promoter/dashboard',
-    5: '/student/dashboard', // Rol 5 es administrador (compatibilidad con API)
-  };
-
-  private readonly TOKEN_KEY = 'auth_token';
+  // Estado computado basado en el estado global
+  readonly currentUser = computed(() => this.appState.currentUser());
+  readonly userRole = computed(() => this.currentUser()?.rol_id);
 
   constructor() {
-    // Verificar si hay un usuario en el localStorage al inicializar
-    this.initializeFromStorage();
+    super();
+    this.initializeAuth();
   }
 
-  private initializeFromStorage(): void {
-    const token = this.tokenService.getToken();
-    const role = this.tokenService.getUserRole();
-    const storedUser = localStorage.getItem('currentUser');
+  private initializeAuth(): void {
+    const isAuthenticated = this.tokenService.isAuthenticated();
 
-    console.log('🔄 Initializing from storage:', {
-      hasToken: !!token,
-      role: role || 'No role found',
-      hasStoredUser: !!storedUser,
-    });
-
-    if (token && role) {
-      // Si hay token y rol, crear usuario básico
-      this.currentUserSignal.set({
-        id: 0,
-        correo: '',
-        rol_id: Number(role),
-        nombre: '',
-      });
-      console.log('✅ User initialized with role:', role);
+    if (isAuthenticated) {
+      const user = this.tokenService.getStoredUser();
+      if (user) {
+        this.appState.setCurrentUser(user);
+        this._isAuthenticated.set(true);
+        console.log('🔄 Auth initialized from storage:', user);
+      }
     } else {
-      console.log('❌ Missing token, role, or stored user during initialization');
+      // Limpiar cualquier dato corrupto
+      this.tokenService.clearSession();
+      console.log('🔄 Auth initialization failed - session cleared');
     }
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    console.log('🔄 AuthService - Attempting login with API');
-    const backendCredentials = {
-      correo: credentials.correo,
-      contrasena: credentials.contrasena,
-    };
-    return this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, backendCredentials).pipe(
+    return this.handleRequest(
+      this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials),
+      'auth.login',
+      {
+        showSuccessToast: true,
+        successMessage: `¡Bienvenido de vuelta!`,
+        logRequest: true,
+      },
+    ).pipe(
       tap(response => {
-        console.log('✅ Login successful via API:', response);
         this.setAuthData(response);
-        this.toastService.showSuccess(
-          `¡Bienvenido ${response.user.nombre || response.user.correo}!`,
-        );
-      }),
-      catchError(error => {
-        console.error('❌ Login failed:', error);
-        this.toastService.showError('Error al iniciar sesión. Verifica tus credenciales.');
-        return throwError(() => error);
       }),
     );
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
-    console.log('🔄 AuthService - Attempting registration with API');
-    return this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, userData).pipe(
+    return this.handleRequest(
+      this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, userData),
+      'auth.register',
+      {
+        showSuccessToast: true,
+        successMessage: '¡Cuenta creada exitosamente!',
+        logRequest: true,
+      },
+    ).pipe(
       tap(response => {
-        console.log('✅ Registration successful via API:', response);
         this.setAuthData(response);
-        this.toastService.showSuccess('¡Cuenta creada exitosamente!');
-      }),
-      catchError(error => {
-        console.error('❌ Registration failed:', error);
-        this.toastService.showError('Error al crear la cuenta. Intenta nuevamente.');
-        return throwError(() => error);
       }),
     );
   }
 
   logout(): void {
     const userName = this.currentUser()?.nombre || 'Usuario';
+
     this.clearAuthData();
-    this.toastService.showInfo(`¡Hasta luego ${userName}!`);
     this.router.navigate(['/login']);
+    this.toastService.showInfo(`¡Hasta luego, ${userName}!`);
+
+    console.log('🚪 User logged out successfully');
   }
 
-  navigateByRole(): void {
-    const userRole = this.tokenService.getUserRole();
-    console.log('🧭 Navigating by role:', userRole);
-    console.log('🗺️ Available routes:', this.roleRoutes);
+  private setAuthData(authResponse: AuthResponse): void {
+    // Guardar token
+    this.tokenService.setToken(authResponse.token);
+    this.tokenService.setStoredUser(authResponse.user);
 
-    if (userRole) {
-      //const normalizedRole = userRole;
-      const route = this.roleRoutes[userRole] || this.roleRoutes[userRole];
+    // Actualizar estados
+    this.appState.setCurrentUser(authResponse.user);
+    this._isAuthenticated.set(true);
 
-      if (route) {
-        console.log('✅ Route found, navigating to:', route);
-        this.router.navigate([route]);
-      } else {
-        console.error('❌ No route found for role:', userRole);
-        this.toastService.showError(`Rol de usuario no válido: ${userRole}`);
-        this.router.navigate(['/login']);
-      }
-    } else {
-      console.error('❌ No user role found in TokenService');
-      this.toastService.showError('No se pudo determinar el rol del usuario');
-      this.router.navigate(['/login']);
-    }
-  }
-
-  getRoleLayout(role?: string | number): string {
-    const userRole = role ?? this.tokenService.getUserRole();
-    // Si es número, conviértelo a string
-    const normalizedRole = String(userRole);
-    // Si tienes layouts por número, agrégalos aquí si es necesario
-    const roleLayouts: Record<string, string> = {
-      '1': 'private', // estudiante
-      '2': 'private', // admin-uni
-      '3': 'admin', // admin
-      '4': 'admin', // promoter
-      '5': 'private', // admin (compatibilidad)
-      admin: 'admin',
-      admin_uni: 'private',
-      promoter: 'admin',
-      user: 'private',
-      student: 'private',
-    };
-    return roleLayouts[normalizedRole] || 'public';
-  }
-
-  hasPermission(requiredRole: string | number): boolean {
-    const userRole = this.tokenService.getUserRole();
-    return String(userRole) === String(requiredRole);
-  }
-
-  hasAnyPermission(requiredRoles: (string | number)[]): boolean {
-    const userRole = this.tokenService.getUserRole();
-    return requiredRoles.map(String).includes(String(userRole));
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // setAuthData(data: { token: string; user: any }): void {
-  //   console.log('💾 Setting auth data:', data);
-
-  //   // Guardar en localStorage (mantener compatibilidad)
-  //   localStorage.setItem(this.TOKEN_KEY, data.token);
-  //   localStorage.setItem('currentUser', JSON.stringify(data.user));
-
-  //   // ✅ NUEVO: Actualizar TokenService con token y rol
-  //   this.tokenService.setToken(data.token);
-  //   this.tokenService.setUserRole(data.user.role);
-
-  //   // Actualizar el signal del usuario actual
-  //   this.currentUserSignal.set(data.user);
-
-  //   console.log('🔄 Token and role set in TokenService:', {
-  //     token: data.token ? 'Present' : 'Missing',
-  //     role: data.user.role,
-  //   });
-  // }
-  setAuthData(data: { token: string; user: any }): void {
-    console.log('💾 Setting auth data:', data);
-
-    // Convertir rol_id a role string
-
-    // Guardar en localStorage (mantener compatibilidad)
-    localStorage.setItem(this.TOKEN_KEY, data.token);
-    localStorage.setItem('currentUser', JSON.stringify(data.user));
-
-    // ✅ NUEVO: Actualizar TokenService con token y rol
-    this.tokenService.setToken(data.token);
-    this.tokenService.setUserRole(data.user.rol_id);
-
-    // Actualizar el signal del usuario actual
-    this.currentUserSignal.set(data.user);
-
-    console.log('🔄 Token and role set in TokenService:', {
-      token: data.token ? 'Present' : 'Missing',
-      role: data.user.rol_id,
+    console.log('✅ Auth data set successfully:', {
+      userId: authResponse.user.id,
+      userName: authResponse.user.nombre,
+      role: authResponse.user.rol_id,
     });
   }
 
-  getToken(): string | null {
-    // Usar TokenService como fuente principal
-    const token = this.tokenService.getToken();
-    console.log('🔍 Getting token from TokenService:', token ? 'Found' : 'Not found');
-    return token;
-  }
-
   private clearAuthData(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem('currentUser');
-    this.currentUserSignal.set(null);
+    this.tokenService.clearSession(); // Usar el nuevo método
+    this.appState.clearCurrentUser();
+    this._isAuthenticated.set(false);
+    this.appState.clearErrors();
 
-    // ✅ AGREGAR: Limpiar TokenService también
-    this.tokenService.clearAll();
+    console.log('🧹 Auth data cleared');
   }
 
-  // Método para debugging
-  debugRoleRouting(): void {
-    const userRole = this.tokenService.getUserRole();
-    console.log('🔍 Debug Role Routing:');
-    console.log('- Current role:', userRole);
-    console.log('- Available routes:', this.roleRoutes);
-    console.log('- Normalized role:', userRole?.toLowerCase());
-    console.log('- Target route:', this.roleRoutes[userRole?.toLowerCase() || '']);
+  navigateByRole(): void {
+    const role = this.userRole();
+    const routes = {
+      1: '/admin/dashboard',      // Admin
+      2: '/student/dashboard',    // Estudiante
+      3: '/promoter/dashboard',   // Profesor (como promoter)
+      9: '/admin-uni/dashboard',  // Admin Universitario
+    };
+
+    const route = routes[role as keyof typeof routes] || '/student/dashboard';
+
+    console.log('🧭 Navigating by role:', { role, route });
+    this.router.navigate([route]);
   }
 }

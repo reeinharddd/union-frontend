@@ -94,14 +94,14 @@ export class StudentRegister4Component {
     });
   }
 
-  // Validador personalizado para coincidencia de contraseñas
+  // Validador personalizado para coincidencia de contrasenas
   passwordMatchValidator(formGroup: FormGroup): ValidationErrors | null {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  // Validador personalizado para fortaleza de contraseña
+  // Validador personalizado para fortaleza de contrasena
   createPasswordStrengthValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
@@ -117,7 +117,7 @@ export class StudentRegister4Component {
     };
   }
 
-  // Verificar fortaleza de contraseña en tiempo real
+  // Verificar fortaleza de contrasena en tiempo real
   checkPasswordStrength() {
     const password = this.passwordForm.get('password')?.value;
     if (!password) {
@@ -229,7 +229,7 @@ export class StudentRegister4Component {
       });
     } else {
       this.passwordForm.markAllAsTouched();
-      console.error('Formulario de contraseña inválido');
+      console.error('Formulario de contrasena inválido');
     }
   }
 }

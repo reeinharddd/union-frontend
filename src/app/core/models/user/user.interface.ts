@@ -17,9 +17,11 @@ export interface CreateUserRequest {
 }
 
 export interface UpdateUserRequest {
-  email?: string;
-  password?: string;
-  name?: string;
-  role?: string;
-  address?: string;
+  nombre?: string;
+  telefono?: string;
+  github_url?: string;
+  linkedin_url?: string;
+  biografia?: string;
+  cv_url?: string;
+  cv_publico?: boolean;
 }

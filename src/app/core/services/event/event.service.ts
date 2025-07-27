@@ -1,131 +1,220 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { computed, Injectable, signal } from '@angular/core';
+import {
+  CreateEventRequest,
+  Event,
+  EventAttendance,
+  EventsFilters,
+  EventsResponse,
+} from '@app/core/models/event/event.interface';
+import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
-import { CreateEventRequest, Event, EventAttendance } from '../../models/event/event.interface';
-import { ApiClientService } from '../base/api-client.service';
-import { ToastService } from '../ui/toast.service';
+import { BaseService } from '../base/base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EventService {
-  private readonly apiClient = inject(ApiClientService);
-  private readonly toastService = inject(ToastService);
+export class EventService extends BaseService {
+  protected readonly serviceName = 'EventService';
+
+  // Estado local
   private readonly _events = signal<Event[]>([]);
   private readonly _attendances = signal<EventAttendance[]>([]);
+  private readonly _totalEvents = signal(0);
 
   readonly events = this._events.asReadonly();
+  readonly attendances = this._attendances.asReadonly();
+  readonly totalEvents = this._totalEvents.asReadonly();
 
-  getAll(): Observable<Event[]> {
-    console.log('🔄 EventService - Getting all events from API');
-    return this.apiClient.get<Event[]>(API_ENDPOINTS.EVENTS.BASE).pipe(
-      tap(events => {
-        console.log('✅ Events loaded from API:', events.length);
-        this._events.set(events);
-      }),
-      catchError(error => {
-        console.error('❌ Failed to load events:', error);
-        this.toastService.showError('Error al cargar los eventos');
-        return throwError(() => error);
+  // Estados computados
+  readonly upcomingEvents = computed(() => {
+    const now = new Date();
+    return this._events().filter(event => new Date(event.fecha_inicio) > now);
+  });
+
+  readonly virtualEvents = computed(() => this._events().filter(event => event.es_virtual));
+
+  readonly myRegisteredEvents = computed(() => {
+    const currentUser = this.appState.currentUser();
+    if (!currentUser) return [];
+
+    const myAttendances = this._attendances().filter(att => att.usuario_id === currentUser.id);
+    const eventIds = myAttendances.map(att => att.evento_id);
+
+    return this._events().filter(event => eventIds.includes(event.id));
+  });
+
+  getAll(filters: EventsFilters = {}): Observable<EventsResponse> {
+    return this.handleRequest(
+      this.apiClient.get<EventsResponse>(API_ENDPOINTS.EVENTS.BASE, filters),
+      'events.getAll',
+      { logRequest: true },
+    ).pipe(
+      tap(response => {
+        this._events.set(response.data);
+        this._totalEvents.set(response.pagination.total);
+        console.log(`🎉 Loaded ${response.data.length} events`);
       }),
     );
   }
 
-  getById(id: number): Observable<Event | null> {
-    console.log('🔄 EventService - Getting event by ID:', id);
-    return this.apiClient.get<Event>(API_ENDPOINTS.EVENTS.BY_ID(id)).pipe(
-      catchError(error => {
-        console.error('❌ Failed to load event:', error);
-        this.toastService.showError('Error al cargar el evento');
-        return throwError(() => error);
-      }),
+  getById(id: number): Observable<Event> {
+    return this.handleRequest(
+      this.apiClient.get<Event>(API_ENDPOINTS.EVENTS.BY_ID(id)),
+      `events.getById.${id}`,
+      { logRequest: true },
     );
   }
 
-  create(event: CreateEventRequest): Observable<Event> {
-    console.log('🔄 EventService - Creating event:', event);
-    return this.apiClient.post<Event>(API_ENDPOINTS.EVENTS.BASE, event).pipe(
+  create(eventData: CreateEventRequest): Observable<Event> {
+    return this.handleRequest(
+      this.apiClient.post<Event>(API_ENDPOINTS.EVENTS.BASE, eventData),
+      'events.create',
+      {
+        showSuccessToast: true,
+        successMessage: 'Evento creado exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(newEvent => {
         this._events.update(events => [...events, newEvent]);
-        console.log('✅ Event created via API:', newEvent);
-        this.toastService.showSuccess('Evento creado exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to create event:', error);
-        this.toastService.showError('Error al crear el evento');
-        return throwError(() => error);
+        this._totalEvents.update(total => total + 1);
       }),
     );
   }
 
-  update(id: number, event: Partial<CreateEventRequest>): Observable<Event> {
-    console.log('🔄 EventService - Updating event:', id, event);
-    return this.apiClient.put<Event>(API_ENDPOINTS.EVENTS.BY_ID(id), event).pipe(
+  update(id: number, eventData: Partial<CreateEventRequest>): Observable<Event> {
+    return this.handleRequest(
+      this.apiClient.put<Event>(API_ENDPOINTS.EVENTS.BY_ID(id), eventData),
+      `events.update.${id}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Evento actualizado exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(updatedEvent => {
-        this._events.update(events => events.map(e => (e.id === id ? updatedEvent : e)));
-        console.log('✅ Event updated via API:', updatedEvent);
-        this.toastService.showSuccess('Evento actualizado exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to update event:', error);
-        this.toastService.showError('Error al actualizar el evento');
-        return throwError(() => error);
+        this._events.update(events =>
+          events.map(event => (event.id === id ? updatedEvent : event)),
+        );
       }),
     );
   }
 
   delete(id: number): Observable<{ message: string }> {
-    console.log('🔄 EventService - Deleting event:', id);
-    return this.apiClient.delete<{ message: string }>(API_ENDPOINTS.EVENTS.BY_ID(id)).pipe(
+    return this.handleRequest(
+      this.apiClient.delete<{ message: string }>(API_ENDPOINTS.EVENTS.BY_ID(id)),
+      `events.delete.${id}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Evento eliminado exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(() => {
-        this._events.update(events => events.filter(e => e.id !== id));
-        console.log('✅ Event deleted via API:', id);
-        this.toastService.showSuccess('Evento eliminado exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to delete event:', error);
-        this.toastService.showError('Error al eliminar el evento');
-        return throwError(() => error);
+        this._events.update(events => events.filter(event => event.id !== id));
+        this._totalEvents.update(total => total - 1);
       }),
     );
   }
 
   // Gestión de asistencias
   getAttendances(): Observable<EventAttendance[]> {
-    console.log('🔄 EventService - Getting attendances from API');
-    return this.apiClient.get<EventAttendance[]>(API_ENDPOINTS.EVENTS.ATTENDANCES).pipe(
+    return this.handleRequest(
+      this.apiClient.get<EventAttendance[]>(API_ENDPOINTS.EVENTS.ATTENDANCES),
+      'events.getAttendances',
+      { logRequest: true },
+    ).pipe(
       tap(attendances => {
-        console.log('✅ Attendances loaded from API:', attendances.length);
         this._attendances.set(attendances);
-      }),
-      catchError(error => {
-        console.error('❌ Failed to load attendances:', error);
-        this.toastService.showError('Error al cargar las asistencias');
-        return throwError(() => error);
+        console.log(`📋 Loaded ${attendances.length} attendances`);
       }),
     );
   }
 
-  registerAttendance(eventId: number, userId: number): Observable<EventAttendance> {
-    console.log('🔄 EventService - Registering attendance:', { eventId, userId });
+  registerAttendance(eventId: number): Observable<EventAttendance> {
+    const currentUser = this.appState.currentUser();
+    if (!currentUser) {
+      throw new Error('Usuario no autenticado');
+    }
+
     const attendanceData = {
       evento_id: eventId,
-      usuario_id: userId,
+      usuario_id: currentUser.id,
     };
 
-    return this.apiClient
-      .post<EventAttendance>(API_ENDPOINTS.EVENTS.ATTENDANCES, attendanceData)
-      .pipe(
-        tap(attendance => {
-          this._attendances.update(attendances => [...attendances, attendance]);
-          console.log('✅ Attendance registered via API:', attendance);
-          this.toastService.showSuccess('Asistencia registrada exitosamente');
-        }),
-        catchError(error => {
-          console.error('❌ Failed to register attendance:', error);
-          this.toastService.showError('Error al registrar la asistencia');
-          return throwError(() => error);
-        }),
-      );
+    return this.handleRequest(
+      this.apiClient.post<EventAttendance>(API_ENDPOINTS.EVENTS.ATTENDANCES, attendanceData),
+      `events.registerAttendance.${eventId}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Registrado exitosamente al evento',
+        logRequest: true,
+      },
+    ).pipe(
+      tap(attendance => {
+        this._attendances.update(attendances => [...attendances, attendance]);
+
+        // Actualizar contador en el evento
+        this._events.update(events =>
+          events.map(event =>
+            event.id === eventId
+              ? { ...event, asistentes_registrados: event.asistentes_registrados + 1 }
+              : event,
+          ),
+        );
+      }),
+    );
+  }
+
+  unregisterAttendance(eventId: number): Observable<{ message: string }> {
+    const currentUser = this.appState.currentUser();
+    if (!currentUser) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    // Encontrar la asistencia para eliminarla
+    const attendance = this._attendances().find(
+      att => att.evento_id === eventId && att.usuario_id === currentUser.id,
+    );
+
+    if (!attendance) {
+      throw new Error('No estás registrado en este evento');
+    }
+
+    return this.handleRequest(
+      this.apiClient.delete<{ message: string }>(
+        `${API_ENDPOINTS.EVENTS.ATTENDANCES}/${attendance.id}`,
+      ),
+      `events.unregisterAttendance.${eventId}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Registro cancelado exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
+      tap(() => {
+        this._attendances.update(attendances =>
+          attendances.filter(att => att.id !== attendance.id),
+        );
+
+        // Actualizar contador en el evento
+        this._events.update(events =>
+          events.map(event =>
+            event.id === eventId
+              ? { ...event, asistentes_registrados: Math.max(0, event.asistentes_registrados - 1) }
+              : event,
+          ),
+        );
+      }),
+    );
+  }
+
+  isRegisteredToEvent(eventId: number): boolean {
+    const currentUser = this.appState.currentUser();
+    if (!currentUser) return false;
+
+    return this._attendances().some(
+      att => att.evento_id === eventId && att.usuario_id === currentUser.id,
+    );
   }
 }

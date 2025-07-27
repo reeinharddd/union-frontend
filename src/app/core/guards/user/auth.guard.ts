@@ -11,9 +11,12 @@ export const authGuard: CanActivateFn = () => {
 
   if (!isAuthenticated) {
     console.log('AuthGuard - Not authenticated, redirecting to login');
+    // Limpiar cualquier dato de sesión corrupto
+    tokenService.clearSession();
     router.navigate(['/login']);
     return false;
   }
 
+  console.log('AuthGuard - Access granted');
   return true;
 };

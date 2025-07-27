@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import {
-  NavigationService,
-  NavigationItem,
-} from '@app/core/services/navigation/navigation.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
+import {
+  NavigationItem,
+  NavigationService,
+} from '@app/core/services/navigation/navigation.service';
 
 @Component({
   selector: 'app-dynamic-sidebar',
@@ -268,15 +268,20 @@ export class DynamicSidebarComponent {
     return user?.correo?.slice(0, 2).toUpperCase() || 'US';
   }
 
+  private getRoleName(role: number | undefined): string {
+    const roleNames = {
+      1: 'Administrador',
+      2: 'Estudiante',
+      3: 'Profesor',
+      9: 'Admin Universitario'
+    };
+
+    return role ? roleNames[role as keyof typeof roleNames] || 'Usuario' : 'Usuario';
+  }
+
   getRoleDisplayName(): string {
     const role = this.authService.userRole();
-    const roleNames = {
-      ADMIN: 'Administrador',
-      ADMIN_UNI: 'Admin Universitario',
-      PROMOTER: 'Promotor',
-      USER: 'Estudiante',
-    };
-    return roleNames[role as keyof typeof roleNames] || 'Usuario';
+    return this.getRoleName(role);
   }
 
   logout(): void {

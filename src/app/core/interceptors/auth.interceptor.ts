@@ -33,7 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       // Manejar errores de autenticación
       if (error.status === 401) {
         console.warn('🔒 Unauthorized access - redirecting to login');
-        tokenService.clearAll();
+        tokenService.clearToken();
         toastService.showError('Sesión expirada. Por favor, inicia sesión nuevamente.');
         router.navigate(['/login']);
       }

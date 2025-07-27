@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@app/core/guards/user/auth.guard';
 import { AdminLayoutComponent } from '@app/layouts/admin-layout/admin-layout.component';
 import { roleGuard } from '@app/core/guards/user/role.guard';
-import { Roles } from '@app/core/enums/roles';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
-    canActivate: [roleGuard([Roles.ADMIN])],
+    canActivate: [authGuard, roleGuard([1])], // ✅ Admin = 1
     children: [
       {
         path: '',
@@ -19,42 +19,37 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () =>
           import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
       },
-      {
-        path: 'users',
-        loadChildren: () => import('./users/user.routes').then(m => m.USER_ROUTES),
-      },
-      {
-        path: 'universities',
-        loadChildren: () =>
-          import('./universities/university.routes').then(m => m.UNIVERSITY_ROUTES),
-      },
-      {
-        path: 'events',
-        loadChildren: () => import('./events/event.routes').then(m => m.EVENT_ROUTES),
-      },
-      {
-        path: 'forums',
-        loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
-      },
-      {
-        path: 'opportunities',
-        loadChildren: () =>
-          import('./opportunities/opportunity.routes').then(m => m.OPPORTUNITY_ROUTES),
-      },
-      {
-        path: 'tags',
-        loadChildren: () => import('./tags/tag.routes').then(m => m.TAG_ROUTES),
-      },
-
-      {
-        path: 'conversations',
-        loadChildren: () =>
-          import('./conversations/conversation.routes').then(m => m.CONVERSATION_ROUTES),
-      },
-      {
-        path: 'roles',
-        loadChildren: () => import('./roles/role.routes').then(m => m.ROLE_ROUTES),
-      },
+      // {
+      //   path: 'users',
+      //   loadChildren: () => import('./users/users.routes').then(m => m.USERS_ROUTES),
+      // },
+      // {
+      //   path: 'universities',
+      //   loadChildren: () =>
+      //     import('./universities/universities.routes').then(m => m.UNIVERSITIES_ROUTES),
+      // },
+      // {
+      //   path: 'projects',
+      //   loadChildren: () => import('./projects/projects.routes').then(m => m.PROJECTS_ROUTES),
+      // },
+      // {
+      //   path: 'events',
+      //   loadChildren: () => import('./events/events.routes').then(m => m.EVENTS_ROUTES),
+      // },
+      // {
+      //   path: 'opportunities',
+      //   loadChildren: () =>
+      //     import('./opportunities/opportunities.routes').then(m => m.OPPORTUNITIES_ROUTES),
+      // },
+      // {
+      //   path: 'reports',
+      //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
+      // },
+      // {
+      //   path: 'analytics',
+      //   loadComponent: () =>
+      //     import('./analytics/admin-analytics.component').then(m => m.AdminAnalyticsComponent),
+      // },
     ],
   },
 ];

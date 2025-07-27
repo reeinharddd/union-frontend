@@ -1,92 +1,97 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Injectable, computed, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
-import { CreateUniversityRequest, University } from '../../models/university/university.interface';
-import { ApiClientService } from '../base/api-client.service';
-import { ToastService } from '../ui/toast.service';
+import { BaseService } from '../base/base.service';
+import {
+  CreateUniversityRequest,
+  University,
+} from '@app/core/models/university/university.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UniversityService {
-  private readonly apiClient = inject(ApiClientService);
-  private readonly toastService = inject(ToastService);
+export class UniversityService extends BaseService {
+  protected readonly serviceName = 'UniversityService';
+
+  // Estado local
   private readonly _universities = signal<University[]>([]);
 
   readonly universities = this._universities.asReadonly();
 
+  readonly universitiesOptions = computed(() =>
+    this._universities().map(uni => ({
+      value: uni.id,
+      label: uni.nombre,
+    })),
+  );
+
   getAll(): Observable<University[]> {
-    console.log('🔄 UniversityService - Getting all universities from API');
-    return this.apiClient.get<University[]>(API_ENDPOINTS.UNIVERSITIES.BASE).pipe(
+    return this.handleRequest(
+      this.apiClient.get<University[]>(API_ENDPOINTS.UNIVERSITIES.BASE),
+      'universities.getAll',
+      { logRequest: true },
+    ).pipe(
       tap(universities => {
-        console.log('✅ Universities loaded from API:', universities.length);
         this._universities.set(universities);
-      }),
-      catchError(error => {
-        console.error('❌ Failed to load universities:', error);
-        this.toastService.showError('Error al cargar las universidades');
-        return throwError(() => error);
+        console.log(`🏫 Loaded ${universities.length} universities`);
       }),
     );
   }
 
-  getById(id: number): Observable<University | null> {
-    console.log('🔄 UniversityService - Getting university by ID:', id);
-    return this.apiClient.get<University>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id)).pipe(
-      catchError(error => {
-        console.error('❌ Failed to load university:', error);
-        this.toastService.showError('Error al cargar la universidad');
-        return throwError(() => error);
-      }),
+  getById(id: number): Observable<University> {
+    return this.handleRequest(
+      this.apiClient.get<University>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id)),
+      `universities.getById.${id}`,
+      { logRequest: true },
     );
   }
 
-  create(university: CreateUniversityRequest): Observable<University> {
-    console.log('🔄 UniversityService - Creating university:', university);
-    return this.apiClient.post<University>(API_ENDPOINTS.UNIVERSITIES.BASE, university).pipe(
+  create(universityData: CreateUniversityRequest): Observable<University> {
+    return this.handleRequest(
+      this.apiClient.post<University>(API_ENDPOINTS.UNIVERSITIES.BASE, universityData),
+      'universities.create',
+      {
+        showSuccessToast: true,
+        successMessage: 'Universidad creada exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(newUniversity => {
         this._universities.update(universities => [...universities, newUniversity]);
-        console.log('✅ University created via API:', newUniversity);
-        this.toastService.showSuccess('Universidad creada exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to create university:', error);
-        this.toastService.showError('Error al crear la universidad');
-        return throwError(() => error);
       }),
     );
   }
 
-  update(id: number, university: Partial<CreateUniversityRequest>): Observable<University> {
-    console.log('🔄 UniversityService - Updating university:', id, university);
-    return this.apiClient.put<University>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id), university).pipe(
+  update(id: number, universityData: Partial<CreateUniversityRequest>): Observable<University> {
+    return this.handleRequest(
+      this.apiClient.put<University>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id), universityData),
+      `universities.update.${id}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Universidad actualizada exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(updatedUniversity => {
         this._universities.update(universities =>
-          universities.map(u => (u.id === id ? updatedUniversity : u)),
+          universities.map(uni => (uni.id === id ? updatedUniversity : uni)),
         );
-        console.log('✅ University updated via API:', updatedUniversity);
-        this.toastService.showSuccess('Universidad actualizada exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to update university:', error);
-        this.toastService.showError('Error al actualizar la universidad');
-        return throwError(() => error);
       }),
     );
   }
 
   delete(id: number): Observable<{ message: string }> {
-    console.log('🔄 UniversityService - Deleting university:', id);
-    return this.apiClient.delete<{ message: string }>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id)).pipe(
+    return this.handleRequest(
+      this.apiClient.delete<{ message: string }>(API_ENDPOINTS.UNIVERSITIES.BY_ID(id)),
+      `universities.delete.${id}`,
+      {
+        showSuccessToast: true,
+        successMessage: 'Universidad eliminada exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
       tap(() => {
-        this._universities.update(universities => universities.filter(u => u.id !== id));
-        console.log('✅ University deleted via API:', id);
-        this.toastService.showSuccess('Universidad eliminada exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to delete university:', error);
-        this.toastService.showError('Error al eliminar la universidad');
-        return throwError(() => error);
+        this._universities.update(universities => universities.filter(uni => uni.id !== id));
       }),
     );
   }

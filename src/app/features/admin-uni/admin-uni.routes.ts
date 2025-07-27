@@ -1,47 +1,46 @@
 import { Routes } from '@angular/router';
-
-import { PrivateLayoutComponent } from '@app/layouts/private-layout/private-layout.component';
-import { roleGuard } from '@app/core/guards/user/role.guard';
-import { Roles } from '@app/core/enums/roles';
+// import { authGuard } from '@app/core/guards/user/auth.guard';
+// import { roleGuard } from '@app/core/guards/user/role.guard';
 
 export const ADMIN_UNI_ROUTES: Routes = [
-  {
-    path: '',
-    component: PrivateLayoutComponent,
-    canActivate: [roleGuard([Roles.ADMIN_UNI.toLowerCase()])],
-    children: [
-      // // Dashboard
-      // // Estudiantes
-      // {
-      //   path: 'students',
-      //   loadComponent: () => import('./students/student-list/student-list.component').then(m => m.StudentListComponent)
-      // },
-      // {
-      //   path: 'students/:id',
-      //   loadComponent: () => import('./students/student-detail/student-detail.component').then(m => m.StudentDetailComponent)
-      // },
-      // // Cursos
-      // {
-      //   path: 'courses',
-      //   loadComponent: () => import('./courses/course-list/course-list.component').then(m => m.CourseListComponent)
-      // },
-      // {
-      //   path: 'courses/new',
-      //   loadComponent: () => import('./courses/course-form/course-form.component').then(m => m.CourseFormComponent)
-      // },
-      // {
-      //   path: 'courses/:id',
-      //   loadComponent: () => import('./courses/course-detail/course-detail.component').then(m => m.CourseDetailComponent)
-      // },
-      // {
-      //   path: 'courses/:id/edit',
-      //   loadComponent: () => import('./courses/course-form/course-form.component').then(m => m.CourseFormComponent)
-      // },
-      // // Profesores
-      // {
-      //   path: 'teachers',
-      //   loadComponent: () => import('./teachers/teacher-list/teacher-list.component').then(m => m.TeacherListComponent)
-      // }
-    ],
-  },
+  // {
+  //   path: '',
+  //   loadComponent: () =>
+  //     import('./layout/admin-uni-layout.component').then(m => m.AdminUniLayoutComponent),
+  //   canActivate: [authGuard, roleGuard([9])], // ✅ Admin Universitario = 9
+  //   children: [
+  //     {
+  //       path: '',
+  //       redirectTo: 'dashboard',
+  //       pathMatch: 'full',
+  //     },
+  //     {
+  //       path: 'dashboard',
+  //       loadComponent: () =>
+  //         import('./dashboard/admin-uni-dashboard.component').then(
+  //           m => m.AdminUniDashboardComponent,
+  //         ),
+  //     },
+  //     {
+  //       path: 'students',
+  //       loadComponent: () =>
+  //         import('./students/admin-uni-students.component').then(m => m.AdminUniStudentsComponent),
+  //     },
+  //     {
+  //       path: 'projects',
+  //       loadComponent: () =>
+  //         import('./projects/admin-uni-projects.component').then(m => m.AdminUniProjectsComponent),
+  //     },
+  //     {
+  //       path: 'events',
+  //       loadComponent: () =>
+  //         import('./events/admin-uni-events.component').then(m => m.AdminUniEventsComponent),
+  //     },
+  //     {
+  //       path: 'reports',
+  //       loadComponent: () =>
+  //         import('./reports/admin-uni-reports.component').then(m => m.AdminUniReportsComponent),
+  //     },
+  //   ],
+  // },
 ];
