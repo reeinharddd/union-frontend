@@ -1,0 +1,93 @@
+<div class="mt-2 space-y-6">
+  <!-- Botón para abrir modal de nuevo hilo -->
+  <div class="mb-4 flex justify-end"></div>
+
+  <!-- Modal flotante para crear hilo -->
+  <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div class="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+      <button
+        (click)="cerrarModalHilo()"
+        class="text-gray-500 absolute right-2 top-2 text-xl hover:text-black"
+      >
+        &times;
+      </button>
+      <h2 class="mb-4 text-lg font-bold">Crear nuevo hilo</h2>
+      <form (ngSubmit)="crearHilo()" #formHilo="ngForm">
+        <div class="mb-3">
+          <label class="block font-semibold">Título *</label>
+          <input
+            type="text"
+            class="w-full rounded border px-2 py-1"
+            [(ngModel)]="nuevoHilo.titulo"
+            name="titulo"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block font-semibold">Contenido</label>
+          <textarea
+            class="w-full rounded border px-2 py-1"
+            [(ngModel)]="nuevoHilo.contenido"
+            name="contenido"
+          ></textarea>
+        </div>
+        <div class="flex justify-end gap-2">
+          <button
+            type="button"
+            (click)="cerrarModalHilo()"
+            class="bg-gray-300 rounded px-4 py-1 text-black"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="bg-blue-600 rounded px-4 py-1 text-black"
+            [disabled]="creandoHilo"
+          >
+            Crear hilo
+          </button>
+        </div>
+        <div class="text-red-600 mt-2" *ngIf="errorCrearHilo">{{ errorCrearHilo }}</div>
+      </form>
+    </div>
+  </div>
+  <div class="mb- flex items-center">
+    <button
+      (click)="goBack()"
+      class="bg-orange-500 hover:bg-orange-600 mr-3 rounded-full px-3 py-1 text-xs text-black transition"
+    >
+      ← Volver
+    </button>
+    <h1 class="text-gray-800 flex-1 text-2xl font-bold">{{ foro?.nombre }}</h1>
+    <div class="flex flex-1 justify-end">
+      <button
+        (click)="abrirModalHilo()"
+        class="bg-blue-600 hover:bg-blue-700 rounded px-5 py-2 text-black shadow transition"
+      >
+        Nuevo hilo
+      </button>
+    </div>
+  </div>
+
+  <!-- <div *ngFor="let discusion of discusiones" -->
+  <div
+    *ngFor="let hilo of hilos"
+    class="cursor-pointer rounded-2xl border border-white/20 bg-white/10 p-5 shadow backdrop-blur transition hover:bg-white/20 hover:shadow-lg"
+    (click)="onHiloClick(hilo.id)"
+  >
+    <!-- Título -->
+    <h2 class="mb-2 text-lg font-semibold text-black">
+      {{ hilo.titulo }}
+    </h2>
+    <!-- Contenido (resumen o preview) -->
+    <p class="mb-3 line-clamp-3 text-sm text-black/80">
+      {{ hilo.contenido }}
+    </p>
+
+    <!-- Info adicional -->
+    <div class="mt-4 flex justify-between text-xs text-black/60">
+      <span>Creado por: {{ usuarioNombres[hilo.creador_id] || 'Desconocido' }}</span>
+      <span>{{ hilo.creado_en | date: 'mediumDate' }}</span>
+    </div>
+  </div>
+</div>

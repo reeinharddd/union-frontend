@@ -16,7 +16,7 @@ export class RightSidebarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly apiClient = inject(ApiClientService);
 
-  readonly userProjects = signal<any[]>([]);
+  readonly userProjects = signal<unknown[]>([]);
   readonly isLoadingProjects = signal(false);
   readonly errorMessage = signal<string | null>(null);
 

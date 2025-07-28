@@ -1,1 +1,87 @@
-<p>forum-list works!</p>
+<div class="max-w-8x5 mx-auto space-y-8 p-6">
+  <!-- Encabezado -->
+  <div>
+    <h1 class="text-gray-800 text-2xl font-bold">Explorar Foros</h1>
+
+    <!-- Tags -->
+
+    <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+      <a
+        *ngFor="let foro of foros"
+        [routerLink]="['/student/forum', foro.id]"
+        class="group block rounded-2xl border border-white/20 bg-white/10 p-5 shadow backdrop-blur transition hover:bg-white/20 hover:shadow-lg"
+      >
+        <!-- Nombre del foro -->
+        <div class="mb-3 flex items-center gap-4">
+          <!-- <div
+            class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white text-lg font-bold transition group-hover:scale-105">
+            {{ foro.nombre.charAt(0) }}
+          </div> -->
+          <h3 class="text-lg font-semibold text-black">
+            {{ foro.nombre }}
+          </h3>
+        </div>
+
+        <!-- Descripción -->
+        <p class="mb-4 line-clamp-3 text-sm text-black/80">
+          {{ foro.descripcion }}
+        </p>
+
+        <!-- Botón de acción -->
+        <div class="text-right">
+          <span
+            class="bg-orange-500 group-hover:bg-orange-600 inline-block rounded-full px-4 py-1 text-xs text-black transition"
+          >
+            Ver foro
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Sección: Recomendadas para ti -->
+    <!-- <div> -->
+    <!-- <h2 class="text-lg font-semibold text-gray-700 mb-2">
+        Recomendadas para ti
+        <span class="text-xs text-gray-400 font-normal"> Al crear foro pedir tags para identificar y relacionar con los
+          del usuario</span>
+      </h2> -->
+
+    <!-- Grid de comunidades -->
+    <!-- <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> -->
+    <!-- Tarjeta de comunidad -->
+    <!-- <div class="bg-white rounded-xl p-4 shadow flex items-start gap-4">
+          <div class="w-12 h-12 bg-black rounded-full"></div>
+          <div class="flex-1">
+            <h3 class="text-sm font-semibold text-gray-800">Nombre comunidad</h3>
+            <p class="text-xs text-gray-500 mb-2">300+ miembros</p>
+            <p class="text-sm text-gray-600">Descripción breve</p>
+          </div>
+          <button class="ml-auto bg-orange-500 text-white text-xs px-3 py-1 rounded-full">Unirse</button>
+        </div> -->
+
+    <!-- Repite tarjeta... (puedes duplicar este bloque) -->
+    <!-- </div>
+</div> -->
+
+    <!-- Sección: Parecido a X comunidad -->
+    <!-- <div>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">Parecido a X comunidad</h2>
+
+    Grid de comunidades -->
+    <!-- <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> -->
+    <!-- Tarjeta de comunidad -->
+    <!-- <div *ngFor="let foro of foros" class="bg-white rounded-xl p-4 shadow flex items-start gap-4">
+          <div class="w-12 h-12 bg-black rounded-full"></div>
+          <div class="flex-1">
+            <h3 class="text-sm font-semibold text-black-800">{{ foro.nombre }}</h3>
+            <p class="text-sm text-black-600">{{ foro.descripcion }}</p>
+          </div>
+          <button class="ml-auto bg-orange-500 text-white text-xs px-3 py-1 rounded-full">Unirse</button>
+        </div> -->
+
+    <!-- Repite más tarjetas aquí 
+    </div>
+  </div>
+</div> -->
+  </div>
+</div>

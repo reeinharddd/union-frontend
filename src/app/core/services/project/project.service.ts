@@ -1,14 +1,17 @@
 // src/app/core/services/project/project.service.ts
 import { computed, Injectable, signal } from '@angular/core';
-import { CreateProjectRequest, Project, ProjectsFilters, ProjectsResponse } from '@app/core/models/project/project.interface';
+import {
+  CreateProjectRequest,
+  Project,
+  ProjectsFilters,
+  ProjectsResponse,
+} from '@app/core/models/project/project.interface';
 import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { BaseService } from '../base/base.service';
 
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjectService extends BaseService {
   protected readonly serviceName = 'ProjectService';
@@ -26,22 +29,20 @@ export class ProjectService extends BaseService {
 
   // Estados computados
   readonly approvedProjects = computed(() =>
-    this._projects().filter(project => project.estado_verificacion === 'aprobado')
+    this._projects().filter(project => project.estado_verificacion === 'aprobado'),
   );
 
   readonly publicProjects = computed(() =>
-    this._projects().filter(project => project.vista_publica)
+    this._projects().filter(project => project.vista_publica),
   );
 
-  readonly totalPages = computed(() =>
-    Math.ceil(this._totalProjects() / this._limit())
-  );
+  readonly totalPages = computed(() => Math.ceil(this._totalProjects() / this._limit()));
 
   getAll(filters: ProjectsFilters = {}): Observable<ProjectsResponse> {
     return this.handleRequest(
       this.apiClient.get<ProjectsResponse>(API_ENDPOINTS.PROJECTS.BASE, filters),
       'projects.getAll',
-      { logRequest: true }
+      { logRequest: true },
     ).pipe(
       tap(response => {
         this._projects.set(response.data);
@@ -49,8 +50,10 @@ export class ProjectService extends BaseService {
         this._currentPage.set(response.pagination.page);
         this._limit.set(response.pagination.limit);
 
-        console.log(`🚀 Loaded ${response.data.length} projects (${response.pagination.total} total)`);
-      })
+        console.log(
+          `🚀 Loaded ${response.data.length} projects (${response.pagination.total} total)`,
+        );
+      }),
     );
   }
 
@@ -58,7 +61,7 @@ export class ProjectService extends BaseService {
     return this.handleRequest(
       this.apiClient.get<Project>(API_ENDPOINTS.PROJECTS.BY_ID(id)),
       `projects.getById.${id}`,
-      { logRequest: true }
+      { logRequest: true },
     );
   }
 
@@ -69,13 +72,13 @@ export class ProjectService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Proyecto creado exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(newProject => {
         this._projects.update(projects => [...projects, newProject]);
         this._totalProjects.update(total => total + 1);
-      })
+      }),
     );
   }
 
@@ -86,14 +89,14 @@ export class ProjectService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Proyecto actualizado exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(updatedProject => {
         this._projects.update(projects =>
-          projects.map(project => project.id === id ? updatedProject : project)
+          projects.map(project => (project.id === id ? updatedProject : project)),
         );
-      })
+      }),
     );
   }
 
@@ -104,15 +107,13 @@ export class ProjectService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Proyecto eliminado exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(() => {
-        this._projects.update(projects =>
-          projects.filter(project => project.id !== id)
-        );
+        this._projects.update(projects => projects.filter(project => project.id !== id));
         this._totalProjects.update(total => total - 1);
-      })
+      }),
     );
   }
 
@@ -120,40 +121,40 @@ export class ProjectService extends BaseService {
   approveProject(id: number): Observable<Project> {
     return this.handleRequest(
       this.apiClient.put<Project>(API_ENDPOINTS.PROJECTS.BY_ID(id), {
-        estado_verificacion: 'aprobado'
+        estado_verificacion: 'aprobado',
       }),
       `projects.approve.${id}`,
       {
         showSuccessToast: true,
         successMessage: 'Proyecto aprobado exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(updatedProject => {
         this._projects.update(projects =>
-          projects.map(project => project.id === id ? updatedProject : project)
+          projects.map(project => (project.id === id ? updatedProject : project)),
         );
-      })
+      }),
     );
   }
 
   rejectProject(id: number): Observable<Project> {
     return this.handleRequest(
       this.apiClient.put<Project>(API_ENDPOINTS.PROJECTS.BY_ID(id), {
-        estado_verificacion: 'rechazado'
+        estado_verificacion: 'rechazado',
       }),
       `projects.reject.${id}`,
       {
         showSuccessToast: true,
         successMessage: 'Proyecto rechazado',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(updatedProject => {
         this._projects.update(projects =>
-          projects.map(project => project.id === id ? updatedProject : project)
+          projects.map(project => (project.id === id ? updatedProject : project)),
         );
-      })
+      }),
     );
   }
 
@@ -163,7 +164,7 @@ export class ProjectService extends BaseService {
       return new Observable(subscriber => {
         subscriber.next({
           data: [],
-          pagination: { total: 0, page: 1, limit: 10, totalPages: 0 }
+          pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
         });
         subscriber.complete();
       });
@@ -172,7 +173,7 @@ export class ProjectService extends BaseService {
     return this.getAll({ creador_id: currentUser.id }).pipe(
       tap(response => {
         console.log(`👤 Loaded ${response.data.length} projects for user ${currentUser.id}`);
-      })
+      }),
     );
   }
 }

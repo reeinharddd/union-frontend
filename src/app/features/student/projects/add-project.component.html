@@ -1,8 +1,9 @@
-<div class="bg-gray-50 flex min-h-screen items-center justify-center px-4 py-8">
-  <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-md">
-    <h2 class="text-gray-800 mb-6 text-center text-xl font-semibold">Registro de Proyecto</h2>
+<div class="h-full w-full bg-white p-10">
+  <h2 class="text-gray-800 mb-8 text-center text-2xl font-semibold">Registro de Proyecto</h2>
 
-    <form [formGroup]="proyectoForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  <form [formGroup]="proyectoForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Nombre -->
+    <div>
       <input
         type="text"
         formControlName="nombre"
@@ -11,51 +12,80 @@
       />
       <div
         *ngIf="proyectoForm.get('nombre')?.touched && proyectoForm.get('nombre')?.invalid"
-        class="text-red-500 text-sm"
+        class="text-red-500 mt-1 text-sm"
       >
         Requerido (máx 200 caracteres)
       </div>
+    </div>
 
+    <!-- Descripción -->
+    <div>
       <textarea
         formControlName="descripcion"
         placeholder="Descripción del Proyecto"
-        rows="3"
+        rows="4"
         class="border-orange-400 focus:ring-orange-500 w-full resize-none rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
       ></textarea>
       <div
         *ngIf="proyectoForm.get('descripcion')?.touched && proyectoForm.get('descripcion')?.invalid"
-        class="text-red-500 text-sm"
+        class="text-red-500 mt-1 text-sm"
       >
         Descripción requerida
       </div>
+    </div>
 
-      <input
-        type="text"
+    <!-- Estado de Verificación -->
+    <div>
+      <select
         formControlName="estado_verificacion"
-        placeholder="Estado de Verificación"
-        class="border-orange-400 focus:ring-orange-500 w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
-      />
+        class="border-orange-400 focus:ring-orange-500 text-gray-700 w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2"
+      >
+        <option value="" disabled selected>Selecciona el estado de verificación</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="En revisión">En revisión</option>
+        <option value="Verificado">Verificado</option>
+        <option value="Rechazado">Rechazado</option>
+      </select>
       <div
         *ngIf="
           proyectoForm.get('estado_verificacion')?.touched &&
           proyectoForm.get('estado_verificacion')?.invalid
         "
-        class="text-red-500 text-sm"
+        class="text-red-500 mt-1 text-sm"
       >
-        Requerido (máx 50 caracteres)
+        Selecciona un estado válido
       </div>
+    </div>
 
-      <div class="flex items-center space-x-2">
-        <input type="checkbox" formControlName="vista_publica" class="text-orange-500 h-4 w-4" />
-        <label class="text-gray-700 text-sm">Hacer proyecto público</label>
-      </div>
+    <!-- Vista pública -->
+    <div class="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        formControlName="vista_publica"
+        class="text-orange-500 h-4 w-4"
+        id="public-project"
+      />
+      <label for="public-project" class="text-gray-700 cursor-pointer text-sm">
+        Hacer proyecto público (visible para todos los usuarios)
+      </label>
+    </div>
+
+    <!-- Botones -->
+    <div class="mt-8 flex justify-between space-x-4">
+      <button
+        type="button"
+        routerLink="/student/dashboard"
+        class="border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 flex-1 rounded-xl border px-4 py-3 text-lg font-medium shadow-sm transition"
+      >
+        Cancelar
+      </button>
 
       <button
         type="submit"
-        class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        class="flex-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-md transition hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Registrar Proyecto
       </button>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
