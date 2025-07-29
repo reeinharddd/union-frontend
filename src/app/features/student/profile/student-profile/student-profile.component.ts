@@ -41,11 +41,19 @@ export class StudentProfileComponent implements OnInit {
 
   onSaveProfile(event: Event) {
     event.preventDefault();
-    // Aquí deberías llamar a tu servicio para guardar los cambios en el backend
-    // Ejemplo: this.apiClient.put(`/usuarios/${this.userProfile()?.id}`, this.editProfile())
-    this.isEditing.set(false);
-    // Opcional: Actualiza userProfile con los nuevos datos
-    this.userProfile.update(profile => ({ ...profile, ...this.editProfile() }));
+    const userId = this.userProfile()?.id;
+    if (!userId) return;
+
+    this.apiClient.put(`/usuarios/${userId}`, this.editProfile()).subscribe({
+      next: updatedUser => {
+        this.userProfile.set(updatedUser);
+        this.isEditing.set(false);
+      },
+      error: () => {
+        this.errorMessage.set('Error al guardar los cambios');
+        this.isEditing.set(false);
+      }
+    });
   }
   private readonly authService = inject(AuthService);
   private readonly apiClient = inject(ApiClientService);
@@ -165,21 +173,35 @@ export class StudentProfileComponent implements OnInit {
 
   private loadUserProjects(userId: number): void {
     this.isLoadingProjects.set(true);
-    // Endpoint: GET /proyectos (trae todos, luego filtra por creador)
-    this.apiClient.get<any[]>(`/proyectos`).subscribe({
-      next: allProjects => {
-        // Filtrar solo los proyectos creados por el usuario actual
-        const userProjects = allProjects.filter(proj => proj.creador_id === userId);
-        console.log('✅ Todos los proyectos:', allProjects);
-        console.log('✅ Proyectos del usuario:', userProjects);
-        this.userProjects.set(userProjects);
-        this.isLoadingProjects.set(false);
+    // Trae todas las participaciones y luego filtra por usuario
+    this.apiClient.get<any[]>(`/participaciones-proyecto`).subscribe({
+      next: allParticipations => {
+        // Solo participaciones donde el usuario participa
+        const myParticipations = allParticipations.filter(p => p.usuario_id === userId);
+        const projectIds = myParticipations.map(p => p.proyecto_id);
+        this.apiClient.get<any[]>(`/proyectos`).subscribe({
+          next: allProjects => {
+            // Excluir los proyectos donde el usuario es el creador
+            const userProjects = allProjects.filter(
+              proj => projectIds.includes(proj.id) && proj.creador_id !== userId
+            );
+            console.log('✅ Proyectos donde participo (no soy creador):', userProjects);
+            this.userProjects.set(userProjects);
+            this.isLoadingProjects.set(false);
+          },
+          error: err => {
+            console.error('❌ Error al cargar proyectos:', err);
+            this.userProjects.set([]);
+            this.isLoadingProjects.set(false);
+            this.errorMessage.set('Error al cargar proyectos');
+          },
+        });
       },
       error: err => {
-        console.error('❌ Error al cargar proyectos:', err);
+        console.error('❌ Error al cargar participaciones:', err);
         this.userProjects.set([]);
         this.isLoadingProjects.set(false);
-        this.errorMessage.set('Error al cargar proyectos');
+        this.errorMessage.set('Error al cargar participaciones');
       },
     });
   }

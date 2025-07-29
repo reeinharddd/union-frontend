@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
-import { AdminLayoutComponent } from '@app/layouts/admin-layout/admin-layout.component';
 import { roleGuard } from '@app/core/guards/user/role.guard';
+import { AdminLayoutComponent } from '@app/layouts/admin-layout/admin-layout.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -18,6 +18,11 @@ export const ADMIN_ROUTES: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+      },
+      {
+        path: 'backups',
+        loadComponent: () =>
+          import('./backups-admin/backups-admin.component').then(m => m.BackupsAdminComponent),
       },
       // {
       //   path: 'users',

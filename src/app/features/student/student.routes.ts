@@ -105,13 +105,13 @@ export const STUDENT_ROUTES: Routes = [
             m => m.StudentProfileComponent,
           ),
       },
-      {
-        path: 'public-profile',
-        loadComponent: () =>
-          import('./profile/student-public-profile/student-public-profile.component').then(
-            m => m.StudentPublicProfileComponent,
-          ),
-      },
+      // {
+      //   path: 'public-profile',
+      //   loadComponent: () =>
+      //     import('./profile/student-public-profile/student-public-profile.component').then(
+      //       m => m.StudentPublicProfileComponent,
+      //     ),
+      // },
       // {
       //   path: 'messages',
       //   loadComponent: () =>
