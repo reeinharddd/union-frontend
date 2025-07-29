@@ -27,8 +27,77 @@ export class ForumConversationsComponent {
     private apiClient: ApiClientService,
     private cdr: ChangeDetectorRef,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
+
+  // --- Modal de reporte ---
+  mostrarModalReporte: boolean = false;
+  motivoReporte: string = '';
+  respuestaAReportar: any = null;
+
+  // Determina si el comentario es del usuario autenticado
+  esMiComentario(respuesta: any): boolean {
+    const miId = this.tokenService.getUserId && this.tokenService.getUserId();
+    const autorId = respuesta.usuario_id || respuesta.autor_id || respuesta.user_id || respuesta.creador_id || respuesta.id_usuario;
+    return Number(miId) === Number(autorId);
+  }
+
+  // Abrir el modal de reporte
+  reportarComentario(respuesta: any) {
+    this.respuestaAReportar = respuesta;
+    this.motivoReporte = '';
+    this.mostrarModalReporte = true;
+  }
+
+  // Cerrar el modal de reporte
+  cerrarModalReporte() {
+    this.mostrarModalReporte = false;
+    this.motivoReporte = '';
+    this.respuestaAReportar = null;
+  }
+
+  // Enviar el reporte
+  async enviarReporteComentario() {
+    const reportanteId = this.tokenService.getUserId && this.tokenService.getUserId();
+    if (!reportanteId) {
+      alert('No se pudo identificar al usuario autenticado.');
+      return;
+    }
+    if (!this.motivoReporte.trim()) {
+      alert('Por favor, escribe el motivo del reporte.');
+      return;
+    }
+    const respuesta = this.respuestaAReportar;
+    // El usuario reportado es quien envió el mensaje
+    const usuarioReportadoId = respuesta.usuario_id || respuesta.autor_id || respuesta.user_id || respuesta.creador_id || respuesta.id_usuario;
+    const payload = {
+      reportante_id: Number(reportanteId),
+      usuario_reportado_id: Number(usuarioReportadoId),
+      tipo_contenido: 'mensaje',
+      contenido_id: respuesta.id || respuesta.respuesta_id || respuesta.id_respuesta,
+      motivo: this.motivoReporte.trim(),
+      estado: 'pendiente',
+    };
+    // Verificar si ya existe un reporte de este usuario para este comentario
+    const contenidoId = respuesta.id || respuesta.respuesta_id || respuesta.id_respuesta;
+    try {
+      const reportes = await this.apiClient.get(`/reportes?contenido_id=${contenidoId}&tipo_contenido=mensaje&reportante_id=${reportanteId}`).toPromise() as any[];
+      if (Array.isArray(reportes) && reportes.some(r => r.contenido_id == contenidoId && r.reportante_id == reportanteId)) {
+        alert('Ya has reportado este comentario. No puedes reportarlo de nuevo.');
+        this.cerrarModalReporte();
+        return;
+      }
+    } catch (e) {
+      // Si hay error al consultar, continuar (no bloquear el reporte)
+    }
+    try {
+      await this.apiClient.post('/reportes', payload).toPromise();
+      alert('¡Reporte enviado! Será revisado por los moderadores.');
+      this.cerrarModalReporte();
+    } catch (e: any) {
+      alert('Error al enviar el reporte: ' + (e?.error?.error || e?.message || 'Error desconocido'));
+    }
+  }
   enviarRespuesta() {
     if (!this.nuevaRespuesta.trim() || !this.hiloId) return;
     this.enviando = true;
