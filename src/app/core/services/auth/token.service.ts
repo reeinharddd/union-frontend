@@ -95,6 +95,11 @@ export class TokenService {
     return user?.id || null;
   }
 
+  // ✅ AGREGAR: Método para obtener los datos del usuario
+  getUserData(): User | null {
+    return this.getStoredUser();
+  }
+
   // ✅ AGREGAR: Método para verificar si el usuario tiene un rol específico
   hasRole(roleId: number): boolean {
     const userRoleId = this.getUserRoleId();

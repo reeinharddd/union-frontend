@@ -22,7 +22,7 @@ export interface PaginationState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppState {
   // Estados de loading
@@ -49,7 +49,7 @@ export class AppState {
   setLoading(key: string, loading: boolean): void {
     this._loadingState.update(state => ({
       ...state,
-      [key]: loading
+      [key]: loading,
     }));
   }
 
