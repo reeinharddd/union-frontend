@@ -12,7 +12,10 @@
         <div class="text-gray-500 py-4 text-center">No hay proyectos para mostrar</div>
       } @else {
         @for (project of userProjects(); track project.id) {
-          <a href="#" class="block rounded-md border border-border p-3 hover:bg-neutral-50">
+          <a
+            [routerLink]="['/student/projects', project.id]"
+            class="block rounded-md border border-border p-3 hover:bg-neutral-50"
+          >
             <span class="block font-medium text-text-base">{{
               project.nombre_proyecto || project.nombre || 'Sin nombre'
             }}</span>

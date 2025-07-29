@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { ApiClientService } from '@app/core/services/base/api-client.service';
 
 @Component({
   selector: 'app-right-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './right-sidebar.component.html',
-  styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RightSidebarComponent implements OnInit {
@@ -16,7 +17,7 @@ export class RightSidebarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly apiClient = inject(ApiClientService);
 
-  readonly userProjects = signal<unknown[]>([]);
+  readonly userProjects = signal<any[]>([]);
   readonly isLoadingProjects = signal(false);
   readonly errorMessage = signal<string | null>(null);
 

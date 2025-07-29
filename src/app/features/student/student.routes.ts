@@ -68,6 +68,14 @@ export const STUDENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./projects/add-project.component').then(m => m.AddProyectoComponent),
       },
+      {
+        path: 'projects/:id',
+        loadComponent: () =>
+          import('./projects/project-detail/project-detail.component').then(
+            m => m.ProjectDetailComponent,
+          ),
+      },
+
       // {
       //   path: 'events',
       //   loadChildren: () => import('./events/events.routes').then((m) => m.STUDENT_EVENTS_ROUTES),
