@@ -8,6 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TokenService } from '@app/core/services/auth/token.service';
+import { ProjectService } from '@app/core/services/project/project.service';
+import { ToastService } from '@app/core/services/ui/toast.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-proyecto',
@@ -17,53 +21,93 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class AddProyectoComponent implements OnInit {
   proyectoForm: FormGroup;
-  creador_id: number = 0;
-  universidad_id: number = 0;
+  creador_id: number | null = null;
+  universidad_id: number | null = null;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private projectService: ProjectService,
+    private toastService: ToastService,
+    private tokenService: TokenService,
   ) {
     this.proyectoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(200)]],
       descripcion: ['', Validators.required],
-      estado_verificacion: ['', [Validators.required, Validators.maxLength(50)]],
+      estado_verificacion: ['pendiente', [Validators.required]],
       vista_publica: [false],
     });
   }
 
-  goToAddProject() {
-    this.router.navigate(['/student/Addprojects']);
-  }
   ngOnInit() {
-    // Simula obtener los datos desde un backend
-    this.obtenerDatosUsuarioDesdeBD();
+    this.obtenerDatosUsuario();
   }
 
-  obtenerDatosUsuarioDesdeBD() {
-    // ⚠️ Aquí deberías hacer una llamada HTTP real para obtener creador_id y universidad_id
-    // Por ejemplo: this.userService.getProfile().subscribe(...)
-    // Aquí lo simulamos:
-    this.creador_id = 123;
-    this.universidad_id = 456;
+  obtenerDatosUsuario() {
+    try {
+      // Obtener ID de usuario desde TokenService
+      this.creador_id = this.tokenService.getUserId();
+
+      // Obtener universidad_id desde los claims del token
+      const userData = this.tokenService.getUserData();
+      this.universidad_id = userData?.universidad_id || null;
+
+      if (!this.creador_id || !this.universidad_id) {
+        this.toastService.showError('Error');
+        this.router.navigate(['/login']);
+      }
+    } catch (error) {
+      console.error('Error al obtener datos de usuario:', error);
+      this.toastService.showError('Error');
+      this.router.navigate(['/login']);
+    }
   }
 
   onSubmit() {
-    if (this.proyectoForm.valid && this.creador_id && this.universidad_id) {
-      const proyectoData = {
-        ...this.proyectoForm.value,
-        creador_id: this.creador_id,
-        universidad_id: this.universidad_id,
-      };
-
-      // Simular almacenamiento temporal
-      localStorage.setItem('newProyectoData', JSON.stringify(proyectoData));
-
-      // Redirigir a otra vista (como resumen o lista)
-      this.router.navigate(['/proyectos/resumen']);
-    } else {
+    if (this.proyectoForm.invalid || !this.creador_id || !this.universidad_id) {
       this.proyectoForm.markAllAsTouched();
-      alert('Por favor completa todos los campos.');
+
+      if (!this.creador_id || !this.universidad_id) {
+        this.toastService.showError('Error de autenticación');
+        this.router.navigate(['/login']);
+      }
+      return;
     }
+
+    this.isLoading = true;
+
+    const proyectoData = {
+      ...this.proyectoForm.value,
+      creador_id: this.creador_id,
+      universidad_id: this.universidad_id,
+    };
+
+    this.projectService
+      .create(proyectoData)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: _newProject => {
+          this.toastService.showSuccess('Éxito');
+          this.router.navigate(['/student/dashboard']);
+        },
+        error: err => {
+          console.error('Error al crear proyecto:', err);
+          let errorMessage = 'No se pudo crear el proyecto';
+
+          if (err.error?.message) {
+            errorMessage += `: ${err.error.message}`;
+          } else if (err.status === 401) {
+            errorMessage = 'Su sesión ha expirado. Por favor inicie sesión nuevamente';
+            this.router.navigate(['/login']);
+          }
+
+          this.toastService.showError('Error');
+        },
+      });
+  }
+
+  goToAddProject() {
+    this.router.navigate(['/student/Addprojects']);
   }
 }

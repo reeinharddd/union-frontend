@@ -113,10 +113,10 @@ export class AuthService extends BaseService {
   navigateByRole(): void {
     const role = this.userRole();
     const routes = {
-      1: '/admin/dashboard',      // Admin
-      2: '/student/dashboard',    // Estudiante
-      3: '/promoter/dashboard',   // Profesor (como promoter)
-      9: '/admin-uni/dashboard',  // Admin Universitario
+      1: '/admin/dashboard', // Admin
+      2: '/student/dashboard', // Estudiante
+      3: '/promoter/dashboard', // Profesor (como promoter)
+      9: '/admin-uni/dashboard', // Admin Universitario
     };
 
     const route = routes[role as keyof typeof routes] || '/student/dashboard';

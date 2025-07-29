@@ -21,13 +21,13 @@ export abstract class BaseService {
       successMessage?: string;
       showErrorToast?: boolean;
       logRequest?: boolean;
-    } = {}
+    } = {},
   ): Observable<T> {
     const {
       showSuccessToast = false,
       successMessage = 'Operación exitosa',
       showErrorToast = true,
-      logRequest = false
+      logRequest = false,
     } = options;
 
     if (logRequest) {
@@ -50,7 +50,7 @@ export abstract class BaseService {
           message: this.getErrorMessage(error),
           code: error.status?.toString(),
           details: error.error,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
 
         console.error(`❌ ${this.serviceName} - Error:`, error);
@@ -64,7 +64,7 @@ export abstract class BaseService {
       }),
       finalize(() => {
         this.appState.setLoading(loadingKey, false);
-      })
+      }),
     );
   }
 

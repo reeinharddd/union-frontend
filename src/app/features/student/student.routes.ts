@@ -63,10 +63,12 @@ export const STUDENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./dashboard/student-dashboard.component').then(m => m.StudentDashboardComponent),
       },
-      // {
-      //   path: 'projects',
-      //   loadChildren: () => import('./projects/projects.routes').then((m) => m.STUDENT_PROJECTS_ROUTES),
-      // },
+
+      {
+        path: 'Addprojects',
+        loadComponent: () =>
+          import('./projects/add-project.component').then(m => m.AddProyectoComponent),
+      },
       // {
       //   path: 'events',
       //   loadChildren: () => import('./events/events.routes').then((m) => m.STUDENT_EVENTS_ROUTES),
@@ -112,6 +114,7 @@ export const STUDENT_ROUTES: Routes = [
       //       m => m.StudentPublicProfileComponent,
       //     ),
       // },
+
       // {
       //   path: 'messages',
       //   loadComponent: () =>
