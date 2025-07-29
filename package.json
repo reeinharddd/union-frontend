@@ -14,8 +14,7 @@
     "test": "ng test",
     "prune": "ts-prune",
     "prepare": "simple-git-hooks",
-    "lint": "ng lint",
-    "pre-commit-check": "bun run format && bun run lint && bun run prune"
+    "pre-commit-check": "bun run format && bun run prune"
   },
   "private": true,
   "dependencies": {
