@@ -1,3 +1,4 @@
+//Fabian Mendoza
 export const API_CONFIG = {
   BASE_URL: 'http://localhost:3000/api',
   TIMEOUT: 30000,
@@ -64,12 +65,26 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/roles-usuario/${id}`,
   },
 
-  PROJECTS: {
+   PROJECTS: {
     BASE: '/proyectos',
     BY_ID: (id: number) => `/proyectos/${id}`,
-    BY_CREATOR: (creatorId: number) => `/proyectos?creador_id=${creatorId}`,
-    BY_UNIVERSITY: (universityId: number) => `/proyectos?universidad_id=${universityId}`,
+    PERMIT: (projectId: number, userId: number) =>
+      `/proyectos/${projectId}/permiso/${userId}`,
+    PAGES: (projectId: number) => `/proyectos/${projectId}/paginas-colaborativas`,
   },
+
+  COLAB_PAGE: {
+
+    LIST:   (projectId: number) => `/paginas-colaborativas?proyecto_id=${projectId}`,
+    CREATE: '/paginas-colaborativas',
+    BY_ID:  (id: number) => `/paginas-colaborativas/${id}`,
+  },
+
+  BLOQUES: {
+    BY_PAGE: (pageId: number) => `/paginas-colaborativas/${pageId}/bloques`,
+    BY_ID:   (blockId: number) => `/bloques/${blockId}`,
+  },
+
 
   PROJECT_ROLES: {
     BASE: '/roles-proyecto',

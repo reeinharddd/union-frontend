@@ -1,0 +1,76 @@
+<!-- src/app/features/student/colab/colab.component.html -->
+<div class="flex h-screen bg-gray-50">
+
+  <!-- 1) SIDEBAR: la lista de páginas -->
+  <aside class="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
+    <h2 class="text-xs font-semibold uppercase text-gray-500 mb-3">Páginas</h2>
+    <ul class="flex-1 overflow-auto space-y-1">
+      <li
+        *ngFor="let page of pages()"
+        (click)="selectPage(page)"
+        [class.bg-gray-100]="page.id === selectedPage?.id"
+        class="cursor-pointer px-3 py-1 rounded hover:bg-gray-100"
+      >
+        {{ page.titulo }}
+      </li>
+    </ul>
+    <button
+      *ngIf="permiso() === 'edit'"
+      (click)="selectPage(null)"
+      class="mt-4 px-2 py-1 text-sm text-blue-600 hover:underline"
+    >
+      + Nueva página
+    </button>
+  </aside>
+
+  <!-- 2) MAIN: contenido o formulario -->
+  <main class="flex-1 p-8 overflow-auto">
+    <!-- Formulario de creación -->
+    <ng-container *ngIf="showCreateForm() && permiso() === 'edit'; else pageView">
+      <div class="max-w-xl mx-auto">
+        <h2 class="text-2xl mb-4">Crear nueva página</h2>
+        <input
+          [(ngModel)]="newTitle"
+          placeholder="Título"
+          class="w-full mb-2 p-2 border rounded"
+        />
+        <textarea
+          [(ngModel)]="newDesc"
+          placeholder="Descripción"
+          class="w-full mb-4 p-2 border rounded"
+        ></textarea>
+        <button
+          (click)="createPage()"
+          class="px-4 py-2 bg-green-600 text-white rounded"
+        >
+          Guardar página
+        </button>
+        <button
+          (click)="showCreateForm.set(false)"
+          class="ml-2 px-4 py-2 text-gray-600 hover:underline"
+        >
+          Cancelar
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Vista de página seleccionada -->
+    <ng-template #pageView>
+      <ng-container *ngIf="selectedPage; else emptyState">
+        <header class="mb-6">
+          <h1 class="text-3xl font-bold">{{ selectedPage.titulo }}</h1>
+          <p class="text-gray-700">{{ selectedPage.descripcion }}</p>
+        </header>
+        <app-block-list
+          [pageId]="selectedPage.id"
+          [canEdit]="permiso() === 'edit'"
+        ></app-block-list>
+      </ng-container>
+      <ng-template #emptyState>
+        <p class="text-gray-500">
+          Selecciona o crea una página para comenzar.
+        </p>
+      </ng-template>
+    </ng-template>
+  </main>
+</div>

@@ -1,4 +1,4 @@
-// src/app/core/services/project/project.service.ts
+// Fabian Mendoza
 import { computed, Injectable, signal } from '@angular/core';
 import {
   CreateProjectRequest,
@@ -9,6 +9,15 @@ import {
 import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { BaseService } from '../base/base.service';
+
+import {
+  ColabPage,
+  CreateColabPageRequest,
+  PermisoResponse,
+} from '@app/core/models/project/colab.interface';
+
+import { Block, CreateBlockRequest } from '@app/core/models/project/block.interface';
+
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +60,7 @@ export class ProjectService extends BaseService {
         this._limit.set(response.pagination.limit);
 
         console.log(
-          `🚀 Loaded ${response.data.length} projects (${response.pagination.total} total)`,
+          ` Loaded ${response.data.length} projects (${response.pagination.total} total)`,
         );
       }),
     );
@@ -176,4 +185,85 @@ export class ProjectService extends BaseService {
       }),
     );
   }
+    // Permiso
+  getPermiso(projectId: number, userId: number) {
+    return this.handleRequest(
+      this.apiClient.get<PermisoResponse>(
+        API_ENDPOINTS.PROJECTS.PERMIT(projectId, userId)
+      ),
+      `projects.getPermiso.${projectId}.${userId}`
+    );
+  }
+
+  // Listar páginas colaborativas de un proyecto
+  getColabPages(projectId: number) {
+    return this.handleRequest(
+      this.apiClient.get<ColabPage[]>(
+      API_ENDPOINTS.COLAB_PAGE.LIST(projectId)
+    ),
+    `projects.getColabPages.${projectId}`
+    );
+  }
+
+  // Crear página
+  createColabPage(projectId: number, dto: CreateColabPageRequest) {
+    const payload = { ...dto, proyecto_id: projectId };
+
+    return this.handleRequest(
+      this.apiClient.post<ColabPage>(
+        API_ENDPOINTS.COLAB_PAGE.CREATE,  // "/paginas-colaborativas"
+        payload
+      ),
+      `projects.createColabPage.${projectId}`,
+      { showSuccessToast: true, successMessage: 'Página creada' }
+    );
+  }
+
+  // Actualizar página
+  updateColabPage(pageId: number, dto: Partial<CreateColabPageRequest>) {
+    return this.handleRequest(
+      this.apiClient.put<ColabPage>(
+        API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId),
+        dto
+      ),
+      `projects.updateColabPage.${pageId}`,
+      { showSuccessToast: true, successMessage: 'Página actualizada' }
+    );
+  }
+
+  // Eliminar página
+  deleteColabPage(pageId: number) {
+    return this.handleRequest(
+      this.apiClient.delete<{ message: string }>(
+        API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId)
+      ),
+      `projects.deleteColabPage.${pageId}`,
+      { showSuccessToast: true, successMessage: 'Página eliminada' }
+    );
+  }
+
+  // Listar bloques
+getBlocks(pageId: number) {
+  return this.apiClient
+    .get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId));
+}
+
+// Crear
+createBlock(pageId: number, dto: CreateBlockRequest) {
+  return this.apiClient
+    .post<Block>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId), dto);
+}
+
+// Actualizar
+updateBlock(blockId: number, dto: Partial<CreateBlockRequest>) {
+  return this.apiClient
+    .put<Block>(API_ENDPOINTS.BLOQUES.BY_ID(blockId), dto);
+}
+
+// Borrar
+deleteBlock(blockId: number) {
+  return this.apiClient
+    .delete<{ message: string }>(API_ENDPOINTS.BLOQUES.BY_ID(blockId));
+}
+
 }

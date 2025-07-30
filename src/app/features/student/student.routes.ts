@@ -1,3 +1,4 @@
+// Fabian Mendoza
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
 import { roleGuard } from '@app/core/guards/user/role.guard';
@@ -113,6 +114,14 @@ export const STUDENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./profile/student-profile/student-profile.component').then(
             m => m.StudentProfileComponent,
+          ),
+      },
+      {
+        path: 'projects/:projectId/colab',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./projects/colab/colab.component').then(
+            m => m.ColabComponent
           ),
       },
       // {
