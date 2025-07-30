@@ -1,10 +1,10 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthResponse, LoginRequest, RegisterRequest } from '@app/core/models/auth/auth.interface';
 import { Observable, tap } from 'rxjs';
+import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { BaseService } from '../base/base.service';
 import { TokenService } from './token.service';
-import { API_ENDPOINTS } from '../../constants/api-endpoints';
-import { AuthResponse, LoginRequest, RegisterRequest } from '@app/core/models/auth/auth.interface';
 @Injectable({
   providedIn: 'root',
 })
