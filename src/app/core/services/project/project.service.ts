@@ -242,6 +242,12 @@ createColabPage(
       `projects.getBlocks.${pageId}`
     );
   }
+  getBlocksByPageId(pageId: number): Observable<Block[]> {
+    return this.handleRequest(
+      this.apiClient.get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)),
+      `projects.getBlocksByPageId.${pageId}`
+    );
+  }
   createBlock(pageId: number, dto: CreateBlockRequest): Observable<Block> {
     return this.handleRequest(
       this.apiClient.post<Block>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId), dto),
@@ -258,6 +264,12 @@ createColabPage(
     return this.handleRequest(
       this.apiClient.post<void>(API_ENDPOINTS.BLOQUES.REORDER, payload),
       `projects.reorderBlocks`
+    );
+  }
+  updateBlock(id: number, dto: Partial<CreateBlockRequest>): Observable<Block> {
+    return this.handleRequest(
+      this.apiClient.put<Block>(API_ENDPOINTS.BLOQUES.BY_ID(id), dto),
+      `projects.updateBlock.${id}`
     );
   }
 }

@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Block, CreateBlockRequest } from '@app/core/models/project/block.interface';
 import { ProjectService } from '@app/core/services/project/project.service';
@@ -12,17 +12,28 @@ import { SafeUrlPipe } from '@app/shared/pipes/Safe-url.pipe';
   imports: [CommonModule, FormsModule, DragDropModule, SafeUrlPipe],
   templateUrl: './block-list-component.component.html',
 })
-export class BlockListComponent implements OnInit {
+export class BlockListComponent implements OnInit, OnChanges {
   @Input() pageId!: number;
   @Input() canEdit = false;
 
   blocks = signal<Block[]>([]);
+
+  
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['pageId']) {
+    this.loadBlocks(); // función que carga solo los de esta página
+  }
+}
+
 
   // Formulario de nuevo bloque
   newType     = signal<'texto' | 'video' | 'embed'>('texto');
   newText     = signal('');
   newVideoUrl = signal('');
   newEmbedUrl = signal('');
+  showCreate = signal(false);
+  editingBlockId = signal<number|null>(null);
+
 
   constructor(private projectSvc: ProjectService) {}
 
@@ -113,6 +124,22 @@ export class BlockListComponent implements OnInit {
     return url;
   }
 
+  editBlock(bloque: any) {
+  this.editingBlockId.set(bloque.id);
 
+  }
+  saveBlock(bloque: any) {
+    const updatedBlock: Partial<CreateBlockRequest> = {
+      tipo: bloque.tipo,
+      contenido: bloque.contenido,
+      orden: bloque.orden,
+    };
+
+    this.projectSvc.updateBlock(bloque.id, updatedBlock)
+      .subscribe(() => {
+        this.blocks.update(arr => arr.map(b => b.id === bloque.id ? { ...b, ...updatedBlock } : b));
+        this.editingBlockId.set(null);
+      });
+  }
 }
 

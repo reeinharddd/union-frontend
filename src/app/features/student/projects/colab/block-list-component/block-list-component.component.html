@@ -1,79 +1,136 @@
-<!-- Formulario de creación de bloque -->
-<div *ngIf="canEdit" class="mb-6 p-6 bg-white border rounded-2xl shadow-lg space-y-4">
-  <div class="flex items-center space-x-4">
-    <label class="text-black font-semibold">
-      Tipo:
-      <select [(ngModel)]="newType" class="ml-2 p-1 border rounded bg-gray-50 text-black">
-        <option value="texto">Texto</option>
-        <option value="video">Vídeo</option>
-        <option value="embed">Embed</option>
-      </select>
-    </label>
-  </div>
-
-  <!-- Controles dinámicos según el tipo -->
-  <div *ngIf="newType() === 'texto'">
-    <textarea
-      [(ngModel)]="newText"
-      placeholder="Contenido de texto"
-      class="w-full p-3 border rounded bg-gray-50 text-black"
-    ></textarea>
-  </div>
-  <div *ngIf="newType() === 'video'">
-    <input
-      [(ngModel)]="newVideoUrl"
-      placeholder="URL de vídeo"
-      class="w-full p-3 border rounded bg-gray-50 text-black"
-    />
-  </div>
-  <div *ngIf="newType() === 'embed'">
-    <input
-      [(ngModel)]="newEmbedUrl"
-      placeholder="URL embebida"
-      class="w-full p-3 border rounded bg-gray-50 text-black"
-    />
-  </div>
-
+<!-- Botón y formulario para añadir bloque -->
+<div class="relative mb-6">
   <button
+    *ngIf="canEdit && !showCreate()"
     type="button"
-    (click)="add()"
-    [disabled]="
-      (newType() === 'texto' && !newText()) ||
-      (newType() === 'video' && !newVideoUrl()) ||
-      (newType() === 'embed' && !newEmbedUrl())
-    "
+    (click)="showCreate.set(true)"
     class="
-      flex items-center justify-center
-      w-full mt-2
+      absolute top-2 right-2
       bg-primary-500 hover:bg-primary-700
-      text-white text-lg font-bold
-      rounded-2xl shadow-xl
-      px-8 py-3
+      text-white text-xs font-bold
+      rounded-full shadow-md
+      p-2
       transition-all duration-150
-      focus:outline-none focus:ring-4 focus:ring-primary-200
-      disabled:bg-gray-300 disabled:text-gray-500
-      border-2 border-primary-200
+      focus:outline-none focus:ring-2 focus:ring-primary-200
+      border border-primary-200
+      z-10
     "
+    title="Añadir bloque"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
       viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round"
         stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
     </svg>
-    Añadir bloque
   </button>
+
+  <!-- Formulario de creación de bloque -->
+  <div *ngIf="canEdit && showCreate()" class="p-4 bg-white border rounded-2xl shadow-lg space-y-4 mt-8">
+    <div class="flex items-center space-x-4">
+      <label class="text-black font-semibold">
+        Tipo:
+        <select [(ngModel)]="newType" class="ml-2 p-1 border rounded bg-gray-50 text-black">
+          <option value="texto">Texto</option>
+          <option value="video">Vídeo</option>
+          <option value="embed">Embed</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Controles dinámicos según el tipo -->
+    <div *ngIf="newType() === 'texto'">
+      <textarea
+        [(ngModel)]="newText"
+        placeholder="Contenido de texto"
+        class="w-full p-3 border rounded bg-gray-50 text-black"
+      ></textarea>
+    </div>
+    <div *ngIf="newType() === 'video'">
+      <input
+        [(ngModel)]="newVideoUrl"
+        placeholder="URL de vídeo"
+        class="w-full p-3 border rounded bg-gray-50 text-black"
+      />
+    </div>
+    <div *ngIf="newType() === 'embed'">
+      <input
+        [(ngModel)]="newEmbedUrl"
+        placeholder="URL embebida"
+        class="w-full p-3 border rounded bg-gray-50 text-black"
+      />
+    </div>
+
+    <div class="flex gap-4">
+      <button
+        type="button"
+        (click)="add()"
+        [disabled]="
+          (newType() === 'texto' && !newText()) ||
+          (newType() === 'video' && !newVideoUrl()) ||
+          (newType() === 'embed' && !newEmbedUrl())
+        "
+        class="
+          flex items-center justify-center
+          bg-primary-500 hover:bg-primary-700
+          text-white text-lg font-bold
+          rounded-2xl shadow-xl
+          px-8 py-3
+          transition-all duration-150
+          focus:outline-none focus:ring-4 focus:ring-primary-200
+          disabled:bg-gray-300 disabled:text-gray-500
+          border-2 border-primary-200
+        "
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round"
+            stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Guardar bloque
+      </button>
+      <button
+        type="button"
+        (click)="showCreate.set(false)"
+        class="px-4 py-2 rounded-2xl bg-neutral-300 text-black font-semibold hover:bg-neutral-400 transition"
+      >Cancelar</button>
+    </div>
+  </div>
 </div>
 
-<!-- Lista de bloques con drag & drop -->
-<div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-4">
-  <div *ngFor="let b of blocks()" cdkDrag class="p-4 bg-white border rounded-2xl shadow flex justify-between items-center">
-    <div class="flex-1">
+<!-- Lista de bloques ligados a la página actual -->
+<div
+  cdkDropList
+  (cdkDropListDropped)="drop($event)"
+  class="space-y-4"
+>
+  <div
+    *ngFor="let b of blocks()"
+    cdkDrag
+    class="relative p-4 bg-white border rounded-2xl shadow flex justify-between items-center group"
+  >
+    <!-- Icono de mover (arrastrable) -->
+    <span class="absolute top-2 left-2 text-primary-400 cursor-move" cdkDragHandle title="Arrastrar para mover">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="6" cy="6" r="1.5"/>
+        <circle cx="6" cy="12" r="1.5"/>
+        <circle cx="6" cy="18" r="1.5"/>
+        <circle cx="12" cy="6" r="1.5"/>
+        <circle cx="12" cy="12" r="1.5"/>
+        <circle cx="12" cy="18" r="1.5"/>
+        <circle cx="18" cy="6" r="1.5"/>
+        <circle cx="18" cy="12" r="1.5"/>
+        <circle cx="18" cy="18" r="1.5"/>
+      </svg>
+    </span>
+
+    <div class="flex-1 pl-8 pr-4">
       <ng-container [ngSwitch]="b.tipo">
         <p *ngSwitchCase="'texto'" class="whitespace-pre-wrap text-black">
           {{ b.contenido['text']! }}
         </p>
 
-        <!-- Para video -->
+        <!-- VIDEO -->
         <ng-container *ngSwitchCase="'video'">
           <ng-container *ngIf="isEmbeddable(b.contenido['videoUrl']!); else videoBlocked">
             <iframe
@@ -90,7 +147,7 @@
           </ng-template>
         </ng-container>
 
-        <!-- Para embed -->
+        <!-- EMBED -->
         <ng-container *ngSwitchCase="'embed'">
           <ng-container *ngIf="isEmbeddable(b.contenido['embedUrl']!); else embedBlocked">
             <iframe
@@ -107,15 +164,26 @@
           </ng-template>
         </ng-container>
       </ng-container>
-
     </div>
-    <button
-      *ngIf="canEdit"
-      type="button"
-      (click)="remove(b.id)"
-      class="ml-4 text-accent-500 hover:underline font-bold"
-    >
-      Eliminar
-    </button>
+
+    <!-- Botones de acción -->
+    <div *ngIf="canEdit" class="flex flex-col gap-2 items-end">
+      <button
+        type="button"
+        (click)="editBlock(b)"
+        class="px-2 py-1 text-xs rounded bg-primary-100 text-primary-700 hover:bg-primary-200 font-semibold"
+        title="Editar bloque"
+      >
+        Editar
+      </button>
+      <button
+        type="button"
+        (click)="remove(b.id)"
+        class="px-2 py-1 text-xs rounded bg-accent-100 text-accent-700 hover:bg-accent-200 font-semibold"
+        title="Eliminar bloque"
+      >
+        Eliminar
+      </button>
+    </div>
   </div>
 </div>
