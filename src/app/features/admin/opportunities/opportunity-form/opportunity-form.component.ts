@@ -35,7 +35,7 @@ export class OpportunityFormComponent {
     descripcion: ['', Validators.required],
     tipo: ['', Validators.required],
     universidad_id: [null],
-    fecha_limite: ['', Validators.required]
+    fecha_limite: ['', Validators.required],
   });
 
   ngOnInit() {
@@ -57,7 +57,7 @@ export class OpportunityFormComponent {
     const { universidad_id, ...rest } = raw;
     const payload: any = {
       ...rest,
-      fecha_limite: raw.fecha_limite ? new Date(raw.fecha_limite).toISOString().slice(0, 10) : null
+      fecha_limite: raw.fecha_limite ? new Date(raw.fecha_limite).toISOString().slice(0, 10) : null,
     };
     if (universidad_id !== null && universidad_id !== undefined && universidad_id !== '') {
       payload.universidad_id = Number(universidad_id);
@@ -70,7 +70,7 @@ export class OpportunityFormComponent {
         },
         error: () => {
           alert('Error al actualizar la oportunidad');
-        }
+        },
       });
     } else {
       this.opportunityService.create(payload).subscribe({
@@ -79,7 +79,7 @@ export class OpportunityFormComponent {
         },
         error: () => {
           alert('Error al guardar la oportunidad');
-        }
+        },
       });
     }
   }

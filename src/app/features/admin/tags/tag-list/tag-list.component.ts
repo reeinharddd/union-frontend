@@ -33,7 +33,7 @@ export class TagListComponent {
       },
       error: err => {
         console.error('Error eliminando tag:', err);
-      }
+      },
     });
   }
 }

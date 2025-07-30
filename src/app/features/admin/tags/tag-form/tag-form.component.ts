@@ -30,7 +30,7 @@ export class TagFormComponent {
   private tagService = inject(TagService);
 
   form = this.fb.group({
-    nombre: ['']
+    nombre: [''],
   });
 
   guardar() {
@@ -43,7 +43,7 @@ export class TagFormComponent {
           },
           error: err => {
             console.error('Error actualizando tag:', err);
-          }
+          },
         });
       } else {
         this.tagService.create(data).subscribe({
@@ -52,7 +52,7 @@ export class TagFormComponent {
           },
           error: err => {
             console.error('Error creando tag:', err);
-          }
+          },
         });
       }
     }

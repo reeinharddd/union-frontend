@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +11,6 @@ import { OpportunityService } from '../opportunity.service';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class OpportunityListComponent {
   private opportunityService = inject(OpportunityService);
   private router = inject(Router);
@@ -36,7 +34,7 @@ export class OpportunityListComponent {
         },
         error: () => {
           alert('Error al eliminar la oportunidad');
-        }
+        },
       });
     }
   }

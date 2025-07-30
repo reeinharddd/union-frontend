@@ -9,7 +9,7 @@ import { ProyectosService } from '../proyectos.service';
   imports: [ReactiveFormsModule],
   templateUrl: './proyectos-form.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProyectosFormComponent {
   guardar() {
@@ -19,7 +19,7 @@ export class ProyectosFormComponent {
     if (id) {
       this.proyectosService.update(id, data).subscribe({
         next: () => this.router.navigate(['/admin/proyectos']),
-        error: err => console.error('Error actualizando proyecto:', err)
+        error: err => console.error('Error actualizando proyecto:', err),
       });
     }
   }
@@ -37,7 +37,7 @@ export class ProyectosFormComponent {
     creador_id: [null, Validators.required],
     universidad_id: [null, Validators.required],
     estado_verificacion: ['', Validators.required],
-    vista_publica: [false]
+    vista_publica: [false],
   });
 
   constructor() {

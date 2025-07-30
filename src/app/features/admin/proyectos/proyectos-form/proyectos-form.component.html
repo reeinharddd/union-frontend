@@ -1,37 +1,81 @@
-<form [formGroup]="form" (ngSubmit)="guardar()" class="max-w-md mx-auto bg-white p-6 rounded shadow">
-
+<form
+  [formGroup]="form"
+  (ngSubmit)="guardar()"
+  class="mx-auto max-w-md rounded bg-white p-6 shadow"
+>
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Nombre <span class="text-red-500">*</span></label>
-    <input formControlName="nombre" type="text" class="w-full border rounded px-3 py-2" required />
+    <label class="mb-1 block text-sm font-medium">Nombre <span class="text-red-500">*</span></label>
+    <input formControlName="nombre" type="text" class="w-full rounded border px-3 py-2" required />
   </div>
 
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Descripción <span class="text-red-500">*</span></label>
-    <textarea formControlName="descripcion" class="w-full border rounded px-3 py-2" required></textarea>
+    <label class="mb-1 block text-sm font-medium"
+      >Descripción <span class="text-red-500">*</span></label
+    >
+    <textarea
+      formControlName="descripcion"
+      class="w-full rounded border px-3 py-2"
+      required
+    ></textarea>
   </div>
 
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Creador ID <span class="text-red-500">*</span></label>
-    <input formControlName="creador_id" type="number" min="0" class="w-full border rounded px-3 py-2" required />
+    <label class="mb-1 block text-sm font-medium"
+      >Creador ID <span class="text-red-500">*</span></label
+    >
+    <input
+      formControlName="creador_id"
+      type="number"
+      min="0"
+      class="w-full rounded border px-3 py-2"
+      required
+    />
   </div>
 
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Universidad ID <span class="text-red-500">*</span></label>
-    <input formControlName="universidad_id" type="number" min="0" class="w-full border rounded px-3 py-2" required />
+    <label class="mb-1 block text-sm font-medium"
+      >Universidad ID <span class="text-red-500">*</span></label
+    >
+    <input
+      formControlName="universidad_id"
+      type="number"
+      min="0"
+      class="w-full rounded border px-3 py-2"
+      required
+    />
   </div>
 
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Estado de verificación <span class="text-red-500">*</span></label>
-    <input formControlName="estado_verificacion" type="text" class="w-full border rounded px-3 py-2" required />
+    <label class="mb-1 block text-sm font-medium"
+      >Estado de verificación <span class="text-red-500">*</span></label
+    >
+    <input
+      formControlName="estado_verificacion"
+      type="text"
+      class="w-full rounded border px-3 py-2"
+      required
+    />
   </div>
 
   <div class="mb-3">
-    <label class="block text-sm font-medium mb-1">Vista pública</label>
+    <label class="mb-1 block text-sm font-medium">Vista pública</label>
     <input formControlName="vista_publica" type="checkbox" class="mr-2 align-middle" />
   </div>
 
-  <div class="flex gap-2 mt-4">
-    <button type="submit" [disabled]="form.invalid" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition">Guardar</button>
-    <button type="button" (click)="volver()" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500 transition">Regresar</button>
+  <div class="mt-4 flex gap-2">
+    <button
+      type="submit"
+      [disabled]="form.invalid"
+      class="bg-green-600 hover:bg-green-700 rounded px-4 py-2 text-black transition"
+    >
+      Guardar
+    </button>
+    <button
+      type="button"
+      (click)="volver()"
+      class="bg-gray-400 hover:bg-gray-500 rounded px-4 py-2 text-black transition"
+    >
+      Regresar
+    </button>
   </div>
 </form>

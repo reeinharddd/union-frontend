@@ -1,21 +1,45 @@
 <div *ngIf="proyectos$ | async as proyectos; else loading">
-  <div class="flex justify-between items-center mb-4">
+  <div class="mb-4 flex items-center justify-between">
     <h2 class="text-lg font-semibold">Proyectos</h2>
   </div>
   <ul *ngIf="proyectos.length > 0; else empty" class="space-y-4">
-    <li *ngFor="let proyecto of proyectos" class="border rounded-lg p-4 bg-white">
+    <li *ngFor="let proyecto of proyectos" class="rounded-lg border bg-white p-4">
       <div class="flex flex-col gap-1">
-        <span class="font-bold text-primary-700 text-base">{{ proyecto.nombre || proyecto.titulo }}</span>
+        <span class="text-base font-bold text-primary-700">{{
+          proyecto.nombre || proyecto.titulo
+        }}</span>
         <span *ngIf="proyecto.descripcion" class="text-gray-600">{{ proyecto.descripcion }}</span>
-        <span *ngIf="proyecto.tecnologias" class="text-xs text-gray-500">Tecnologías: {{ proyecto.tecnologias }}</span>
-        <span *ngIf="proyecto.estado_verificacion" class="text-xs text-gray-500">Estado: {{ proyecto.estado_verificacion }}</span>
-        <span *ngIf="proyecto.creado_en" class="text-xs text-gray-500">Creado en: {{ proyecto.creado_en | date:'mediumDate' }}</span>
-        <span *ngIf="proyecto.repositorio_url" class="text-xs text-gray-500">Repositorio: {{ proyecto.repositorio_url }}</span>
-        <span *ngIf="proyecto.responsable" class="text-xs text-gray-500">Responsable: {{ proyecto.responsable }}</span>
+        <span *ngIf="proyecto.tecnologias" class="text-gray-500 text-xs"
+          >Tecnologías: {{ proyecto.tecnologias }}</span
+        >
+        <span *ngIf="proyecto.estado_verificacion" class="text-gray-500 text-xs"
+          >Estado: {{ proyecto.estado_verificacion }}</span
+        >
+        <span *ngIf="proyecto.creado_en" class="text-gray-500 text-xs"
+          >Creado en: {{ proyecto.creado_en | date: 'mediumDate' }}</span
+        >
+        <span *ngIf="proyecto.repositorio_url" class="text-gray-500 text-xs"
+          >Repositorio: {{ proyecto.repositorio_url }}</span
+        >
+        <span *ngIf="proyecto.responsable" class="text-gray-500 text-xs"
+          >Responsable: {{ proyecto.responsable }}</span
+        >
       </div>
-      <div class="flex gap-2 mt-2">
-        <button type="button" class="bg-blue-600 text-black px-3 py-1 rounded hover:bg-blue-700 transition" (click)="editarProyecto(proyecto)">Editar</button>
-        <button type="button" class="bg-red-600 text-black px-3 py-1 rounded hover:bg-red-700 transition" (click)="eliminarProyecto(proyecto)">Eliminar</button>
+      <div class="mt-2 flex gap-2">
+        <button
+          type="button"
+          class="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 text-black transition"
+          (click)="editarProyecto(proyecto)"
+        >
+          Editar
+        </button>
+        <button
+          type="button"
+          class="bg-red-600 hover:bg-red-700 rounded px-3 py-1 text-black transition"
+          (click)="eliminarProyecto(proyecto)"
+        >
+          Eliminar
+        </button>
       </div>
     </li>
   </ul>

@@ -24,7 +24,7 @@ export class EventDetailComponent {
     universidad_id: [0],
     fecha_inicio: [''],
     fecha_fin: [''],
-    enlace_acceso: ['']
+    enlace_acceso: [''],
   });
 
   guardar() {
@@ -37,7 +37,7 @@ export class EventDetailComponent {
         universidad_id: this.form.value.universidad_id ?? 0,
         fecha_inicio: this.form.value.fecha_inicio,
         fecha_fin: this.form.value.fecha_fin,
-        enlace_acceso: this.form.value.enlace_acceso
+        enlace_acceso: this.form.value.enlace_acceso,
       };
       this.eventService.create(data).subscribe({
         next: () => {
@@ -45,7 +45,7 @@ export class EventDetailComponent {
         },
         error: err => {
           console.error('Error creando evento:', err);
-        }
+        },
       });
     }
   }

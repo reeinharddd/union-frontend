@@ -1,24 +1,61 @@
-<form [formGroup]="form" (ngSubmit)="guardar()" class="max-w-md mx-auto bg-white p-6 rounded shadow">
-  <h2 class="text-lg font-semibold mb-4">Editar foro</h2>
+<form
+  [formGroup]="form"
+  (ngSubmit)="guardar()"
+  class="mx-auto max-w-md rounded bg-white p-6 shadow"
+>
+  <h2 class="mb-4 text-lg font-semibold">Editar foro</h2>
 
   <div class="mb-3">
-    <label for="nombre" class="block text-sm font-medium mb-1">Nombre <span class="text-red-500">*</span></label>
-    <input id="nombre" formControlName="nombre" type="text" class="w-full border rounded px-3 py-2" required />
-    <div *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched" class="text-red-500 text-xs mt-1">
+    <label for="nombre" class="mb-1 block text-sm font-medium"
+      >Nombre <span class="text-red-500">*</span></label
+    >
+    <input
+      id="nombre"
+      formControlName="nombre"
+      type="text"
+      class="w-full rounded border px-3 py-2"
+      required
+    />
+    <div
+      *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+      class="text-red-500 mt-1 text-xs"
+    >
       El nombre es obligatorio.
     </div>
   </div>
 
   <div class="mb-3">
-    <label for="descripcion" class="block text-sm font-medium mb-1">Descripción <span class="text-red-500">*</span></label>
-    <textarea id="descripcion" formControlName="descripcion" class="w-full border rounded px-3 py-2" required></textarea>
-    <div *ngIf="form.get('descripcion')?.invalid && form.get('descripcion')?.touched" class="text-red-500 text-xs mt-1">
+    <label for="descripcion" class="mb-1 block text-sm font-medium"
+      >Descripción <span class="text-red-500">*</span></label
+    >
+    <textarea
+      id="descripcion"
+      formControlName="descripcion"
+      class="w-full rounded border px-3 py-2"
+      required
+    ></textarea>
+    <div
+      *ngIf="form.get('descripcion')?.invalid && form.get('descripcion')?.touched"
+      class="text-red-500 mt-1 text-xs"
+    >
       La descripción es obligatoria.
     </div>
   </div>
 
-  <div class="flex gap-2 mt-4">
-    <button type="submit" [disabled]="form.invalid" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition">Guardar</button>
-    <button type="button" (click)="volver()" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500 transition">Regresar</button>
+  <div class="mt-4 flex gap-2">
+    <button
+      type="submit"
+      [disabled]="form.invalid"
+      class="bg-green-600 hover:bg-green-700 rounded px-4 py-2 text-black transition"
+    >
+      Guardar
+    </button>
+    <button
+      type="button"
+      (click)="volver()"
+      class="bg-gray-400 hover:bg-gray-500 rounded px-4 py-2 text-black transition"
+    >
+      Regresar
+    </button>
   </div>
 </form>

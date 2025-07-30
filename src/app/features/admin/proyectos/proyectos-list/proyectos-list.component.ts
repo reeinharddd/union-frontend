@@ -9,9 +9,9 @@ import { ProyectosService } from '../proyectos.service';
   imports: [CommonModule],
   templateUrl: './proyectos-list.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProyectosListComponent  {
+export class ProyectosListComponent {
   private proyectosService = inject(ProyectosService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -34,9 +34,8 @@ export class ProyectosListComponent  {
         },
         error: () => {
           alert('Error al eliminar el proyecto');
-        }
+        },
       });
     }
   }
-  }
-
+}

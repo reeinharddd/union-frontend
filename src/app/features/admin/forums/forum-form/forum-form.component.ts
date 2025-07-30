@@ -4,7 +4,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForumService } from '../forum.service';
 
-
 @Component({
   selector: 'app-forum-form',
   standalone: true,
@@ -22,7 +21,7 @@ export class ForumFormComponent implements OnInit {
 
   form = this.fb.group({
     nombre: ['', Validators.required],
-    descripcion: ['', Validators.required]
+    descripcion: ['', Validators.required],
   });
 
   ngOnInit() {
@@ -31,7 +30,7 @@ export class ForumFormComponent implements OnInit {
       this.forumService.getById(this.forumId).subscribe(foro => {
         this.form.patchValue({
           nombre: foro.nombre,
-          descripcion: foro.descripcion
+          descripcion: foro.descripcion,
         });
       });
     }
@@ -40,7 +39,7 @@ export class ForumFormComponent implements OnInit {
   guardar() {
     let data: any = {
       nombre: String(this.form.value.nombre || ''),
-      descripcion: String(this.form.value.descripcion || '')
+      descripcion: String(this.form.value.descripcion || ''),
     };
     // Solo agregar el id si es edición
     if (this.forumId) {
@@ -49,7 +48,7 @@ export class ForumFormComponent implements OnInit {
         next: () => this.router.navigate(['/admin/foros']),
         error: err => {
           console.error('Error actualizando foro:', err);
-        }
+        },
       });
     } else {
       // En creación nunca enviar el id
@@ -57,7 +56,7 @@ export class ForumFormComponent implements OnInit {
         next: () => this.router.navigate(['/admin/foros']),
         error: err => {
           console.error('Error creando foro:', err);
-        }
+        },
       });
     }
   }

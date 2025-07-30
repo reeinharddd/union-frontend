@@ -21,9 +21,9 @@ export class EventListComponent {
         this.events$ = this.eventService.getAll();
         this.cdr.markForCheck();
       },
-      error: (err) => {
+      error: err => {
         console.error('Error eliminando evento:', err);
-      }
+      },
     });
   }
 
