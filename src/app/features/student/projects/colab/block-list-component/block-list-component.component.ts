@@ -72,4 +72,47 @@ export class BlockListComponent implements OnInit {
     this.newVideoUrl.set('');
     this.newEmbedUrl.set('');
   }
+
+  blockedDomains = [
+    'facebook.com',
+    'instagram.com',
+    'tiktok.com',
+    'linkedin.com',
+    'drive.google.com',
+    'twitter.com',
+    'reddit.com',
+  ];
+
+  // Detecta si la url puede ser embebida 
+  isEmbeddable(url: string): boolean {
+    if (!url) return false;
+    if (this.isYoutubeUrl(url)) return true;
+    return !this.blockedDomains.some(domain => url.includes(domain));
+  }
+
+  // Detecta si es YouTube
+  isYoutubeUrl(url: string): boolean {
+    return /youtube\.com|youtu\.be/.test(url);
+  }
+
+  // Convierte links de YouTube normales a formato embed
+  getEmbeddableUrl(url: string): string {
+    if (!url) return '';
+    if (this.isYoutubeUrl(url)) {
+      // https://www.youtube.com/watch?v=VIDEO_ID  -->  https://www.youtube.com/embed/VIDEO_ID
+      let videoId = '';
+      if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1]?.split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      }
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    return url;
+  }
+
+
 }
+

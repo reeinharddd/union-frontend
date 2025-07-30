@@ -73,22 +73,41 @@
           {{ b.contenido['text']! }}
         </p>
 
-        <iframe
-          *ngSwitchCase="'video'"
-          [src]="b.contenido['videoUrl']! | safeUrl"
-          class="w-full h-48 rounded-lg"
-          frameborder="0"
-          allowfullscreen>
-        </iframe>
+        <!-- Para video -->
+        <ng-container *ngSwitchCase="'video'">
+          <ng-container *ngIf="isEmbeddable(b.contenido['videoUrl']!); else videoBlocked">
+            <iframe
+              [src]="getEmbeddableUrl(b.contenido['videoUrl']!) | safeUrl"
+              class="w-full h-48 rounded-lg"
+              frameborder="0"
+              allowfullscreen>
+            </iframe>
+          </ng-container>
+          <ng-template #videoBlocked>
+            <div class="p-4 bg-yellow-100 border border-yellow-400 rounded text-primary-700 font-semibold">
+              No es posible mostrar este video embebido por restricciones del sitio de origen.
+            </div>
+          </ng-template>
+        </ng-container>
 
-        <iframe
-          *ngSwitchCase="'embed'"
-          [src]="b.contenido['embedUrl']! | safeUrl"
-          class="w-full h-48 rounded-lg"
-          frameborder="0"
-          allowfullscreen>
-        </iframe>
+        <!-- Para embed -->
+        <ng-container *ngSwitchCase="'embed'">
+          <ng-container *ngIf="isEmbeddable(b.contenido['embedUrl']!); else embedBlocked">
+            <iframe
+              [src]="getEmbeddableUrl(b.contenido['embedUrl']!) | safeUrl"
+              class="w-full h-48 rounded-lg"
+              frameborder="0"
+              allowfullscreen>
+            </iframe>
+          </ng-container>
+          <ng-template #embedBlocked>
+            <div class="p-4 bg-yellow-100 border border-yellow-400 rounded text-primary-700 font-semibold">
+              No es posible mostrar este contenido embebido por restricciones del sitio de origen.
+            </div>
+          </ng-template>
+        </ng-container>
       </ng-container>
+
     </div>
     <button
       *ngIf="canEdit"

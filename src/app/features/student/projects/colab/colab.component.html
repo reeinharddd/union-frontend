@@ -111,6 +111,7 @@
         </header>
         <app-block-list-component
           [pageId]="selectedPage.id"
+          [canEdit]="permiso() === 'edit'"
         ></app-block-list-component>
       </ng-container>
       <ng-template #emptyState>
