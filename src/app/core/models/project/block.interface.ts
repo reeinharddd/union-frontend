@@ -1,15 +1,16 @@
 // Fabian Mendoza
-export type BlockType = 'texto' | 'video' | 'embed';
+export type BlockType = 'texto' | 'video' | 'embed' | 'image';
 
 export interface Block {
   id: number;
   pagina_id: number;
-  tipo: 'texto' | 'video' | 'embed';
+  tipo: 'texto' | 'video' | 'embed' | 'image';
   contenido: {
     text?: string;
     videoUrl?: string;
     embedUrl?: string;
-    [key: string]: string | undefined;   
+    imageUrl?: string;
+    [key: string]: string | undefined;
   };
   orden: number;
   creado_por: number;
@@ -21,7 +22,8 @@ export interface CreateBlockRequest {
   contenido: 
     | { text: string }
     | { videoUrl: string }
-    | { embedUrl: string };
+    | { embedUrl: string }
+    | { imageUrl: string };
   orden?: number;
 }
 export interface UpdateBlockRequest {
@@ -29,6 +31,7 @@ export interface UpdateBlockRequest {
   contenido?: 
     | { text: string }
     | { videoUrl: string }
-    | { embedUrl: string };
+    | { embedUrl: string }
+    | { imageUrl: string };
   orden?: number;
 }
