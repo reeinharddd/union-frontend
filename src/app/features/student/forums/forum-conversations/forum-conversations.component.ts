@@ -27,8 +27,7 @@ export class ForumConversationsComponent {
     private apiClient: ApiClientService,
     private cdr: ChangeDetectorRef,
     private tokenService: TokenService,
-  ) { }
-
+  ) {}
 
   // --- Modal de reporte ---
   mostrarModalReporte: boolean = false;
@@ -38,7 +37,12 @@ export class ForumConversationsComponent {
   // Determina si el comentario es del usuario autenticado
   esMiComentario(respuesta: any): boolean {
     const miId = this.tokenService.getUserId && this.tokenService.getUserId();
-    const autorId = respuesta.usuario_id || respuesta.autor_id || respuesta.user_id || respuesta.creador_id || respuesta.id_usuario;
+    const autorId =
+      respuesta.usuario_id ||
+      respuesta.autor_id ||
+      respuesta.user_id ||
+      respuesta.creador_id ||
+      respuesta.id_usuario;
     return Number(miId) === Number(autorId);
   }
 
@@ -69,7 +73,12 @@ export class ForumConversationsComponent {
     }
     const respuesta = this.respuestaAReportar;
     // El usuario reportado es quien envió el mensaje
-    const usuarioReportadoId = respuesta.usuario_id || respuesta.autor_id || respuesta.user_id || respuesta.creador_id || respuesta.id_usuario;
+    const usuarioReportadoId =
+      respuesta.usuario_id ||
+      respuesta.autor_id ||
+      respuesta.user_id ||
+      respuesta.creador_id ||
+      respuesta.id_usuario;
     const payload = {
       reportante_id: Number(reportanteId),
       usuario_reportado_id: Number(usuarioReportadoId),
@@ -81,8 +90,15 @@ export class ForumConversationsComponent {
     // Verificar si ya existe un reporte de este usuario para este comentario
     const contenidoId = respuesta.id || respuesta.respuesta_id || respuesta.id_respuesta;
     try {
-      const reportes = await this.apiClient.get(`/reportes?contenido_id=${contenidoId}&tipo_contenido=mensaje&reportante_id=${reportanteId}`).toPromise() as any[];
-      if (Array.isArray(reportes) && reportes.some(r => r.contenido_id == contenidoId && r.reportante_id == reportanteId)) {
+      const reportes = (await this.apiClient
+        .get(
+          `/reportes?contenido_id=${contenidoId}&tipo_contenido=mensaje&reportante_id=${reportanteId}`,
+        )
+        .toPromise()) as any[];
+      if (
+        Array.isArray(reportes) &&
+        reportes.some(r => r.contenido_id == contenidoId && r.reportante_id == reportanteId)
+      ) {
         alert('Ya has reportado este comentario. No puedes reportarlo de nuevo.');
         this.cerrarModalReporte();
         return;
@@ -95,7 +111,9 @@ export class ForumConversationsComponent {
       alert('¡Reporte enviado! Será revisado por los moderadores.');
       this.cerrarModalReporte();
     } catch (e: any) {
-      alert('Error al enviar el reporte: ' + (e?.error?.error || e?.message || 'Error desconocido'));
+      alert(
+        'Error al enviar el reporte: ' + (e?.error?.error || e?.message || 'Error desconocido'),
+      );
     }
   }
   enviarRespuesta() {

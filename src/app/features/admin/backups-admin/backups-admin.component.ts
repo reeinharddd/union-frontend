@@ -9,7 +9,7 @@ import { BackupApiClientService } from '@app/core/services/backupAdmin/backup-ap
   imports: [CommonModule, FormsModule],
   templateUrl: './backups-admin.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackupsAdminComponent {
   resultadoRespaldo: string | null = null;
@@ -33,12 +33,32 @@ export class BackupsAdminComponent {
   tablaExportarCsv: string = '';
   schemaExportarCsv: string = '';
   tablasDisponibles: string[] = [
-    'actividad_usuario', 'asistencias_evento', 'bloques', 'conversaciones',
-    'eventos', 'experiencia_usuario', 'foros', 'hilos', 'mensajes',
-    'oportunidades', 'paginas_colaborativas', 'participaciones_proyecto',
-    'perfiles', 'postulaciones', 'proyectos', 'proyectos_validaciones',
-    'reportes', 'respuestas_hilo', 'roles_proyecto', 'roles_usuario',
-    'seguimientos', 'taggables', 'tags', 'universidades', 'usuarios', 'versiones_bloques'
+    'actividad_usuario',
+    'asistencias_evento',
+    'bloques',
+    'conversaciones',
+    'eventos',
+    'experiencia_usuario',
+    'foros',
+    'hilos',
+    'mensajes',
+    'oportunidades',
+    'paginas_colaborativas',
+    'participaciones_proyecto',
+    'perfiles',
+    'postulaciones',
+    'proyectos',
+    'proyectos_validaciones',
+    'reportes',
+    'respuestas_hilo',
+    'roles_proyecto',
+    'roles_usuario',
+    'seguimientos',
+    'taggables',
+    'tags',
+    'universidades',
+    'usuarios',
+    'versiones_bloques',
   ];
 
   constructor(private backupApi: BackupApiClientService) {}
@@ -47,14 +67,14 @@ export class BackupsAdminComponent {
     this.cargandoRespaldoCompleto = true;
     this.resultadoRespaldoCompleto = null;
     this.backupApi.ejecutarRespaldoCompleto().subscribe({
-      next: (res) => {
+      next: res => {
         this.resultadoRespaldoCompleto = res?.message || 'Respaldo completado.';
         this.cargandoRespaldoCompleto = false;
       },
-      error: (err) => {
+      error: err => {
         this.resultadoRespaldoCompleto = err?.error?.error || 'Error al ejecutar respaldo.';
         this.cargandoRespaldoCompleto = false;
-      }
+      },
     });
   }
 
@@ -66,14 +86,14 @@ export class BackupsAdminComponent {
     this.cargandoRespaldoParcial = true;
     this.resultadoRespaldoParcial = null;
     this.backupApi.ejecutarRespaldoParcial([this.tablaRespaldoParcial]).subscribe({
-      next: (res) => {
+      next: res => {
         this.resultadoRespaldoParcial = res?.message || 'Respaldo parcial completado.';
         this.cargandoRespaldoParcial = false;
       },
-      error: (err) => {
+      error: err => {
         this.resultadoRespaldoParcial = err?.error?.error || 'Error al ejecutar respaldo parcial.';
         this.cargandoRespaldoParcial = false;
-      }
+      },
     });
   }
 
@@ -81,14 +101,15 @@ export class BackupsAdminComponent {
     this.cargandoRestaurarCompleto = true;
     this.resultadoRestaurarCompleto = null;
     this.backupApi.restaurarCompleto().subscribe({
-      next: (res) => {
+      next: res => {
         this.resultadoRestaurarCompleto = res?.message || 'Restauración completa realizada.';
         this.cargandoRestaurarCompleto = false;
       },
-      error: (err) => {
-        this.resultadoRestaurarCompleto = err?.error?.error || 'Error al restaurar respaldo completo.';
+      error: err => {
+        this.resultadoRestaurarCompleto =
+          err?.error?.error || 'Error al restaurar respaldo completo.';
         this.cargandoRestaurarCompleto = false;
-      }
+      },
     });
   }
 
@@ -96,14 +117,15 @@ export class BackupsAdminComponent {
     this.cargandoRestaurarParcial = true;
     this.resultadoRestaurarParcial = null;
     this.backupApi.restaurarParcial().subscribe({
-      next: (res) => {
+      next: res => {
         this.resultadoRestaurarParcial = res?.message || 'Restauración parcial realizada.';
         this.cargandoRestaurarParcial = false;
       },
-      error: (err) => {
-        this.resultadoRestaurarParcial = err?.error?.error || 'Error al restaurar respaldo parcial.';
+      error: err => {
+        this.resultadoRestaurarParcial =
+          err?.error?.error || 'Error al restaurar respaldo parcial.';
         this.cargandoRestaurarParcial = false;
-      }
+      },
     });
   }
 
@@ -116,7 +138,7 @@ export class BackupsAdminComponent {
     this.resultadoExportarCsv = null;
     const schema = this.schemaExportarCsv?.trim() || 'public';
     this.backupApi.exportarTablaCsv(this.tablaExportarCsv, schema).subscribe({
-      next: (blob) => {
+      next: blob => {
         // Descargar el archivo CSV
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -127,10 +149,10 @@ export class BackupsAdminComponent {
         this.resultadoExportarCsv = 'Exportación CSV completada.';
         this.cargandoExportarCsv = false;
       },
-      error: (err) => {
+      error: err => {
         this.resultadoExportarCsv = err?.error?.error || 'Error al exportar CSV.';
         this.cargandoExportarCsv = false;
-      }
+      },
     });
   }
 }

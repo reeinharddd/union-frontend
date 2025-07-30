@@ -12,14 +12,11 @@ import { BaseService } from '../base/base.service';
 
 import {
   ColabPage,
-  CreateColabPageRequest, UpdateColabPageRequest,
+  CreateColabPageRequest,
+  UpdateColabPageRequest,
 } from '@app/core/models/project/colab.interface';
 
-import {
-  Block,
-  CreateBlockRequest
-} from '@app/core/models/project/block.interface';
-
+import { Block, CreateBlockRequest } from '@app/core/models/project/block.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -187,15 +184,15 @@ export class ProjectService extends BaseService {
       }),
     );
   }
-   /**
+  /**
    * Obtiene el permiso del usuario sobre un proyecto
    */
   getPermiso(projectId: number, userId: number): Observable<{ permiso: 'edit' | 'view' | 'none' }> {
     return this.handleRequest(
       this.apiClient.get<{ permiso: 'edit' | 'view' | 'none' }>(
-        API_ENDPOINTS.PROJECTS.PERMIT(projectId, userId)
+        API_ENDPOINTS.PROJECTS.PERMIT(projectId, userId),
       ),
-      `projects.getPermiso.${projectId}.${userId}`
+      `projects.getPermiso.${projectId}.${userId}`,
     );
   }
 
@@ -205,71 +202,76 @@ export class ProjectService extends BaseService {
   getColabPages(projectId: number): Observable<ColabPage[]> {
     return this.handleRequest(
       this.apiClient.get<ColabPage[]>(API_ENDPOINTS.COLAB_PAGE.LIST(projectId)),
-      `projects.getColabPages.${projectId}`
+      `projects.getColabPages.${projectId}`,
     );
   }
   // Servicio
-createColabPage(
-  projectId: number,
-  dto: CreateColabPageRequest & { proyecto_id: number; permisos_lectura: String[]; permisos_escritura: String[]; orden: number }
-): Observable<ColabPage> {
-  return this.handleRequest(
-    this.apiClient.post<ColabPage>(API_ENDPOINTS.COLAB_PAGE.CREATE, dto),
-    `projects.createColabPage.${projectId}`
-  );
-}
+  createColabPage(
+    projectId: number,
+    dto: CreateColabPageRequest & {
+      proyecto_id: number;
+      permisos_lectura: String[];
+      permisos_escritura: String[];
+      orden: number;
+    },
+  ): Observable<ColabPage> {
+    return this.handleRequest(
+      this.apiClient.post<ColabPage>(API_ENDPOINTS.COLAB_PAGE.CREATE, dto),
+      `projects.createColabPage.${projectId}`,
+    );
+  }
 
   updateColabPage(id: number, dto: UpdateColabPageRequest): Observable<ColabPage> {
     return this.handleRequest(
       this.apiClient.put<ColabPage>(API_ENDPOINTS.COLAB_PAGE.UPDATE(id), dto),
-      `projects.updateColabPage.${id}`
+      `projects.updateColabPage.${id}`,
     );
   }
   deleteColabPage(id: number): Observable<void> {
     return this.handleRequest(
       this.apiClient.delete<void>(API_ENDPOINTS.COLAB_PAGE.DELETE(id)),
-      `projects.deleteColabPage.${id}`
+      `projects.deleteColabPage.${id}`,
     );
   }
 
   /**
    * Crea un bloque en una página colaborativa
    */
-    // Bloques
+  // Bloques
   getBlocks(pageId: number): Observable<Block[]> {
     return this.handleRequest(
       this.apiClient.get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)),
-      `projects.getBlocks.${pageId}`
+      `projects.getBlocks.${pageId}`,
     );
   }
   getBlocksByPageId(pageId: number): Observable<Block[]> {
     return this.handleRequest(
       this.apiClient.get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)),
-      `projects.getBlocksByPageId.${pageId}`
+      `projects.getBlocksByPageId.${pageId}`,
     );
   }
   createBlock(pageId: number, dto: CreateBlockRequest): Observable<Block> {
     return this.handleRequest(
       this.apiClient.post<Block>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId), dto),
-      `projects.createBlock.${pageId}`
+      `projects.createBlock.${pageId}`,
     );
   }
   deleteBlock(id: number): Observable<void> {
     return this.handleRequest(
       this.apiClient.delete<void>(API_ENDPOINTS.BLOQUES.BY_ID(id)),
-      `projects.deleteBlock.${id}`
+      `projects.deleteBlock.${id}`,
     );
   }
   reorderBlocks(payload: { id: number; orden: number }[]): Observable<void> {
     return this.handleRequest(
       this.apiClient.post<void>(API_ENDPOINTS.BLOQUES.REORDER, payload),
-      `projects.reorderBlocks`
+      `projects.reorderBlocks`,
     );
   }
   updateBlock(id: number, dto: Partial<CreateBlockRequest>): Observable<Block> {
     return this.handleRequest(
       this.apiClient.put<Block>(API_ENDPOINTS.BLOQUES.BY_ID(id), dto),
-      `projects.updateBlock.${id}`
+      `projects.updateBlock.${id}`,
     );
   }
 }

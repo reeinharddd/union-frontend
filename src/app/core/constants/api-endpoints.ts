@@ -1,4 +1,3 @@
-
 //Fabian Mendoza
 export const API_CONFIG = {
   BASE_URL: 'http://localhost:3000/api',
@@ -66,24 +65,23 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/roles-usuario/${id}`,
   },
 
-   PROJECTS: {
+  PROJECTS: {
     BASE: '/proyectos',
     BY_ID: (id: number) => `/proyectos/${id}`,
-    PERMIT: (projectId: number, userId: number) =>
-      `/proyectos/${projectId}/permiso/${userId}`,
+    PERMIT: (projectId: number, userId: number) => `/proyectos/${projectId}/permiso/${userId}`,
     PAGES: (projectId: number) => `/proyectos/${projectId}/paginas-colaborativas`,
   },
 
   COLAB_PAGE: {
-    LIST:   (projectId: number) => `/paginas-colaborativas?proyecto_id=${projectId}`,
+    LIST: (projectId: number) => `/paginas-colaborativas?proyecto_id=${projectId}`,
     CREATE: '/paginas-colaborativas',
-    BY_ID:  (id: number) => `/paginas-colaborativas/${id}`,
+    BY_ID: (id: number) => `/paginas-colaborativas/${id}`,
     UPDATE: (id: number) => `/paginas-colaborativas/${id}`,
     DELETE: (id: number) => `/paginas-colaborativas/${id}`,
   },
   BLOQUES: {
     BY_PAGE: (pageId: number) => `/paginas-colaborativas/${pageId}/bloques`,
-    BY_ID:   (blockId: number) => `/bloques/${blockId}`,
+    BY_ID: (blockId: number) => `/bloques/${blockId}`,
     REORDER: '/bloques/reorder',
   },
 

@@ -1,7 +1,15 @@
 // Fabian Mendoza
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Block, CreateBlockRequest } from '@app/core/models/project/block.interface';
 import { ProjectService } from '@app/core/services/project/project.service';
@@ -20,14 +28,14 @@ export class BlockListComponent implements OnInit, OnChanges {
   blocks = signal<Block[]>([]);
 
   // Formulario de nuevo bloque
-  newType     = signal<'texto' | 'video' | 'embed'>('texto');
-  newText     = signal('');
+  newType = signal<'texto' | 'video' | 'embed'>('texto');
+  newText = signal('');
   newVideoUrl = signal('');
   newEmbedUrl = signal('');
-  showCreate  = signal(false);
+  showCreate = signal(false);
 
-  editingBlockId = signal<number|null>(null);
-  menuBlockId    = signal<number|null>(null);
+  editingBlockId = signal<number | null>(null);
+  menuBlockId = signal<number | null>(null);
 
   // Pop up de confirmación de borrado
   showDeleteConfirm = signal(false);
@@ -63,8 +71,7 @@ export class BlockListComponent implements OnInit, OnChanges {
   }
 
   loadBlocks() {
-    this.projectSvc.getBlocks(this.pageId)
-      .subscribe(bs => this.blocks.set(bs));
+    this.projectSvc.getBlocks(this.pageId).subscribe(bs => this.blocks.set(bs));
   }
 
   drop(event: CdkDragDrop<Block[]>) {
@@ -88,24 +95,23 @@ export class BlockListComponent implements OnInit, OnChanges {
       dto = { ...base, tipo: 'texto', contenido: { text: this.newText() } };
     }
 
-    this.projectSvc.createBlock(this.pageId, dto)
-      .subscribe(b => {
-        this.blocks.update(arr => [...arr, b]);
-        this.resetForm();
-      });
+    this.projectSvc.createBlock(this.pageId, dto).subscribe(b => {
+      this.blocks.update(arr => [...arr, b]);
+      this.resetForm();
+    });
   }
 
   remove(id: number) {
-    this.projectSvc.deleteBlock(id)
+    this.projectSvc
+      .deleteBlock(id)
       .subscribe(() => this.blocks.update(arr => arr.filter(b => b.id !== id)));
   }
 
   // --- Menú de acciones ---
   toggleActionMenu(b: Block) {
-  this.menuBlockId.set(this.menuBlockId() === b.id ? null : b.id);
-  console.log('menuBlockId:', this.menuBlockId())
+    this.menuBlockId.set(this.menuBlockId() === b.id ? null : b.id);
+    console.log('menuBlockId:', this.menuBlockId());
   }
-
 
   openDeleteConfirm(b: Block) {
     this.blockToDelete = b;
@@ -131,10 +137,9 @@ export class BlockListComponent implements OnInit, OnChanges {
     this.editingBlockId.set(b.id);
   }
 
-
   saveBlock(bloque: Block) {
     let contenido: CreateBlockRequest['contenido'];
-    
+
     switch (bloque.tipo) {
       case 'texto':
         contenido = { text: bloque.contenido.text || '' };
@@ -158,24 +163,26 @@ export class BlockListComponent implements OnInit, OnChanges {
       orden: bloque.orden,
     };
 
-    this.projectSvc.updateBlock(bloque.id, updatedBlock)
-      .subscribe(() => {
-        this.blocks.update(arr => arr.map(b => b.id === bloque.id ? { ...b, ...updatedBlock } : b));
-        this.editingBlockId.set(null);
-      });
+    this.projectSvc.updateBlock(bloque.id, updatedBlock).subscribe(() => {
+      this.blocks.update(arr => arr.map(b => (b.id === bloque.id ? { ...b, ...updatedBlock } : b)));
+      this.editingBlockId.set(null);
+    });
   }
 
   // --- Ancho de bloque ---
   toggleBlockWidth(b: any) {
-  if (!b.width) b.width = 1;
-  b.width = b.width === 3 ? 1 : b.width + 1;
-  // update al bloque en backend (futuro)
+    if (!b.width) b.width = 1;
+    b.width = b.width === 3 ? 1 : b.width + 1;
+    // update al bloque en backend (futuro)
   }
   getBlockWidthClass(b: any) {
     switch (b.width) {
-      case 2: return 'col-span-2';
-      case 3: return 'col-span-3';
-      default: return 'col-span-1';
+      case 2:
+        return 'col-span-2';
+      case 3:
+        return 'col-span-3';
+      default:
+        return 'col-span-1';
     }
   }
 
@@ -238,5 +245,4 @@ export class BlockListComponent implements OnInit, OnChanges {
     this.showDeleteConfirm.set(true);
     this.closeActionMenu();
   }
-
 }

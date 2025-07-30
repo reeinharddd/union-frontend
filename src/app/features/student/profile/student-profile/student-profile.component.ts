@@ -52,7 +52,7 @@ export class StudentProfileComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Error al guardar los cambios');
         this.isEditing.set(false);
-      }
+      },
     });
   }
   private readonly authService = inject(AuthService);
@@ -183,7 +183,7 @@ export class StudentProfileComponent implements OnInit {
           next: allProjects => {
             // Excluir los proyectos donde el usuario es el creador
             const userProjects = allProjects.filter(
-              proj => projectIds.includes(proj.id) && proj.creador_id !== userId
+              proj => projectIds.includes(proj.id) && proj.creador_id !== userId,
             );
             console.log('✅ Proyectos donde participo (no soy creador):', userProjects);
             this.userProjects.set(userProjects);

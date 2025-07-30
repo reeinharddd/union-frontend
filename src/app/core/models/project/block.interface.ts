@@ -19,19 +19,11 @@ export interface Block {
 
 export interface CreateBlockRequest {
   tipo: BlockType;
-  contenido: 
-    | { text: string }
-    | { videoUrl: string }
-    | { embedUrl: string }
-    | { imageUrl: string };
+  contenido: { text: string } | { videoUrl: string } | { embedUrl: string } | { imageUrl: string };
   orden?: number;
 }
 export interface UpdateBlockRequest {
   tipo?: BlockType;
-  contenido?: 
-    | { text: string }
-    | { videoUrl: string }
-    | { embedUrl: string }
-    | { imageUrl: string };
+  contenido?: { text: string } | { videoUrl: string } | { embedUrl: string } | { imageUrl: string };
   orden?: number;
 }

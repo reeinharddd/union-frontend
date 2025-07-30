@@ -49,7 +49,6 @@ export interface CreateBlockRequest {
   orden?: number;
 }
 
-
 /** Contenido de un bloque de texto */
 export interface TextContent {
   text: string;

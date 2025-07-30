@@ -1,93 +1,87 @@
 <!-- Fabian Mendoza -->
-<div class="flex h-screen bg-gray-50" role="application">
-
+<div class="bg-gray-50 flex h-screen" role="application">
   <!-- SIDEBAR como navegación -->
   <aside
-  class="w-64 bg-white border-r border-gray-200 p-4 flex flex-col"
-  role="navigation"
-  aria-label="Lista de páginas colaborativas"
->
-  <h2 class="sr-only">Páginas</h2>
-  <ul role="menu" class="overflow-auto space-y-1 mb-4">
-    <li
-      *ngFor="let page of pages()"
-      (click)="selectPage(page)"
-      [class.bg-gray-100]="page.id === selectedPage?.id"
-      class="cursor-pointer px-3 py-1 rounded hover:bg-gray-100 text-black font-medium"
-      role="menuitem"
-      [attr.aria-current]="page.id === selectedPage?.id ? 'page' : null"
-      tabindex="0"
-      (keydown.enter)="selectPage(page)"
-    >
-      {{ page.titulo }}
-    </li>
-  </ul>
-  <button
-    *ngIf="permiso() === 'edit'"
-    (click)="selectPage(null)"
-    class="
-      w-full
-      bg-primary-500 hover:bg-primary-700
-      text-white text-lg font-bold
-      py-3 rounded-2xl shadow-lg border-2 border-primary-200
-      flex items-center justify-center gap-2
-      transition-all duration-150
-      focus:outline-none focus:ring-4 focus:ring-primary-200
-      mb-2
-    "
-    aria-label="Crear nueva página"
-    style="margin-top: 0.5rem; margin-bottom: 1.5rem;" 
+    class="border-gray-200 flex w-64 flex-col border-r bg-white p-4"
+    role="navigation"
+    aria-label="Lista de páginas colaborativas"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-      viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round"
-        stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-    </svg>
-    Nueva página
-  </button>
-</aside>
+    <h2 class="sr-only">Páginas</h2>
+    <ul role="menu" class="mb-4 space-y-1 overflow-auto">
+      <li
+        *ngFor="let page of pages()"
+        (click)="selectPage(page)"
+        [class.bg-gray-100]="page.id === selectedPage?.id"
+        class="hover:bg-gray-100 cursor-pointer rounded px-3 py-1 font-medium text-black"
+        role="menuitem"
+        [attr.aria-current]="page.id === selectedPage?.id ? 'page' : null"
+        tabindex="0"
+        (keydown.enter)="selectPage(page)"
+      >
+        {{ page.titulo }}
+      </li>
+    </ul>
+    <button
+      *ngIf="permiso() === 'edit'"
+      (click)="selectPage(null)"
+      class="mb-2 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-primary-200 bg-primary-500 py-3 text-lg font-bold text-white shadow-lg transition-all duration-150 hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-200"
+      aria-label="Crear nueva página"
+      style="margin-top: 0.5rem; margin-bottom: 1.5rem"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nueva página
+    </button>
+  </aside>
 
   <!-- MAIN con landmark -->
-  <main class="flex-1 p-8 overflow-auto" role="main">
+  <main class="flex-1 overflow-auto p-8" role="main">
     <!-- Formulario de creación -->
     <ng-container *ngIf="showCreate() && permiso() === 'edit'; else pageView">
-      <div class="max-w-xl mx-auto">
-        <h2 class="text-2xl mb-4 text-black font-bold">Crear nueva página</h2>
-        <div class="flex items-center space-x-6 mb-4" *ngIf="permiso()==='edit'">
-          <label class="text-black font-semibold">
+      <div class="mx-auto max-w-xl">
+        <h2 class="mb-4 text-2xl font-bold text-black">Crear nueva página</h2>
+        <div class="mb-4 flex items-center space-x-6" *ngIf="permiso() === 'edit'">
+          <label class="font-semibold text-black">
             <input
               type="radio"
               name="modo"
               [value]="'view'"
               (change)="viewMode.set('view')"
               [checked]="viewMode() === 'view'"
-            />  
+            />
             Solo lectura
           </label>
-          <label class="text-black font-semibold">
+          <label class="font-semibold text-black">
             <input
               type="radio"
               name="modo"
               [value]="'edit'"
               (change)="viewMode.set('edit')"
               [checked]="viewMode() === 'edit'"
-            />  
+            />
             Modo edición
           </label>
         </div>
         <input
           [(ngModel)]="newTitle"
           placeholder="Título"
-          class="w-full mb-2 p-2 border rounded bg-gray-50 text-black"
+          class="bg-gray-50 mb-2 w-full rounded border p-2 text-black"
         />
         <textarea
           [(ngModel)]="newDesc"
           placeholder="Descripción"
-          class="w-full mb-4 p-2 border rounded bg-gray-50 text-black"
+          class="bg-gray-50 mb-4 w-full rounded border p-2 text-black"
         ></textarea>
         <button
           (click)="createPage()"
-          class="px-4 py-2 bg-primary-500 hover:bg-primary-700 text-white rounded font-bold shadow-lg"
+          class="rounded bg-primary-500 px-4 py-2 font-bold text-white shadow-lg hover:bg-primary-700"
           [attr.aria-disabled]="!newTitle() || !newDesc()"
           [disabled]="!newTitle() || !newDesc()"
         >
@@ -95,7 +89,7 @@
         </button>
         <button
           (click)="showCreate.set(false)"
-          class="ml-2 px-4 py-2 text-gray-800 hover:underline"
+          class="text-gray-800 ml-2 px-4 py-2 hover:underline"
         >
           Cancelar
         </button>
@@ -115,9 +109,7 @@
         ></app-block-list-component>
       </ng-container>
       <ng-template #emptyState>
-        <p class="text-gray-800">
-          Selecciona o crea una página para comenzar.
-        </p>
+        <p class="text-gray-800">Selecciona o crea una página para comenzar.</p>
       </ng-template>
     </ng-template>
   </main>

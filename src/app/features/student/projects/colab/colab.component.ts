@@ -10,46 +10,40 @@ import { BlockListComponent } from './block-list-component/block-list-component.
 @Component({
   standalone: true,
   selector: 'app-colab',
-  imports: [
-    CommonModule,
-    FormsModule,
-    BlockListComponent,
-  ],
+  imports: [CommonModule, FormsModule, BlockListComponent],
   templateUrl: './colab.component.html',
 })
 export class ColabComponent implements OnInit {
   projectId!: number;
-  pages        = signal<ColabPage[]>([]);
-  permiso      = signal<'edit'|'view'|'none'>('none');
-  viewMode     = signal<'edit'|'view'>('view');
-  showCreate   = signal(false);
-  newTitle     = signal('');
-  newDesc      = signal('');
+  pages = signal<ColabPage[]>([]);
+  permiso = signal<'edit' | 'view' | 'none'>('none');
+  viewMode = signal<'edit' | 'view'>('view');
+  showCreate = signal(false);
+  newTitle = signal('');
+  newDesc = signal('');
   selectedPage?: ColabPage;
 
   constructor(
     private projectSvc: ProjectService,
     private auth: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     const userId = this.auth.currentUser()?.id!;
-    this.projectSvc.getPermiso(this.projectId, userId)
-      .subscribe(res => {
-        this.permiso.set(res.permiso);
-        if (res.permiso !== 'none') {
-          this.projectSvc.getColabPages(this.projectId)
-            .subscribe(pgs => {
-              this.pages.set(pgs);
-              this.selectedPage = pgs[0];
-            });
-        }
-      });
+    this.projectSvc.getPermiso(this.projectId, userId).subscribe(res => {
+      this.permiso.set(res.permiso);
+      if (res.permiso !== 'none') {
+        this.projectSvc.getColabPages(this.projectId).subscribe(pgs => {
+          this.pages.set(pgs);
+          this.selectedPage = pgs[0];
+        });
+      }
+    });
   }
 
-  selectPage(page: ColabPage|null) {
+  selectPage(page: ColabPage | null) {
     if (!page && this.permiso() === 'edit') {
       this.showCreate.set(true);
       return;
@@ -74,22 +68,20 @@ export class ColabComponent implements OnInit {
       permisos_escritura: [userId.toString()],
       orden: this.pages().length,
     };
-console.log('Creating page with DTO:', dto);
-    this.projectSvc.createColabPage(this.projectId, dto)
-      .subscribe(page => {
-        this.pages.update(arr => [...arr, page]);
-        this.newTitle.set('');
-        this.newDesc.set('');
-        this.showCreate.set(false);
-        this.selectedPage = page;
-      });
+    console.log('Creating page with DTO:', dto);
+    this.projectSvc.createColabPage(this.projectId, dto).subscribe(page => {
+      this.pages.update(arr => [...arr, page]);
+      this.newTitle.set('');
+      this.newDesc.set('');
+      this.showCreate.set(false);
+      this.selectedPage = page;
+    });
   }
 
   deletePage(pageId: number) {
-    this.projectSvc.deleteColabPage(pageId)
-      .subscribe(() => {
-        this.pages.update(arr => arr.filter(p => p.id !== pageId));
-        this.selectedPage = this.pages()[0];
-      });
+    this.projectSvc.deleteColabPage(pageId).subscribe(() => {
+      this.pages.update(arr => arr.filter(p => p.id !== pageId));
+      this.selectedPage = this.pages()[0];
+    });
   }
 }

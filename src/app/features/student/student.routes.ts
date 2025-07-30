@@ -119,10 +119,7 @@ export const STUDENT_ROUTES: Routes = [
       {
         path: 'projects/:projectId/colab',
         canActivate: [authGuard],
-        loadComponent: () =>
-          import('./projects/colab/colab.component').then(
-            m => m.ColabComponent
-          ),
+        loadComponent: () => import('./projects/colab/colab.component').then(m => m.ColabComponent),
       },
       // {
       //   path: 'public-profile',
