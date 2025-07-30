@@ -12,11 +12,14 @@ import { BaseService } from '../base/base.service';
 
 import {
   ColabPage,
-  CreateColabPageRequest,
-  PermisoResponse,
+  CreateColabPageRequest, UpdateColabPageRequest,
 } from '@app/core/models/project/colab.interface';
 
-import { Block, CreateBlockRequest } from '@app/core/models/project/block.interface';
+import {
+  Block,
+  CreateBlockRequest,
+  UpdateBlockRequest
+} from '@app/core/models/project/block.interface';
 
 
 @Injectable({
@@ -185,85 +188,154 @@ export class ProjectService extends BaseService {
       }),
     );
   }
-    // Permiso
-  getPermiso(projectId: number, userId: number) {
+   /**
+   * Obtiene el permiso del usuario sobre un proyecto
+   */
+  getPermiso(projectId: number, userId: number): Observable<{ permiso: 'edit' | 'view' | 'none' }> {
     return this.handleRequest(
-      this.apiClient.get<PermisoResponse>(
+      this.apiClient.get<{ permiso: 'edit' | 'view' | 'none' }>(
         API_ENDPOINTS.PROJECTS.PERMIT(projectId, userId)
       ),
       `projects.getPermiso.${projectId}.${userId}`
     );
   }
 
-  // Listar páginas colaborativas de un proyecto
-  getColabPages(projectId: number) {
+  /**
+   * Lista las páginas colaborativas de un proyecto
+   */
+  getColabPages(projectId: number): Observable<ColabPage[]> {
     return this.handleRequest(
       this.apiClient.get<ColabPage[]>(
-      API_ENDPOINTS.COLAB_PAGE.LIST(projectId)
-    ),
-    `projects.getColabPages.${projectId}`
-    );
-  }
-
-  // Crear página
-  createColabPage(projectId: number, dto: CreateColabPageRequest) {
-    const payload = { ...dto, proyecto_id: projectId };
-
-    return this.handleRequest(
-      this.apiClient.post<ColabPage>(
-        API_ENDPOINTS.COLAB_PAGE.CREATE,  // "/paginas-colaborativas"
-        payload
+        API_ENDPOINTS.COLAB_PAGE.LIST(projectId)
       ),
-      `projects.createColabPage.${projectId}`,
-      { showSuccessToast: true, successMessage: 'Página creada' }
+      `projects.getColabPages.${projectId}`
     );
   }
 
-  // Actualizar página
-  updateColabPage(pageId: number, dto: Partial<CreateColabPageRequest>) {
+  /**
+   * Crea una nueva página colaborativa
+   */
+  createColabPage(
+  projectId: number,
+  dto: CreateColabPageRequest & {
+    permisos_lectura: number;
+    permisos_escritura: number;
+    orden?: number;
+  }
+): Observable<ColabPage> {
+  return this.handleRequest(
+    this.apiClient.post<ColabPage>(
+      API_ENDPOINTS.COLAB_PAGE.CREATE,
+      dto
+    ),
+    `projects.createColabPage.${projectId}`,
+    { showSuccessToast: true, successMessage: 'Página colaborativa creada' }
+  );
+}
+
+
+  /**
+   * Actualiza una página colaborativa existente
+   */
+  updateColabPage(pageId: number, dto: UpdateColabPageRequest): Observable<ColabPage> {
     return this.handleRequest(
       this.apiClient.put<ColabPage>(
         API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId),
         dto
       ),
       `projects.updateColabPage.${pageId}`,
-      { showSuccessToast: true, successMessage: 'Página actualizada' }
+      { showSuccessToast: true, successMessage: 'Página colaborativa actualizada' }
     );
   }
 
-  // Eliminar página
-  deleteColabPage(pageId: number) {
+  /**
+   * Elimina una página colaborativa
+   */
+  deleteColabPage(pageId: number): Observable<void> {
     return this.handleRequest(
-      this.apiClient.delete<{ message: string }>(
+      this.apiClient.delete<void>(
         API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId)
       ),
       `projects.deleteColabPage.${pageId}`,
-      { showSuccessToast: true, successMessage: 'Página eliminada' }
+      { showSuccessToast: true, successMessage: 'Página colaborativa eliminada' }
     );
   }
 
-  // Listar bloques
-getBlocks(pageId: number) {
-  return this.apiClient
-    .get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId));
-}
+/**
+   * Lista bloques de una página colaborativa
+   */
+  getBlocks(
+    pageId: number
+  ): Observable<Block[]> {
+    return this.handleRequest(
+      this.apiClient.get<Block[]>(
+        API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)
+      ),
+      `projects.getBlocks.${pageId}`
+    );
+  }
 
-// Crear
-createBlock(pageId: number, dto: CreateBlockRequest) {
-  return this.apiClient
-    .post<Block>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId), dto);
-}
+  /**
+   * Crea un bloque en una página colaborativa
+   */
+  createBlock(
+    pageId: number,
+    dto: CreateBlockRequest
+  ): Observable<Block> {
+    return this.handleRequest(
+      this.apiClient.post<Block>(
+        API_ENDPOINTS.BLOQUES.BY_PAGE(pageId),
+        dto
+      ),
+      `projects.createBlock.${pageId}`,
+      { showSuccessToast: true, successMessage: 'Bloque creado' }
+    );
+  }
 
-// Actualizar
-updateBlock(blockId: number, dto: Partial<CreateBlockRequest>) {
-  return this.apiClient
-    .put<Block>(API_ENDPOINTS.BLOQUES.BY_ID(blockId), dto);
-}
+  /**
+   * Actualiza un bloque existente
+   */
+  updateBlock(
+    blockId: number,
+    dto: UpdateBlockRequest
+  ): Observable<Block> {
+    return this.handleRequest(
+      this.apiClient.put<Block>(
+        API_ENDPOINTS.BLOQUES.BY_ID(blockId),
+        dto
+      ),
+      `projects.updateBlock.${blockId}`,
+      { showSuccessToast: true, successMessage: 'Bloque actualizado' }
+    );
+  }
 
-// Borrar
-deleteBlock(blockId: number) {
-  return this.apiClient
-    .delete<{ message: string }>(API_ENDPOINTS.BLOQUES.BY_ID(blockId));
-}
+  /**
+   * Elimina un bloque
+   */
+  deleteBlock(
+    blockId: number
+  ): Observable<void> {
+    return this.handleRequest(
+      this.apiClient.delete<void>(
+        API_ENDPOINTS.BLOQUES.BY_ID(blockId)
+      ),
+      `projects.deleteBlock.${blockId}`,
+      { showSuccessToast: true, successMessage: 'Bloque eliminado' }
+    );
+  }
 
+  /**
+   * Reordena los bloques de una página colaborativa
+   */
+  reorderBlocks(
+    orderPayload: { id: number; orden: number }[]
+  ): Observable<void> {
+    return this.handleRequest(
+      this.apiClient.post<void>(
+        API_ENDPOINTS.BLOQUES.REORDER,
+        { bloques: orderPayload }
+      ),
+      `projects.reorderBlocks`
+    );
+  }
 }

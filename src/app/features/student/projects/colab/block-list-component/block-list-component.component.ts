@@ -1,83 +1,23 @@
 // Fabian Mendoza
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Pipe, PipeTransform, signal } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { Block } from '@app/core/models/project/block.interface';
 import { ProjectService } from '@app/core/services/project/project.service';
-
-@Pipe({ standalone: true, name: 'safeUrl' })
-export class SafeUrlPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
-  transform(url: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-}
+import { SafeUrlPipe } from '@app/shared/pipes/Safe-url.pipe';
 
 @Component({
   standalone: true,
   selector: 'app-block-list',
-  imports: [CommonModule, SafeUrlPipe],
-  template: `
-    <div *ngIf="blocks().length === 0" class="italic text-gray-500 mb-2">
-      Sin bloques aún
-    </div>
-    <div *ngFor="let b of blocks()" class="p-4 border rounded mb-4">
-      <ng-container [ngSwitch]="b.tipo">
-        <!-- Texto -->
-        <p *ngSwitchCase="'texto'" class="mb-2">{{ b.contenido.text }}</p>
-
-        <!-- Video embebido -->
-        <div *ngSwitchCase="'video'" class="mb-2">
-          <iframe
-            [src]="b.contenido.url | safeUrl"
-            class="w-full h-64"
-            frameborder="0"
-            allowfullscreen>
-          </iframe>
-        </div>
-
-        <!-- Imagen -->
-        <div *ngSwitchCase="'imagen'" class="mb-2">
-          <img
-            [src]="b.contenido.url"
-            [alt]="b.contenido.alt"
-            class="max-w-full h-auto rounded"
-          />
-        </div>
-
-        <!-- Fallback -->
-        <p *ngSwitchDefault class="text-red-600">
-          Tipo de bloque desconocido: {{ b.tipo }}
-        </p>
-      </ng-container>
-
-      <button
-        *ngIf="canEdit"
-        (click)="remove(b.id)"
-        class="text-sm text-red-500 hover:underline"
-      >
-        Borrar bloque
-      </button>
-    </div>
-
-    <button
-      *ngIf="canEdit"
-      (click)="add()"
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-    >
-      Añadir bloque de prueba
-    </button>
-  `
+  imports: [CommonModule, DragDropModule, SafeUrlPipe],
+  templateUrl: './block-list-component.component.html',
 })
 export class BlockListComponent implements OnInit {
   @Input() pageId!: number;
   @Input() canEdit = false;
-
   blocks = signal<Block[]>([]);
 
-  constructor(
-    private projectSvc: ProjectService
-  ) {}
+  constructor(private projectSvc: ProjectService) {}
 
   ngOnInit() {
     this.loadBlocks();
@@ -88,6 +28,14 @@ export class BlockListComponent implements OnInit {
       .subscribe(bs => this.blocks.set(bs));
   }
 
+  /** Maneja reordenación drag & drop */
+  drop(event: CdkDragDrop<Block[]>) {
+    moveItemInArray(this.blocks(), event.previousIndex, event.currentIndex);
+    const ordenPayload = this.blocks().map((b, i) => ({ id: b.id, orden: i }));
+    this.projectSvc.reorderBlocks(ordenPayload).subscribe();
+  }
+
+  /** Añade bloque de prueba */
   add() {
     const dto = {
       tipo: 'texto',
@@ -98,10 +46,9 @@ export class BlockListComponent implements OnInit {
       .subscribe(b => this.blocks.update(arr => [...arr, b]));
   }
 
+  /** Elimina bloque */
   remove(id: number) {
     this.projectSvc.deleteBlock(id)
-      .subscribe(() =>
-        this.blocks.update(arr => arr.filter(b => b.id !== id))
-      );
+      .subscribe(() => this.blocks.update(arr => arr.filter(b => b.id !== id)));
   }
 }
