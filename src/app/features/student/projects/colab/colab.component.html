@@ -1,15 +1,23 @@
-<!-- src/app/features/student/colab/colab.component.html -->
-<div class="flex h-screen bg-gray-50">
+<!-- Fabian Mendoza -->
+<div class="flex h-screen bg-gray-50" role="application">
 
-  <!-- 1) SIDEBAR: la lista de páginas -->
-  <aside class="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
-    <h2 class="text-xs font-semibold uppercase text-gray-500 mb-3">Páginas</h2>
-    <ul class="flex-1 overflow-auto space-y-1">
+  <!-- SIDEBAR como navegación -->
+  <aside
+    class="w-64 bg-white border-r border-gray-200 p-4 flex flex-col"
+    role="navigation"
+    aria-label="Lista de páginas colaborativas"
+  >
+    <h2 class="sr-only">Páginas</h2>
+    <ul role="menu" class="flex-1 overflow-auto space-y-1">
       <li
         *ngFor="let page of pages()"
         (click)="selectPage(page)"
         [class.bg-gray-100]="page.id === selectedPage?.id"
         class="cursor-pointer px-3 py-1 rounded hover:bg-gray-100"
+        role="menuitem"
+        [attr.aria-current]="page.id === selectedPage?.id ? 'page' : null"
+        tabindex="0"
+        (keydown.enter)="selectPage(page)"
       >
         {{ page.titulo }}
       </li>
@@ -18,17 +26,40 @@
       *ngIf="permiso() === 'edit'"
       (click)="selectPage(null)"
       class="mt-4 px-2 py-1 text-sm text-blue-600 hover:underline"
+      aria-label="Crear nueva página"
     >
       + Nueva página
     </button>
   </aside>
 
-  <!-- 2) MAIN: contenido o formulario -->
-  <main class="flex-1 p-8 overflow-auto">
+  <!-- MAIN con landmark -->
+  <main class="flex-1 p-8 overflow-auto" role="main">
     <!-- Formulario de creación -->
     <ng-container *ngIf="showCreateForm() && permiso() === 'edit'; else pageView">
       <div class="max-w-xl mx-auto">
         <h2 class="text-2xl mb-4">Crear nueva página</h2>
+        <div class="flex items-center space-x-6 mb-4" *ngIf="permiso()==='edit'">
+          <label>
+            <input
+              type="radio"
+              name="modo"
+              [value]="'view'"
+              (change)="viewMode.set('view')"
+              [checked]="viewMode() === 'view'"
+            />  
+            Solo lectura
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="modo"
+              [value]="'edit'"
+              (change)="viewMode.set('edit')"
+              [checked]="viewMode() === 'edit'"
+            />  
+            Modo edición
+          </label>
+        </div>
         <input
           [(ngModel)]="newTitle"
           placeholder="Título"
@@ -42,6 +73,8 @@
         <button
           (click)="createPage()"
           class="px-4 py-2 bg-green-600 text-white rounded"
+          [attr.aria-disabled]="!newTitle() || !newDesc()"
+          [disabled]="!newTitle() || !newDesc()"
         >
           Guardar página
         </button>

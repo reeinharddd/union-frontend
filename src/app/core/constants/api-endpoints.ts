@@ -1,3 +1,4 @@
+
 //Fabian Mendoza
 export const API_CONFIG = {
   BASE_URL: 'http://localhost:3000/api',
@@ -83,6 +84,7 @@ export const API_ENDPOINTS = {
   BLOQUES: {
     BY_PAGE: (pageId: number) => `/paginas-colaborativas/${pageId}/bloques`,
     BY_ID:   (blockId: number) => `/bloques/${blockId}`,
+    REORDER: '/bloques/reorder',
   },
 
 
