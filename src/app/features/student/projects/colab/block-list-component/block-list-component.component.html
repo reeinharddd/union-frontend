@@ -1,9 +1,9 @@
 <!-- Formulario de creación de bloque -->
-<div *ngIf="canEdit" class="mb-6 p-4 bg-white border rounded space-y-4">
+<div *ngIf="canEdit" class="mb-6 p-6 bg-white border rounded-2xl shadow-lg space-y-4">
   <div class="flex items-center space-x-4">
-    <label>
+    <label class="text-black font-semibold">
       Tipo:
-      <select [(ngModel)]="newType" class="ml-2 p-1 border rounded">
+      <select [(ngModel)]="newType" class="ml-2 p-1 border rounded bg-gray-50 text-black">
         <option value="texto">Texto</option>
         <option value="video">Vídeo</option>
         <option value="embed">Embed</option>
@@ -16,21 +16,21 @@
     <textarea
       [(ngModel)]="newText"
       placeholder="Contenido de texto"
-      class="w-full p-2 border rounded"
+      class="w-full p-3 border rounded bg-gray-50 text-black"
     ></textarea>
   </div>
   <div *ngIf="newType() === 'video'">
     <input
       [(ngModel)]="newVideoUrl"
       placeholder="URL de vídeo"
-      class="w-full p-2 border rounded"
+      class="w-full p-3 border rounded bg-gray-50 text-black"
     />
   </div>
   <div *ngIf="newType() === 'embed'">
     <input
       [(ngModel)]="newEmbedUrl"
       placeholder="URL embebida"
-      class="w-full p-2 border rounded"
+      class="w-full p-3 border rounded bg-gray-50 text-black"
     />
   </div>
 
@@ -42,25 +42,41 @@
       (newType() === 'video' && !newVideoUrl()) ||
       (newType() === 'embed' && !newEmbedUrl())
     "
-    class="px-4 py-2 bg-blue-600 text-white rounded"
+    class="
+      flex items-center justify-center
+      w-full mt-2
+      bg-primary-500 hover:bg-primary-700
+      text-white text-lg font-bold
+      rounded-2xl shadow-xl
+      px-8 py-3
+      transition-all duration-150
+      focus:outline-none focus:ring-4 focus:ring-primary-200
+      disabled:bg-gray-300 disabled:text-gray-500
+      border-2 border-primary-200
+    "
   >
-    Añadir
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round"
+        stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+    </svg>
+    Añadir bloque
   </button>
 </div>
 
 <!-- Lista de bloques con drag & drop -->
 <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-4">
-  <div *ngFor="let b of blocks()" cdkDrag class="p-4 bg-white border rounded flex justify-between">
+  <div *ngFor="let b of blocks()" cdkDrag class="p-4 bg-white border rounded-2xl shadow flex justify-between items-center">
     <div class="flex-1">
       <ng-container [ngSwitch]="b.tipo">
-        <p *ngSwitchCase="'texto'" class="whitespace-pre-wrap">
+        <p *ngSwitchCase="'texto'" class="whitespace-pre-wrap text-black">
           {{ b.contenido['text']! }}
         </p>
 
         <iframe
           *ngSwitchCase="'video'"
           [src]="b.contenido['videoUrl']! | safeUrl"
-          class="w-full h-48"
+          class="w-full h-48 rounded-lg"
           frameborder="0"
           allowfullscreen>
         </iframe>
@@ -68,7 +84,7 @@
         <iframe
           *ngSwitchCase="'embed'"
           [src]="b.contenido['embedUrl']! | safeUrl"
-          class="w-full h-48"
+          class="w-full h-48 rounded-lg"
           frameborder="0"
           allowfullscreen>
         </iframe>
@@ -78,7 +94,7 @@
       *ngIf="canEdit"
       type="button"
       (click)="remove(b.id)"
-      class="ml-4 text-red-500 hover:underline"
+      class="ml-4 text-accent-500 hover:underline font-bold"
     >
       Eliminar
     </button>
