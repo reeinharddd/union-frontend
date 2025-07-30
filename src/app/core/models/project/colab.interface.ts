@@ -20,9 +20,12 @@ export interface ColabPage {
  */
 export interface CreateColabPageRequest {
   titulo: string;
+  proyecto_id: number;
   descripcion: string;
+  permisos_lectura: string[];
+  permisos_escritura: string[];
+  orden: number;
 }
-
 export interface UpdateColabPageRequest {
   titulo?: string;
   descripcion?: string;

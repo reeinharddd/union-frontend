@@ -211,7 +211,7 @@ export class ProjectService extends BaseService {
   // Servicio
 createColabPage(
   projectId: number,
-  dto: CreateColabPageRequest & { proyecto_id: number; permisos_lectura: number[]; permisos_escritura: number[]; orden: number }
+  dto: CreateColabPageRequest & { proyecto_id: number; permisos_lectura: String[]; permisos_escritura: String[]; orden: number }
 ): Observable<ColabPage> {
   return this.handleRequest(
     this.apiClient.post<ColabPage>(API_ENDPOINTS.COLAB_PAGE.CREATE, dto),

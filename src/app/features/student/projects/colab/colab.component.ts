@@ -63,18 +63,18 @@ export class ColabComponent implements OnInit {
     const userId = this.auth.currentUser()?.id!;
     const dto: CreateColabPageRequest & {
       proyecto_id: number;
-      permisos_lectura: number[];
-      permisos_escritura: number[];
+      permisos_lectura: string[];
+      permisos_escritura: string[];
       orden: number;
     } = {
       titulo: this.newTitle(),
       descripcion: this.newDesc(),
       proyecto_id: this.projectId,
-      permisos_lectura: [userId],
-      permisos_escritura: [userId],
+      permisos_lectura: [userId.toString()],
+      permisos_escritura: [userId.toString()],
       orden: this.pages().length,
     };
-
+console.log('Creating page with DTO:', dto);
     this.projectSvc.createColabPage(this.projectId, dto)
       .subscribe(page => {
         this.pages.update(arr => [...arr, page]);
