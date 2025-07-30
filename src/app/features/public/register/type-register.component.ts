@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-type-register',
@@ -10,9 +10,13 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, RouterLink], // Añade los módulos necesarios
 })
 export class TypeRegisterComponent {
-  constructor(private router: Router) {}
+  private readonly router = inject(Router);
 
-  navigateToRegister(type: string) {
+  navigateToHome(): void {
+    this.router.navigate(['/']);
+  }
+
+  navigateToRegister(type: string): void {
     this.router.navigate(['/register', type]);
   }
 }

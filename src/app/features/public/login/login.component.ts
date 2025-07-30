@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '@app/core/models/auth/auth.interface';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LoadingService } from '@app/core/services/ui/loading.service';
@@ -18,6 +18,7 @@ export class LoginComponent {
   private readonly toastService = inject(ToastService);
   private readonly loadingService = inject(LoadingService);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   readonly isLoading = this.loadingService.isLoading;
   readonly loginError = signal<string | null>(null);
@@ -27,16 +28,17 @@ export class LoginComponent {
     contrasena: ['', [Validators.required, Validators.minLength(6)]],
   });
 
+  navigateToHome(): void {
+    this.router.navigate(['/']);
+  }
+
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.loginError.set(null);
       const credentials: LoginRequest = this.loginForm.value;
 
-      console.log('Attempting login with:', credentials);
-
       this.authService.login(credentials).subscribe({
-        next: response => {
-          console.log('Login successful:', response);
+        next: () => {
           this.toastService.showSuccess('¡Bienvenido de nuevo!');
 
           // Pequeño delay para asegurar que todo se configure correctamente

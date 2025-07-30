@@ -4,8 +4,12 @@ import { PublicLayoutComponent } from '@app/layouts/public-layout/public-layout.
 import { LoginComponent } from '@features/public/login/login.component';
 
 export const routes: Routes = [
-  // Redirección por defecto
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Landing page como página principal
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/public/landing/landing.component').then(m => m.LandingComponent),
+  },
 
   // Rutas públicas
   {
