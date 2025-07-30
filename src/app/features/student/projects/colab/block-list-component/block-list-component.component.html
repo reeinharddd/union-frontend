@@ -1,1 +1,86 @@
-<p>block-list-component works!</p>
+<!-- Formulario de creación de bloque -->
+<div *ngIf="canEdit" class="mb-6 p-4 bg-white border rounded space-y-4">
+  <div class="flex items-center space-x-4">
+    <label>
+      Tipo:
+      <select [(ngModel)]="newType" class="ml-2 p-1 border rounded">
+        <option value="texto">Texto</option>
+        <option value="video">Vídeo</option>
+        <option value="embed">Embed</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Controles dinámicos según el tipo -->
+  <div *ngIf="newType() === 'texto'">
+    <textarea
+      [(ngModel)]="newText"
+      placeholder="Contenido de texto"
+      class="w-full p-2 border rounded"
+    ></textarea>
+  </div>
+  <div *ngIf="newType() === 'video'">
+    <input
+      [(ngModel)]="newVideoUrl"
+      placeholder="URL de vídeo"
+      class="w-full p-2 border rounded"
+    />
+  </div>
+  <div *ngIf="newType() === 'embed'">
+    <input
+      [(ngModel)]="newEmbedUrl"
+      placeholder="URL embebida"
+      class="w-full p-2 border rounded"
+    />
+  </div>
+
+  <button
+    type="button"
+    (click)="add()"
+    [disabled]="
+      (newType() === 'texto' && !newText()) ||
+      (newType() === 'video' && !newVideoUrl()) ||
+      (newType() === 'embed' && !newEmbedUrl())
+    "
+    class="px-4 py-2 bg-blue-600 text-white rounded"
+  >
+    Añadir
+  </button>
+</div>
+
+<!-- Lista de bloques con drag & drop -->
+<div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-4">
+  <div *ngFor="let b of blocks()" cdkDrag class="p-4 bg-white border rounded flex justify-between">
+    <div class="flex-1">
+      <ng-container [ngSwitch]="b.tipo">
+        <p *ngSwitchCase="'texto'" class="whitespace-pre-wrap">
+          {{ b.contenido['text']! }}
+        </p>
+
+        <iframe
+          *ngSwitchCase="'video'"
+          [src]="b.contenido['videoUrl']! | safeUrl"
+          class="w-full h-48"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+
+        <iframe
+          *ngSwitchCase="'embed'"
+          [src]="b.contenido['embedUrl']! | safeUrl"
+          class="w-full h-48"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+      </ng-container>
+    </div>
+    <button
+      *ngIf="canEdit"
+      type="button"
+      (click)="remove(b.id)"
+      class="ml-4 text-red-500 hover:underline"
+    >
+      Eliminar
+    </button>
+  </div>
+</div>

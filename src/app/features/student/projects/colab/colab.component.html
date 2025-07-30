@@ -35,7 +35,7 @@
   <!-- MAIN con landmark -->
   <main class="flex-1 p-8 overflow-auto" role="main">
     <!-- Formulario de creación -->
-    <ng-container *ngIf="showCreateForm() && permiso() === 'edit'; else pageView">
+    <ng-container *ngIf="showCreate() && permiso() === 'edit'; else pageView">
       <div class="max-w-xl mx-auto">
         <h2 class="text-2xl mb-4">Crear nueva página</h2>
         <div class="flex items-center space-x-6 mb-4" *ngIf="permiso()==='edit'">
@@ -79,7 +79,7 @@
           Guardar página
         </button>
         <button
-          (click)="showCreateForm.set(false)"
+          (click)="showCreate.set(false)"
           class="ml-2 px-4 py-2 text-gray-600 hover:underline"
         >
           Cancelar
@@ -94,10 +94,9 @@
           <h1 class="text-3xl font-bold">{{ selectedPage.titulo }}</h1>
           <p class="text-gray-700">{{ selectedPage.descripcion }}</p>
         </header>
-        <app-block-list
+        <app-block-list-component
           [pageId]="selectedPage.id"
-          [canEdit]="permiso() === 'edit'"
-        ></app-block-list>
+        ></app-block-list-component>
       </ng-container>
       <ng-template #emptyState>
         <p class="text-gray-500">
