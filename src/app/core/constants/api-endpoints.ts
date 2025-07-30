@@ -75,18 +75,17 @@ export const API_ENDPOINTS = {
   },
 
   COLAB_PAGE: {
-
     LIST:   (projectId: number) => `/paginas-colaborativas?proyecto_id=${projectId}`,
     CREATE: '/paginas-colaborativas',
     BY_ID:  (id: number) => `/paginas-colaborativas/${id}`,
+    UPDATE: (id: number) => `/paginas-colaborativas/${id}`,
+    DELETE: (id: number) => `/paginas-colaborativas/${id}`,
   },
-
   BLOQUES: {
     BY_PAGE: (pageId: number) => `/paginas-colaborativas/${pageId}/bloques`,
     BY_ID:   (blockId: number) => `/bloques/${blockId}`,
     REORDER: '/bloques/reorder',
   },
-
 
   PROJECT_ROLES: {
     BASE: '/roles-proyecto',

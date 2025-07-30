@@ -20,25 +20,35 @@ export interface ColabPage {
  */
 export interface CreateColabPageRequest {
   titulo: string;
+  proyecto_id: number;
   descripcion: string;
+  permisos_lectura: string[];
+  permisos_escritura: string[];
+  orden: number;
 }
-
-/**
- * DTO para actualizar una página colaborativa existente
- */
 export interface UpdateColabPageRequest {
   titulo?: string;
   descripcion?: string;
-  permisos_lectura?: string[];
-  permisos_escritura?: string[];
+}
+
+export type BlockType = 'texto' | 'video' | 'embed';
+
+export interface Block {
+  id: number;
+  pagina_id: number;
+  tipo: BlockType;
+  contenido: { text?: string; videoUrl?: string; embedUrl?: string };
+  orden: number;
+  creado_por: number;
+  creada_en: string;
+}
+
+export interface CreateBlockRequest {
+  tipo: BlockType;
+  contenido: { text?: string; videoUrl?: string; embedUrl?: string };
   orden?: number;
 }
 
-
-// src/app/core/models/project/block.interface.ts
-
-/** Tipos de bloque soportados */
-export type BlockType = 'texto' | 'imagen' | 'video';
 
 /** Contenido de un bloque de texto */
 export interface TextContent {
@@ -66,16 +76,14 @@ export interface Block {
   id: number;
   pagina_id: number;
   tipo: BlockType;
-  contenido: BlockContent;
+  contenido: { text?: string; videoUrl?: string; embedUrl?: string };
   orden: number;
   creado_por: number;
-  creado_en: string; // ISO 8601 timestamp
+  creada_en: string;
 }
 
-/**
- * Payload para reordenar bloques
- */
-export interface BlockOrderPayload {
-  id: number;
-  orden: number;
+export interface CreateBlockRequest {
+  tipo: BlockType;
+  contenido: { text?: string; videoUrl?: string; embedUrl?: string };
+  orden?: number;
 }

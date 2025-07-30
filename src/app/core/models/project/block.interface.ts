@@ -1,20 +1,34 @@
 // Fabian Mendoza
-/** Representa un bloque dentro de una página colaborativa */
+export type BlockType = 'texto' | 'video' | 'embed';
+
 export interface Block {
   id: number;
   pagina_id: number;
-  tipo: string;
-  /** Contenido del bloque, al ser JSONB puede ser cualquier objeto */
-  contenido: any;
+  tipo: 'texto' | 'video' | 'embed';
+  contenido: {
+    text?: string;
+    videoUrl?: string;
+    embedUrl?: string;
+    [key: string]: string | undefined;   
+  };
   orden: number;
   creado_por: number;
   creada_en: string;
 }
 
 export interface CreateBlockRequest {
-  tipo: string;
-  contenido: any;
+  tipo: BlockType;
+  contenido: 
+    | { text: string }
+    | { videoUrl: string }
+    | { embedUrl: string };
   orden?: number;
 }
-
-export type UpdateBlockRequest = Partial<CreateBlockRequest>;
+export interface UpdateBlockRequest {
+  tipo?: BlockType;
+  contenido?: 
+    | { text: string }
+    | { videoUrl: string }
+    | { embedUrl: string };
+  orden?: number;
+}

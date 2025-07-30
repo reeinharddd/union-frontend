@@ -2,9 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import {
-  ColabPage
-} from '@app/core/models/project/colab.interface';
+import { ColabPage, CreateColabPageRequest } from '@app/core/models/project/colab.interface';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { ProjectService } from '@app/core/services/project/project.service';
 import { BlockListComponent } from './block-list-component/block-list-component.component';
@@ -15,20 +13,19 @@ import { BlockListComponent } from './block-list-component/block-list-component.
   imports: [
     CommonModule,
     FormsModule,
-    BlockListComponent
+    BlockListComponent,
   ],
   templateUrl: './colab.component.html',
 })
 export class ColabComponent implements OnInit {
-  projectId     !: number;
-  pages          = signal<ColabPage[]>([]);
-  permiso        = signal<'edit'|'view'|'none'>('none');
-  showCreateForm = signal(false);
-  newTitle       = signal('');
-  newDesc        = signal('');
+  projectId!: number;
+  pages        = signal<ColabPage[]>([]);
+  permiso      = signal<'edit'|'view'|'none'>('none');
+  viewMode     = signal<'edit'|'view'>('view');
+  showCreate   = signal(false);
+  newTitle     = signal('');
+  newDesc      = signal('');
   selectedPage?: ColabPage;
-  /** 1) NUEVA señal para el modo de vista */
-  viewMode       = signal<'view'|'edit'>('view');
 
   constructor(
     private projectSvc: ProjectService,
@@ -42,55 +39,52 @@ export class ColabComponent implements OnInit {
     this.projectSvc.getPermiso(this.projectId, userId)
       .subscribe(res => {
         this.permiso.set(res.permiso);
-        this.viewMode.set(res.permiso === 'edit' ? 'edit' : 'view');
         if (res.permiso !== 'none') {
           this.projectSvc.getColabPages(this.projectId)
-            .subscribe(pgs => this.pages.set(pgs));
+            .subscribe(pgs => {
+              this.pages.set(pgs);
+              this.selectedPage = pgs[0];
+            });
         }
       });
   }
-  /**
-   * Selecciona una página o abre el formulario de creación
-   */
-  selectPage(page: ColabPage | null) {
-    if (page === null && this.permiso() === 'edit') {
-      this.showCreateForm.set(true);
+
+  selectPage(page: ColabPage|null) {
+    if (!page && this.permiso() === 'edit') {
+      this.showCreate.set(true);
       return;
     }
-    this.showCreateForm.set(false);
+    this.showCreate.set(false);
     this.selectedPage = page ?? this.pages()[0];
   }
 
-  /**
-   * Crea una nueva página colaborativa y la selecciona
-   */
   createPage() {
-  const userId = this.auth.currentUser()?.id!;
-  if (!this.newTitle() || !this.newDesc()) return;
+    if (!this.newTitle() || !this.newDesc()) return;
+    const userId = this.auth.currentUser()?.id!;
+    const dto: CreateColabPageRequest & {
+      proyecto_id: number;
+      permisos_lectura: string[];
+      permisos_escritura: string[];
+      orden: number;
+    } = {
+      titulo: this.newTitle(),
+      descripcion: this.newDesc(),
+      proyecto_id: this.projectId,
+      permisos_lectura: [userId.toString()],
+      permisos_escritura: [userId.toString()],
+      orden: this.pages().length,
+    };
+console.log('Creating page with DTO:', dto);
+    this.projectSvc.createColabPage(this.projectId, dto)
+      .subscribe(page => {
+        this.pages.update(arr => [...arr, page]);
+        this.newTitle.set('');
+        this.newDesc.set('');
+        this.showCreate.set(false);
+        this.selectedPage = page;
+      });
+  }
 
-  // Construimos el objeto completo que pide el backend
-  const dto = {
-    titulo:          this.newTitle(),
-    descripcion:     this.newDesc(),
-    proyecto_id:     this.projectId,
-    permisos_lectura:[ userId ],  
-    permisos_escritura:[ userId ], 
-    orden:           (this.pages().length), 
-  };
-
-  this.projectSvc.createColabPage(this.projectId, dto)
-    .subscribe(page => {
-      this.pages.update(arr => [...arr, page]);
-      this.newTitle.set('');
-      this.newDesc.set('');
-      this.showCreateForm.set(false);
-      this.selectedPage = page;
-    });
-}
-
-  /**
-   * Elimina la página seleccionada y ajusta la lista
-   */
   deletePage(pageId: number) {
     this.projectSvc.deleteColabPage(pageId)
       .subscribe(() => {

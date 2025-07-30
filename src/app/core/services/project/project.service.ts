@@ -17,8 +17,7 @@ import {
 
 import {
   Block,
-  CreateBlockRequest,
-  UpdateBlockRequest
+  CreateBlockRequest
 } from '@app/core/models/project/block.interface';
 
 
@@ -205,137 +204,72 @@ export class ProjectService extends BaseService {
    */
   getColabPages(projectId: number): Observable<ColabPage[]> {
     return this.handleRequest(
-      this.apiClient.get<ColabPage[]>(
-        API_ENDPOINTS.COLAB_PAGE.LIST(projectId)
-      ),
+      this.apiClient.get<ColabPage[]>(API_ENDPOINTS.COLAB_PAGE.LIST(projectId)),
       `projects.getColabPages.${projectId}`
     );
   }
-
-  /**
-   * Crea una nueva página colaborativa
-   */
-  createColabPage(
+  // Servicio
+createColabPage(
   projectId: number,
-  dto: CreateColabPageRequest & {
-    permisos_lectura: number;
-    permisos_escritura: number;
-    orden?: number;
-  }
+  dto: CreateColabPageRequest & { proyecto_id: number; permisos_lectura: String[]; permisos_escritura: String[]; orden: number }
 ): Observable<ColabPage> {
   return this.handleRequest(
-    this.apiClient.post<ColabPage>(
-      API_ENDPOINTS.COLAB_PAGE.CREATE,
-      dto
-    ),
-    `projects.createColabPage.${projectId}`,
-    { showSuccessToast: true, successMessage: 'Página colaborativa creada' }
+    this.apiClient.post<ColabPage>(API_ENDPOINTS.COLAB_PAGE.CREATE, dto),
+    `projects.createColabPage.${projectId}`
   );
 }
 
-
-  /**
-   * Actualiza una página colaborativa existente
-   */
-  updateColabPage(pageId: number, dto: UpdateColabPageRequest): Observable<ColabPage> {
+  updateColabPage(id: number, dto: UpdateColabPageRequest): Observable<ColabPage> {
     return this.handleRequest(
-      this.apiClient.put<ColabPage>(
-        API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId),
-        dto
-      ),
-      `projects.updateColabPage.${pageId}`,
-      { showSuccessToast: true, successMessage: 'Página colaborativa actualizada' }
+      this.apiClient.put<ColabPage>(API_ENDPOINTS.COLAB_PAGE.UPDATE(id), dto),
+      `projects.updateColabPage.${id}`
     );
   }
-
-  /**
-   * Elimina una página colaborativa
-   */
-  deleteColabPage(pageId: number): Observable<void> {
+  deleteColabPage(id: number): Observable<void> {
     return this.handleRequest(
-      this.apiClient.delete<void>(
-        API_ENDPOINTS.COLAB_PAGE.BY_ID(pageId)
-      ),
-      `projects.deleteColabPage.${pageId}`,
-      { showSuccessToast: true, successMessage: 'Página colaborativa eliminada' }
-    );
-  }
-
-/**
-   * Lista bloques de una página colaborativa
-   */
-  getBlocks(
-    pageId: number
-  ): Observable<Block[]> {
-    return this.handleRequest(
-      this.apiClient.get<Block[]>(
-        API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)
-      ),
-      `projects.getBlocks.${pageId}`
+      this.apiClient.delete<void>(API_ENDPOINTS.COLAB_PAGE.DELETE(id)),
+      `projects.deleteColabPage.${id}`
     );
   }
 
   /**
    * Crea un bloque en una página colaborativa
    */
-  createBlock(
-    pageId: number,
-    dto: CreateBlockRequest
-  ): Observable<Block> {
+    // Bloques
+  getBlocks(pageId: number): Observable<Block[]> {
     return this.handleRequest(
-      this.apiClient.post<Block>(
-        API_ENDPOINTS.BLOQUES.BY_PAGE(pageId),
-        dto
-      ),
-      `projects.createBlock.${pageId}`,
-      { showSuccessToast: true, successMessage: 'Bloque creado' }
+      this.apiClient.get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)),
+      `projects.getBlocks.${pageId}`
     );
   }
-
-  /**
-   * Actualiza un bloque existente
-   */
-  updateBlock(
-    blockId: number,
-    dto: UpdateBlockRequest
-  ): Observable<Block> {
+  getBlocksByPageId(pageId: number): Observable<Block[]> {
     return this.handleRequest(
-      this.apiClient.put<Block>(
-        API_ENDPOINTS.BLOQUES.BY_ID(blockId),
-        dto
-      ),
-      `projects.updateBlock.${blockId}`,
-      { showSuccessToast: true, successMessage: 'Bloque actualizado' }
+      this.apiClient.get<Block[]>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId)),
+      `projects.getBlocksByPageId.${pageId}`
     );
   }
-
-  /**
-   * Elimina un bloque
-   */
-  deleteBlock(
-    blockId: number
-  ): Observable<void> {
+  createBlock(pageId: number, dto: CreateBlockRequest): Observable<Block> {
     return this.handleRequest(
-      this.apiClient.delete<void>(
-        API_ENDPOINTS.BLOQUES.BY_ID(blockId)
-      ),
-      `projects.deleteBlock.${blockId}`,
-      { showSuccessToast: true, successMessage: 'Bloque eliminado' }
+      this.apiClient.post<Block>(API_ENDPOINTS.BLOQUES.BY_PAGE(pageId), dto),
+      `projects.createBlock.${pageId}`
     );
   }
-
-  /**
-   * Reordena los bloques de una página colaborativa
-   */
-  reorderBlocks(
-    orderPayload: { id: number; orden: number }[]
-  ): Observable<void> {
+  deleteBlock(id: number): Observable<void> {
     return this.handleRequest(
-      this.apiClient.post<void>(
-        API_ENDPOINTS.BLOQUES.REORDER,
-        { bloques: orderPayload }
-      ),
+      this.apiClient.delete<void>(API_ENDPOINTS.BLOQUES.BY_ID(id)),
+      `projects.deleteBlock.${id}`
+    );
+  }
+  reorderBlocks(payload: { id: number; orden: number }[]): Observable<void> {
+    return this.handleRequest(
+      this.apiClient.post<void>(API_ENDPOINTS.BLOQUES.REORDER, payload),
       `projects.reorderBlocks`
+    );
+  }
+  updateBlock(id: number, dto: Partial<CreateBlockRequest>): Observable<Block> {
+    return this.handleRequest(
+      this.apiClient.put<Block>(API_ENDPOINTS.BLOQUES.BY_ID(id), dto),
+      `projects.updateBlock.${id}`
     );
   }
 }
