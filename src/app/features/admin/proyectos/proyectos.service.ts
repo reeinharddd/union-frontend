@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class OpportunityService {
-  private apiUrl = 'http://localhost:3000/api/oportunidades';
+export class ProyectosService {
+  private apiUrl = 'http://localhost:3000/api/proyectos';
 
   constructor(private http: HttpClient) {}
 
@@ -14,19 +14,20 @@ export class OpportunityService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getById(id: number): Observable<any> {
+  getById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, data);
+  create(proyecto: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, proyecto);
   }
 
-  update(id: number, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, data);
+  update(id: string, proyecto: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, proyecto);
   }
 
-  delete(id: number): Observable<any> {
+  delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+

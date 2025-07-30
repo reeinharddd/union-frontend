@@ -1,1 +1,25 @@
-<p>tag-list works!</p>
+<div *ngIf="tags$ | async as tags; else loading">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Tags</h2>
+    <button (click)="crearTag()" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition">Crear tag</button>
+  </div>
+  <ul *ngIf="tags.length > 0; else empty" class="space-y-4">
+    <li *ngFor="let tag of tags" class="border rounded-lg p-4 bg-white">
+      <div class="flex flex-col gap-1">
+        <span class="font-bold text-primary-700 text-base">{{ tag.nombre || tag.titulo || tag.id }}</span>
+        <span *ngIf="tag.descripcion" class="text-gray-600">{{ tag.descripcion }}</span>
+        <span *ngIf="tag.categoria" class="text-xs text-gray-500">Categoría: {{ tag.categoria }}</span>
+        <div class="flex gap-2 mt-2">
+          <button (click)="editarTag(tag.id)" class="bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-600 transition">Editar</button>
+          <button (click)="eliminarTag(tag.id)" class="bg-red-600 text-black px-3 py-1 rounded hover:bg-red-700 transition">Eliminar</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<ng-template #loading>
+  <p>Cargando tags...</p>
+</ng-template>
+<ng-template #empty>
+  <p>No hay tags disponibles.</p>
+</ng-template>
