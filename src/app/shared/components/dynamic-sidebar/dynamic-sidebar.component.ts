@@ -34,6 +34,25 @@ import {
 
       <!-- Navegación principal -->
       <nav class="flex-1 space-y-2 px-4 py-4">
+        <a routerLink="dashboard" class="nav-item group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100">Dashboard</a>
+        <br>
+        <a routerLink="backups" class="nav-item group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100">Respaldos</a>
+
+        <div class="relative inline-block text-left">
+          <button type="button" class="inline-flex w-full justify-center rounded-md bg-primary-100 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-200 focus:outline-none" (click)="showDropdown = !showDropdown">
+            Administracion
+            <span class="ml-2">▼</span>
+          </button>
+          <div *ngIf="showDropdown" class="absolute left-0 mt-2 w-40 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+            <div class="py-1">
+              <button routerLink="tags" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 text-left">Tags</button>
+              <button routerLink="taggables" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 text-left">Taggables</button>
+              <button routerLink="taggables" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 text-left">asda</button>
+              <!-- Agrega más botones aquí si lo necesitas -->
+            </div>
+          </div>
+        </div>
+
         @for (item of navigation(); track item.route) {
           <div class="navigation-group">
             <!-- Item principal -->
@@ -227,6 +246,7 @@ import {
   ],
 })
 export class DynamicSidebarComponent {
+  showDropdown = false;
   private readonly navigationService = inject(NavigationService);
   private readonly authService = inject(AuthService);
 

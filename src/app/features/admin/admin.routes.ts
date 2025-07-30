@@ -25,6 +25,14 @@ export const ADMIN_ROUTES: Routes = [
           import('./backups-admin/backups-admin.component').then(m => m.BackupsAdminComponent),
       },
       // {
+      //   path: 'tags',
+      //   loadComponent: () => import('./tags/tags.routes').then(m => m.TAGS_ROUTES),
+      // },
+      // {
+      //   path: 'taggables',
+      //   loadComponent: () => import('./taggables/taggables.routes').then(m => m.TAGGABLES_ROUTES),
+      // },
+      // {
       //   path: 'users',
       //   loadChildren: () => import('./users/users.routes').then(m => m.USERS_ROUTES),
       // },
