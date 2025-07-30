@@ -1,1 +1,13 @@
-<p>tag-form works!</p>
+<form [formGroup]="form" (ngSubmit)="guardar()" class="max-w-md mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-lg font-semibold mb-4">Crear tag</h2>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Nombre</label>
+    <input formControlName="nombre" type="text" class="w-full border rounded px-3 py-2" />
+  </div>
+
+  <div class="flex gap-2 mt-4">
+    <button type="submit" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition">Guardar</button>
+    <button type="button" (click)="volver()" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500 transition">Regresar</button>
+  </div>
+</form>

@@ -1,1 +1,26 @@
-<p>opportunity-list works!</p>
+<div *ngIf="opportunities$ | async as opportunities; else loading">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Oportunidades</h2>
+    <button type="button" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition" (click)="crearOpportunity()">Crear oportunidad</button>
+  </div>
+  <ul *ngIf="opportunities.length > 0; else empty" class="space-y-4">
+    <li *ngFor="let opportunity of opportunities" class="border rounded-lg p-4 bg-white">
+      <div class="flex flex-col gap-1">
+        <span class="font-bold text-primary-700 text-base">{{ opportunity.titulo }}</span>
+        <span *ngIf="opportunity.descripcion" class="text-gray-600">{{ opportunity.descripcion }}</span>
+        <span *ngIf="opportunity.tipo" class="text-xs text-gray-500">Tipo: {{ opportunity.tipo }}</span>
+        <span *ngIf="opportunity.fecha_limite" class="text-xs text-gray-500">Fecha límite: {{ opportunity.fecha_limite | date:'mediumDate' }}</span>
+      </div>
+      <div class="flex gap-2 mt-2">
+        <button type="button" class="bg-blue-600 text-black px-3 py-1 rounded hover:bg-blue-700 transition" (click)="editarOpportunity(opportunity)">Editar</button>
+        <button type="button" class="bg-red-600 text-black px-3 py-1 rounded hover:bg-red-700 transition" (click)="eliminarOpportunity(opportunity)">Eliminar</button>
+      </div>
+    </li>
+  </ul>
+</div>
+<ng-template #loading>
+  <p>Cargando oportunidades...</p>
+</ng-template>
+<ng-template #empty>
+  <p>No hay oportunidades registradas.</p>
+</ng-template>

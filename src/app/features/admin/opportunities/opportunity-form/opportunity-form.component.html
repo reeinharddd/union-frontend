@@ -1,1 +1,33 @@
-<p>opportunity-form works!</p>
+<form [formGroup]="form" (ngSubmit)="guardar()" class="max-w-md mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-lg font-semibold mb-4">Crear Oportunidad</h2>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Título <span class="text-red-500">*</span></label>
+    <input formControlName="titulo" type="text" class="w-full border rounded px-3 py-2" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Descripción <span class="text-red-500">*</span></label>
+    <textarea formControlName="descripcion" class="w-full border rounded px-3 py-2" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Tipo <span class="text-red-500">*</span></label>
+    <input formControlName="tipo" type="text" class="w-full border rounded px-3 py-2" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Universidad ID <span class="text-red-500">*</span></label>
+    <input formControlName="universidad_id" type="number" min="0" class="w-full border rounded px-3 py-2"/>
+  </div>
+
+  <div class="mb-3">
+    <label class="block text-sm font-medium mb-1">Fecha límite <span class="text-red-500">*</span></label>
+    <input formControlName="fecha_limite" type="date" class="w-full border rounded px-3 py-2" required />
+  </div>
+
+  <div class="flex gap-2 mt-4">
+    <button type="submit" [disabled]="form.invalid" class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 transition">Guardar</button>
+    <button type="button" (click)="volver()" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500 transition">Regresar</button>
+  </div>
+</form>
