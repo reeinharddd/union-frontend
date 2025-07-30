@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { UserService } from '@app/core/services/user/user.service';
-import { UniversityService } from '@app/core/services/university/university.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { EventService } from '@app/core/services/event/event.service';
+import { UniversityService } from '@app/core/services/university/university.service';
+import { UserService } from '@app/core/services/user/user.service';
 
 @Component({
   selector: 'app-admin-dashboard',
