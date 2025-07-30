@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const EVENT_ROUTES: Routes = [
+export const EVENTS_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
