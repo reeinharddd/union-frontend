@@ -60,7 +60,9 @@
   >
     <div class="max-w-md rounded-lg border bg-white p-6 text-center shadow">
       <h2 class="text-red-600 mb-4 text-xl font-semibold">Acceso Restringido</h2>
-      <p class="text-gray-600 mb-4">Este proyecto es privado y solo el creador puede verlo.</p>
+      <p class="text-gray-600 mb-4">
+        Este proyecto es privado y solo los colaboradores pueden verlo.
+      </p>
       <a routerLink="#" class="text-blue-500 hover:underline" *ngIf="!currentUserId">
         solicitar acceso
       </a>
