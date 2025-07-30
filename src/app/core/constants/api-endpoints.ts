@@ -64,6 +64,13 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/roles-usuario/${id}`,
   },
 
+  PROJECTS: {
+    BASE: '/proyectos',
+    BY_ID: (id: number) => `/proyectos/${id}`,
+    BY_CREATOR: (creatorId: number) => `/proyectos?creador_id=${creatorId}`,
+    BY_UNIVERSITY: (universityId: number) => `/proyectos?universidad_id=${universityId}`,
+  },
+
   PROJECT_ROLES: {
     BASE: '/roles-proyecto',
     BY_ID: (id: number) => `/roles-proyecto/${id}`,

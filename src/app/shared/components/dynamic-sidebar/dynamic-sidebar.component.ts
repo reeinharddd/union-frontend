@@ -293,7 +293,7 @@ export class DynamicSidebarComponent {
       1: 'Administrador',
       2: 'Estudiante',
       3: 'Profesor',
-      9: 'Admin Universitario'
+      9: 'Admin Universitario',
     };
 
     return role ? roleNames[role as keyof typeof roleNames] || 'Usuario' : 'Usuario';
