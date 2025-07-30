@@ -63,6 +63,7 @@ export const STUDENT_ROUTES: Routes = [
         loadComponent: () =>
           import('./dashboard/student-dashboard.component').then(m => m.StudentDashboardComponent),
       },
+
       {
         path: 'Addprojects',
         loadComponent: () =>
@@ -121,6 +122,7 @@ export const STUDENT_ROUTES: Routes = [
       //       m => m.StudentPublicProfileComponent,
       //     ),
       // },
+
       // {
       //   path: 'messages',
       //   loadComponent: () =>
