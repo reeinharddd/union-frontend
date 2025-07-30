@@ -1,55 +1,252 @@
-<div class="union-container">
-  <header class="union-header">
-    <img src="assets/images/logo.png" alt="UNION" class="union-logo" />
-    <a class="login-link" routerLink="/login">Iniciar Sesión</a>
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-surface to-secondary-50">
+  <!-- Header con navegación de vuelta -->
+  <header class="relative bg-surface/90 backdrop-blur-sm border-b border-border">
+    <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <button
+          (click)="navigateToHome()"
+          class="flex items-center space-x-3 transition-all duration-300 hover:opacity-75"
+        >
+          <img src="/assets/images/logo.png" alt="UniON" class="h-8 w-auto" />
+          <span class="text-xl font-bold text-primary-600">UniON</span>
+        </button>
+        <a
+          routerLink="/login"
+          class="text-sm font-medium text-text-muted hover:text-primary-600 transition-colors"
+        >
+          ¿Ya tienes cuenta? <span class="text-primary-600">Inicia sesión</span>
+        </a>
+      </div>
+    </div>
   </header>
 
-  <main class="union-content">
-    <section class="card">
-      <div class="card-icon">★</div>
-      <h1>Instituciones Académicas</h1>
-      <p>
-        Únete como institución y valida a tus estudiantes y egresados. Gestiona oportunidades
-        académicas, eventos y verifica proyectos que representen el talento de tu comunidad
-        universitaria.
-      </p>
-      <button class="union-button" (click)="navigateToRegister('institucion')">
-        Saber más y aplicar
-      </button>
-    </section>
+  <!-- Contenido principal -->
+  <div class="px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-4xl">
+      <!-- Título y descripción -->
+      <div class="text-center mb-16 animate-fade-in">
+        <h1 class="text-4xl font-bold tracking-tight text-text-base sm:text-5xl mb-6">
+          Únete a la comunidad
+          <span class="text-primary-600">UniON</span>
+        </h1>
+        <p class="text-xl text-text-muted max-w-2xl mx-auto">
+          Selecciona tu perfil para comenzar y acceder a las herramientas
+          diseñadas específicamente para tu rol en el ecosistema académico.
+        </p>
+      </div>
 
-    <section class="card">
-      <div class="card-icon">★</div>
-      <h2>Estudiantes</h2>
-      <p>
-        Conéctate con otros estudiantes, participa en foros, crea proyectos colaborativos y
-        postúlate a oportunidades académicas o laborales validadas por tu universidad.
-      </p>
-      <button class="union-button" (click)="navigateToRegister('estudiante')">
-        Saber más y aplicar
-      </button>
-    </section>
+      <!-- Cards de selección -->
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-3 animate-slide-in">
+        <!-- Estudiantes -->
+        <div class="group relative bg-surface rounded-2xl shadow-soft border border-border p-8 transition-all duration-300 hover:shadow-hover hover:-translate-y-2 hover:border-primary-200">
+          <div class="flex flex-col h-full">
+            <div class="flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-6 group-hover:bg-primary-200 transition-colors">
+              <svg class="w-8 h-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443a55.381 55.381 0 0 1 5.25 2.882V15" />
+              </svg>
+            </div>
 
-    <section class="card">
-      <div class="card-icon">★</div>
-      <h2>Promotores</h2>
-      <p>
-        Publica ofertas de empleo, prácticas o colaboración dirigidas a estudiantes y egresados
-        verificados. Encuentra talento académico alineado con los objetivos profesionales.
-      </p>
-      <button class="union-button" (click)="navigateToRegister('promotor')">
-        Saber más y aplicar
-      </button>
-    </section>
-  </main>
+            <h2 class="text-2xl font-bold text-text-base mb-4 group-hover:text-primary-600 transition-colors">
+              Estudiantes y Egresados
+            </h2>
 
-  <footer class="union-footer">
-    <p>© 2025 UniON, todos los derechos reservados.</p>
-    <div class="footer-links">
-      <a href="#">Condiciones de uso</a>
-      <a href="#">Política de privacidad (actualizada 07/2025)</a>
-      <a href="#">¿Qué es UniON?</a>
-      <a href="#">No vender ni compartir mi información personal</a>
+            <p class="text-text-muted mb-8 flex-grow leading-relaxed">
+              Conéctate con otros estudiantes, participa en foros académicos, crea proyectos colaborativos
+              y postúlate a oportunidades académicas o laborales validadas por tu universidad.
+            </p>
+
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-primary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Foros académicos especializados</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-primary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Proyectos colaborativos verificados</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-primary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Oportunidades académicas exclusivas</span>
+              </div>
+            </div>
+
+            <button
+              (click)="navigateToRegister('estudiante')"
+              class="w-full bg-primary-600 text-surface py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:bg-primary-700 hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            >
+              Comenzar registro
+            </button>
+          </div>
+        </div>
+
+        <!-- Instituciones -->
+        <div class="group relative bg-surface rounded-2xl shadow-soft border border-border p-8 transition-all duration-300 hover:shadow-hover hover:-translate-y-2 hover:border-secondary-200">
+          <div class="flex flex-col h-full">
+            <div class="flex items-center justify-center w-16 h-16 bg-secondary-100 rounded-2xl mb-6 group-hover:bg-secondary-200 transition-colors">
+              <svg class="w-8 h-8 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+              </svg>
+            </div>
+
+            <h2 class="text-2xl font-bold text-text-base mb-4 group-hover:text-secondary-600 transition-colors">
+              Instituciones Académicas
+            </h2>
+
+            <p class="text-text-muted mb-8 flex-grow leading-relaxed">
+              Únete como institución y valida a tus estudiantes y egresados. Gestiona oportunidades
+              académicas, eventos y verifica proyectos que representen el talento de tu comunidad universitaria.
+            </p>
+
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-secondary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Verificación de estudiantes y egresados</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-secondary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Organización de eventos institucionales</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-secondary-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Métricas de participación estudiantil</span>
+              </div>
+            </div>
+
+            <button
+              (click)="navigateToRegister('institucion')"
+              class="w-full bg-secondary-600 text-surface py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:bg-secondary-700 hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2"
+            >
+              Comenzar registro
+            </button>
+          </div>
+        </div>
+
+        <!-- Promotores -->
+        <div class="group relative bg-surface rounded-2xl shadow-soft border border-border p-8 transition-all duration-300 hover:shadow-hover hover:-translate-y-2 hover:border-accent-200">
+          <div class="flex flex-col h-full">
+            <div class="flex items-center justify-center w-16 h-16 bg-accent-100 rounded-2xl mb-6 group-hover:bg-accent-200 transition-colors">
+              <svg class="w-8 h-8 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+              </svg>
+            </div>
+
+            <h2 class="text-2xl font-bold text-text-base mb-4 group-hover:text-accent-600 transition-colors">
+              Promotores y Empresas
+            </h2>
+
+            <p class="text-text-muted mb-8 flex-grow leading-relaxed">
+              Publica ofertas de empleo, prácticas o colaboración dirigidas a estudiantes y egresados
+              verificados. Encuentra talento académico alineado con tus objetivos profesionales.
+            </p>
+
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-accent-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Publicación de ofertas laborales</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-accent-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Acceso a talento verificado</span>
+              </div>
+              <div class="flex items-center text-sm text-text-muted">
+                <svg class="w-4 h-4 text-accent-600 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Gestión de postulaciones</span>
+              </div>
+            </div>
+
+            <button
+              (click)="navigateToRegister('promotor')"
+              class="w-full bg-accent-600 text-surface py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:bg-accent-700 hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
+            >
+              Comenzar registro
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="mt-16 text-center animate-fade-in">
+        <div class="max-w-3xl mx-auto bg-surface/80 backdrop-blur-sm rounded-2xl border border-border p-8 shadow-soft">
+          <h3 class="text-2xl font-bold text-text-base mb-4">
+            ¿Por qué elegir UniON?
+          </h3>
+          <p class="text-text-muted leading-relaxed mb-6">
+            UniON no es solo otra plataforma educativa. Es un ecosistema completo que conecta
+            estudiantes, instituciones y empresas de manera verificada y segura, fomentando
+            la colaboración académica global y la innovación interuniversitaria.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+              </div>
+              <span class="font-semibold text-text-base">Verificación Institucional</span>
+              <span class="text-text-muted text-center">Todos los usuarios son verificados por sus instituciones</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 bg-secondary-100 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-5 h-5 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3s-4.5 4.03-4.5 9 2.015 9 4.5 9Z" />
+                </svg>
+              </div>
+              <span class="font-semibold text-text-base">Alcance Global</span>
+              <span class="text-text-muted text-center">Conecta con universidades de todo el mundo</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-5 h-5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.228a9.014 9.014 0 0 1 5.196 5.314m-7.425-.025L12 2.25l.75.002m-.75-.002a24.301 24.301 0 0 1 4.094.206m-4.094-.206a26.647 26.647 0 0 0-4.094.206m4.094 0V9.72a4.563 4.563 0 0 1-1.423-.165m1.423.165a4.563 4.563 0 0 0 1.423-.165" />
+                </svg>
+              </div>
+              <span class="font-semibold text-text-base">Proyectos Reales</span>
+              <span class="text-text-muted text-center">Colabora en iniciativas con impacto real</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-neutral-900 border-t border-neutral-800 mt-16">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div class="flex items-center space-x-3">
+          <img src="/assets/images/logo.png" alt="UniON" class="h-8 w-auto" />
+          <span class="text-lg font-semibold text-surface">UniON</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6 text-sm text-neutral-400">
+          <a href="#" class="hover:text-surface transition-colors">Términos de uso</a>
+          <a href="#" class="hover:text-surface transition-colors">Política de privacidad</a>
+          <a href="#" class="hover:text-surface transition-colors">¿Qué es UniON?</a>
+          <a href="#" class="hover:text-surface transition-colors">Soporte</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-neutral-800 text-center">
+        <p class="text-sm text-neutral-400">
+          © 2025 UniON. Transformando la colaboración académica global.
+        </p>
+      </div>
     </div>
   </footer>
 </div>
