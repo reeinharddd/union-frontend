@@ -29,7 +29,7 @@ export class ApiClientService {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body);
   }
 
-  put<T>(endpoint: string, body: any): Observable<T> {
+  put<T>(endpoint: string, body: any, p0: { headers: { Authorization: string; }; }): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, body);
   }
 

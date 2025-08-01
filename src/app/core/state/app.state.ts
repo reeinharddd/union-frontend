@@ -1,5 +1,5 @@
 // src/app/core/state/app.state.ts
-import { Injectable, signal, computed } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { User } from '@app/core/models/auth/auth.interface';
 
 export interface AppError {
@@ -25,6 +25,7 @@ export interface PaginationState {
   providedIn: 'root',
 })
 export class AppState {
+  [x: string]: any;
   // Estados de loading
   private readonly _loadingState = signal<LoadingState>({});
   readonly loadingState = this._loadingState.asReadonly();

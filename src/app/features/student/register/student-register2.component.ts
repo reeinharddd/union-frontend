@@ -49,7 +49,7 @@ export class StudentRegister2Component {
         token: this.token,
         usuario_id: this.usuario_id,
         fullName: this.registerForm.value.fullName,
-        email: this.registerForm.value.email,
+        correo: this.registerForm.value.correo,
       };
 
       // console.log('=== DATOS DEL FORMULARIO 2 ===');
@@ -69,7 +69,7 @@ export class StudentRegister2Component {
             token: this.token,
             usuario_id: this.usuario_id,
             fullName: completeFormData.fullName,
-            email: completeFormData.email,
+            correo: completeFormData.correo,
           },
         });
       }, 1500);

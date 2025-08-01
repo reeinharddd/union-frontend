@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE: '/usuarios',
     BY_ID: (id: number) => `/usuarios/${id}`,
+    UPDATE: (id: number) => `/usuarios/${id}`,
   },
 
   // Universidades - ✅ Corregidos según API
@@ -40,6 +41,20 @@ export const API_ENDPOINTS = {
   OPPORTUNITIES: {
     BASE: '/oportunidades',
     BY_ID: (id: number) => `/oportunidades/${id}`,
+    BY_PROMOTER: '/oportunidades/promotor',
+    PENDING_REVIEW: '/oportunidades/pending-review',
+    UPDATE: (id: number) => `/oportunidades/${id}`,
+    DELETE: (id: number) => `/oportunidades/${id}`,
+  },
+
+  // Postulaciones
+  POSTULATIONS: {
+    BASE: '/postulaciones',
+    BY_ID: (id: number) => `/postulaciones/${id}`,
+    RECENT: '/postulaciones/recent',
+    PENDING_REVIEW: '/postulaciones/pending-review',
+    BY_OPPORTUNITY: (opportunityId: number) => `/postulaciones?oportunidad_id=${opportunityId}`,
+    BY_USER: (userId: number) => `/postulaciones?usuario_id=${userId}`,
   },
 
   // Tags

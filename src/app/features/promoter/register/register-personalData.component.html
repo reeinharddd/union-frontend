@@ -3,8 +3,7 @@
   <div class="flex flex-1 flex-col justify-center">
     <h1 class="mb-4 text-4xl font-bold text-black">Completa tu registro</h1>
     <p class="mb-8 text-lg text-neutral-600">
-      Por favor ingresa tus datos personales para continuarRegístrate con tu correo institucional,
-      ID de estudiante y token de acceso
+      Por favor ingresa tus datos personales para finalizar el registro en UniON.
     </p>
     <a class="login-link" routerLink="/login">Ya tengo cuenta</a>
   </div>
@@ -14,7 +13,7 @@
     <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
       <!-- Header de "ventana" -->
       <div class="mb-6 flex items-center justify-between">
-        <span class="text-sm font-semibold text-black">Correo Alternativo</span>
+        <span class="text-sm font-semibold text-black">Datos Personales</span>
         <div class="flex space-x-2">
           <span class="bg-red-500 h-3 w-3 rounded-full"></span>
           <span class="bg-yellow-500 h-3 w-3 rounded-full"></span>
@@ -22,10 +21,7 @@
         </div>
       </div>
 
-      <p class="mb-6 text-center text-sm font-semibold text-neutral-800">
-        Además de tu correo universitario, este funcionará como otro método de accesoy/o de
-        recuperación
-      </p>
+      <p class="mb-6 text-center text-sm font-semibold text-neutral-800">Formulario</p>
 
       <!-- Formulario -->
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
@@ -33,7 +29,7 @@
         <div>
           <input
             type="text"
-            formControlName="fullName"
+            formControlName="nombre"
             placeholder="Nombre completo"
             class="border-gray-300 w-full rounded-lg border px-4 py-2"
           />
@@ -43,6 +39,15 @@
             type="email"
             formControlName="correo"
             placeholder="Correo electrónico"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2"
+          />
+        </div>
+
+        <div>
+          <input
+            type="password"
+            formControlName="contrasena"
+            placeholder="Contraseña"
             class="border-gray-300 w-full rounded-lg border px-4 py-2"
           />
         </div>

@@ -74,6 +74,64 @@ export class AuthService extends BaseService {
       }),
     );
   }
+  // verifyEmail(token: string): Observable<AuthResponse> {
+  //   return this.handleRequest(
+  //     this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, { token }),
+  //     'auth.verifyEmail',
+  //     {
+  //       showSuccessToast: true,
+  //       successMessage: '¡Correo verificado exitosamente!',
+  //       logRequest: true,
+  //     },
+  //   ).pipe(
+  //     tap(response => {
+  //       this.setAuthData(response);
+  //     }),
+  //   );
+  // }
+  // resetPassword(email: string): Observable<{ message: string }> {
+  //   return this.handleRequest(
+  //     this.apiClient.post<{ message: string }>(API_ENDPOINTS.AUTH.RESET_PASSWORD, { email }),
+  //     'auth.resetPassword',
+  //     {
+  //       showSuccessToast: true,
+  //       successMessage: 'Instrucciones de restablecimiento enviadas a tu correo',
+  //       logRequest: true,
+  //     },
+  //   );
+  // }
+  // changePassword(token: string, newPassword: string): Observable<{ message: string }> {
+  //   return this.handleRequest(
+  //     this.apiClient.post<{ message: string }>(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, { token, newPassword }),
+  //     'auth.changePassword',
+  //     {
+  //       showSuccessToast: true,
+  //       successMessage: 'Contraseña cambiada exitosamente',
+  //       logRequest: true,
+  //     },
+  //   ).pipe(
+  //     tap(() => {
+
+  //       this.clearAuthData(); // Limpiar datos de autenticación después de cambiar la contraseña
+  //       this.router.navigate(['/login']);
+  //       this.toastService.showSuccess('¡Tu contraseña ha sido cambiada exitosamente! Por favor, inicia sesión nuevamente.');
+  //     }),
+  //   );
+  // }
+  // refreshToken(): Observable<AuthResponse> {
+  //   return this.handleRequest(
+  //     this.apiClient.post<AuthResponse>(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {}),
+  //     'auth.refreshToken',
+  //     {
+  //       showSuccessToast: false, // No mostrar toast en el refresh
+  //       logRequest: true,
+  //     },
+  //   ).pipe(
+  //     tap(response => {
+  //       this.setAuthData(response);
+  //     }),
+  //   );
+  // }
 
   logout(): void {
     const userName = this.currentUser()?.nombre || 'Usuario';

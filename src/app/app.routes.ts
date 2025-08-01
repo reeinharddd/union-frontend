@@ -55,7 +55,16 @@ export const routes: Routes = [
       {
         path: 'register/promotor',
         loadComponent: () =>
-          import('./features/public/register/register.component').then(m => m.RegisterComponent),
+          import('./features/promoter/register/register-token.component').then(
+            m => m.PromotorRegisterComponent,
+          ),
+      },
+      {
+        path: 'register/promotor/datos-personales',
+        loadComponent: () =>
+          import('./features/promoter/register/register-personalData.component').then(
+            m => m.PromotorRegister2Component,
+          ),
       },
     ],
   },

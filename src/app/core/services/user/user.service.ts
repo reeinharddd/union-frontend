@@ -42,23 +42,20 @@ export class UserService extends BaseService {
     );
   }
 
-  update(id: number, userData: UpdateUserRequest): Observable<User> {
+  update(id: number, data: UpdateUserRequest): Observable<User> {
     return this.handleRequest(
-      this.apiClient.put<User>(API_ENDPOINTS.USERS.BY_ID(id), userData),
+      this.apiClient.put<User>(API_ENDPOINTS.USERS.UPDATE(id), data),
       `users.update.${id}`,
       {
         showSuccessToast: true,
-        successMessage: 'Perfil actualizado exitosamente',
+        successMessage: 'Usuario actualizado exitosamente',
         logRequest: true,
       },
     ).pipe(
       tap(updatedUser => {
-        this._users.update(users => users.map(user => (user.id === id ? updatedUser : user)));
-
-        const currentUser = this.appState.currentUser();
-        if (currentUser && currentUser.id === id) {
-          this.appState.setCurrentUser(updatedUser);
-        }
+        this._users.update(users =>
+          users.map(user => (user.id === id ? { ...user, ...updatedUser } : user)),
+        );
       }),
     );
   }
