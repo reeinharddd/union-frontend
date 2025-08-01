@@ -1,0 +1,15 @@
+<div class="flex h-screen overflow-hidden bg-background">
+  <!-- Sidebar Promotor -->
+  <app-promoter-sidebar class="w-64 flex-shrink-0 border-r border-border bg-white"></app-promoter-sidebar>
+
+  <!-- Contenedor principal -->
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <!-- Encabezado Promotor -->
+    <app-promoter-header class="flex-shrink-0 bg-white shadow-sm"></app-promoter-header>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 overflow-auto p-6 bg-muted">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -6,8 +6,8 @@ export const PROMOTER_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('../../layouts/private-layout/private-layout.component').then(
-        m => m.PrivateLayoutComponent,
+      import('../../layouts/promoter-layout/promoter-layout.component').then(
+        m => m.PromoterLayoutComponent, // Ensure this matches the component name in the layout file
       ),
     canActivate: [authGuard, roleGuard([3])], // ✅ Estudiante = 2
     children: [

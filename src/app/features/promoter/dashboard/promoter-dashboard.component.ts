@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
+//import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
 import { PostulationService } from '@app/core/services/postulation/postulation.service';
 
 @Component({
@@ -197,7 +197,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
 })
 export class PromoterDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
-  private readonly opportunityService = inject(OpportunityService);
+  //private readonly opportunityService = inject(OpportunityService);
   private readonly postulationService = inject(PostulationService);
 
   readonly promoterStats = signal({

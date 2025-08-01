@@ -78,9 +78,7 @@ export class OpportunityService {
   update(id: number, opportunity: Partial<CreateOpportunityRequest>): Observable<Opportunity> {
     console.log('🔄 OpportunityService - Updating opportunity:', id, opportunity);
     return this.apiClient
-      .put<Opportunity>(API_ENDPOINTS.OPPORTUNITIES.BY_ID(id), opportunity, {
-        headers: { Authorization: `Bearer ${this.appState['token']}` },
-      })
+      .put<Opportunity>(API_ENDPOINTS.OPPORTUNITIES.BY_ID(id), opportunity)
       .pipe(
         tap(updatedOpportunity => {
           this._opportunities.update(opportunities =>
