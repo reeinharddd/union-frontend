@@ -18,7 +18,7 @@ import { PromoterSidebarComponent } from '@app/shared/components/dynamic-sidebar
         <app-header class="flex-shrink-0"></app-header>
 
         <!-- Área Principal -->
-        <main class="flex-1 overflow-auto bg-muted p-6">
+        <main class="bg-muted flex-1 overflow-auto p-6">
           <div class="mx-auto max-w-6xl">
             <router-outlet></router-outlet>
           </div>

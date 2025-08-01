@@ -12,8 +12,8 @@ import {
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `
-    <aside class="h-full w-full bg-white border-r border-border p-4 flex flex-col">
-        <div class="border-b border-border p-6">
+    <aside class="flex h-full w-full flex-col border-r border-border bg-white p-4">
+      <div class="border-b border-border p-6">
         <div class="flex items-center space-x-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
             <span class="text-sm font-semibold text-primary-600">
@@ -35,34 +35,34 @@ import {
         <a
           routerLink="/promoter/dashboard"
           routerLinkActive="bg-primary text-white"
-          class="px-4 py-2 rounded hover:bg-primary/10 transition"
+          class="rounded px-4 py-2 transition hover:bg-primary/10"
         >
           🏠 Dashboard
         </a>
         <a
           routerLink="/promoter/projects"
           routerLinkActive="bg-primary text-white"
-          class="px-4 py-2 rounded hover:bg-primary/10 transition"
+          class="rounded px-4 py-2 transition hover:bg-primary/10"
         >
           📁 Mis Proyectos
         </a>
         <a
           routerLink="/promoter/clients"
           routerLinkActive="bg-primary text-white"
-          class="px-4 py-2 rounded hover:bg-primary/10 transition"
+          class="rounded px-4 py-2 transition hover:bg-primary/10"
         >
           👥 Clientes
         </a>
         <a
           routerLink="/promoter/settings"
           routerLinkActive="bg-primary text-white"
-          class="px-4 py-2 rounded hover:bg-primary/10 transition"
+          class="rounded px-4 py-2 transition hover:bg-primary/10"
         >
           ⚙️ Configuración
         </a>
       </nav>
 
-       <!-- Footer con acciones -->
+      <!-- Footer con acciones -->
       <div class="border-t border-border p-4">
         <button
           (click)="logout()"
@@ -74,7 +74,7 @@ import {
       </div>
     </aside>
   `,
-    styles: [
+  styles: [
     `
       .nav-item.active {
         @apply border-primary-200 bg-primary-50 text-primary-700;
@@ -199,65 +199,65 @@ import {
   ],
 })
 export class PromoterSidebarComponent {
-    showDropdown = false;
-      private readonly navigationService = inject(NavigationService);
-      private readonly authService = inject(AuthService);
-    
-      readonly navigation = this.navigationService.currentNavigation;
-      readonly currentUser = this.authService.currentUser;
-    
-      private expandedMenusSignal = signal<Set<string>>(new Set());
-      readonly expandedMenus = this.expandedMenusSignal.asReadonly();
+  showDropdown = false;
+  private readonly navigationService = inject(NavigationService);
+  private readonly authService = inject(AuthService);
 
-      toggleSubmenu(item: NavigationItem): void {
-        if (!item.children?.length) return;
-    
-        const expanded = this.expandedMenusSignal();
-        const newExpanded = new Set(expanded);
-    
-        if (newExpanded.has(item.route)) {
-          newExpanded.delete(item.route);
-        } else {
-          newExpanded.add(item.route);
-        }
-    
-        this.expandedMenusSignal.set(newExpanded);
-      }
-    
-      isActiveRoute(route: string): boolean {
-        return window.location.pathname.startsWith(route);
-      }
-    
-      getUserInitials(): string {
-        const user = this.currentUser();
-        if (user?.nombre) {
-          return user.nombre
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-        }
-        return user?.correo?.slice(0, 2).toUpperCase() || 'US';
-      }
-    
-      private getRoleName(role: number | undefined): string {
-        const roleNames = {
-          1: 'Administrador',
-          2: 'Estudiante',
-          3: 'Profesor',
-          9: 'Admin Universitario',
-        };
-    
-        return role ? roleNames[role as keyof typeof roleNames] || 'Usuario' : 'Usuario';
-      }
-    
-      getRoleDisplayName(): string {
-        const role = this.authService.userRole();
-        return this.getRoleName(role);
-      }
-    
-      logout(): void {
-        this.authService.logout();
-      }
+  readonly navigation = this.navigationService.currentNavigation;
+  readonly currentUser = this.authService.currentUser;
+
+  private expandedMenusSignal = signal<Set<string>>(new Set());
+  readonly expandedMenus = this.expandedMenusSignal.asReadonly();
+
+  toggleSubmenu(item: NavigationItem): void {
+    if (!item.children?.length) return;
+
+    const expanded = this.expandedMenusSignal();
+    const newExpanded = new Set(expanded);
+
+    if (newExpanded.has(item.route)) {
+      newExpanded.delete(item.route);
+    } else {
+      newExpanded.add(item.route);
+    }
+
+    this.expandedMenusSignal.set(newExpanded);
+  }
+
+  isActiveRoute(route: string): boolean {
+    return window.location.pathname.startsWith(route);
+  }
+
+  getUserInitials(): string {
+    const user = this.currentUser();
+    if (user?.nombre) {
+      return user.nombre
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return user?.correo?.slice(0, 2).toUpperCase() || 'US';
+  }
+
+  private getRoleName(role: number | undefined): string {
+    const roleNames = {
+      1: 'Administrador',
+      2: 'Estudiante',
+      3: 'Profesor',
+      9: 'Admin Universitario',
+    };
+
+    return role ? roleNames[role as keyof typeof roleNames] || 'Usuario' : 'Usuario';
+  }
+
+  getRoleDisplayName(): string {
+    const role = this.authService.userRole();
+    return this.getRoleName(role);
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

@@ -71,24 +71,22 @@ export class PostulationService {
   }
   update(id: number, data: Partial<Postulation>): Observable<Postulation> {
     console.log('🔄 PostulationService - Updating postulation:', id, data);
-    return this.apiClient
-      .put<Postulation>(API_ENDPOINTS.POSTULATIONS.BY_ID(id), data)
-      .pipe(
-        tap(updatedPostulation => {
-          this._postulations.update(postulations =>
-            postulations.map(postulation =>
-              postulation.id === id ? { ...postulation, ...updatedPostulation } : postulation,
-            ),
-          );
-          console.log('✅ Postulation updated:', updatedPostulation);
-          this.toastService.showSuccess('Postulación actualizada exitosamente');
-        }),
-        catchError(error => {
-          console.error('❌ Failed to update postulation:', error);
-          this.toastService.showError('Error al actualizar la postulación');
-          return throwError(() => error);
-        }),
-      );
+    return this.apiClient.put<Postulation>(API_ENDPOINTS.POSTULATIONS.BY_ID(id), data).pipe(
+      tap(updatedPostulation => {
+        this._postulations.update(postulations =>
+          postulations.map(postulation =>
+            postulation.id === id ? { ...postulation, ...updatedPostulation } : postulation,
+          ),
+        );
+        console.log('✅ Postulation updated:', updatedPostulation);
+        this.toastService.showSuccess('Postulación actualizada exitosamente');
+      }),
+      catchError(error => {
+        console.error('❌ Failed to update postulation:', error);
+        this.toastService.showError('Error al actualizar la postulación');
+        return throwError(() => error);
+      }),
+    );
   }
 
   // Otros métodos como delete pueden ser implementados aquí
