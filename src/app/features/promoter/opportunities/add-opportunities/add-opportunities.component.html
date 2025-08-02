@@ -1,0 +1,252 @@
+<div class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-md">
+  <h2 class="text-gray-800 mb-6 text-center text-2xl font-bold">Publicar Nueva Oportunidad</h2>
+
+  <form [formGroup]="oportunidadForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Título -->
+    <div>
+      <label class="text-gray-700 mb-1 block text-sm font-medium">Título *</label>
+      <input
+        type="text"
+        formControlName="titulo"
+        placeholder="Ej: Desarrollador Frontend Junior"
+        class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        [class.border-red-500]="
+          oportunidadForm.get('titulo')?.invalid && oportunidadForm.get('titulo')?.touched
+        "
+      />
+      <div
+        *ngIf="oportunidadForm.get('titulo')?.invalid && oportunidadForm.get('titulo')?.touched"
+        class="text-red-500 mt-1 text-sm"
+      >
+        <span *ngIf="oportunidadForm.get('titulo')?.errors?.['required']"
+          >El título es requerido</span
+        >
+        <span *ngIf="oportunidadForm.get('titulo')?.errors?.['maxlength']"
+          >Máximo 200 caracteres</span
+        >
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div>
+      <label class="text-gray-700 mb-1 block text-sm font-medium">Descripción *</label>
+      <textarea
+        formControlName="descripcion"
+        rows="4"
+        class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        [class.border-red-500]="
+          oportunidadForm.get('descripcion')?.invalid && oportunidadForm.get('descripcion')?.touched
+        "
+        placeholder="Describe detalladamente la oportunidad..."
+      ></textarea>
+      <div
+        *ngIf="
+          oportunidadForm.get('descripcion')?.invalid && oportunidadForm.get('descripcion')?.touched
+        "
+        class="text-red-500 mt-1 text-sm"
+      >
+        La descripción es requerida
+      </div>
+    </div>
+
+    <!-- Universidad y Tipo -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <!-- Universidad -->
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Universidad *</label>
+        <select
+          formControlName="universidad_id"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+          [class.border-red-500]="
+            oportunidadForm.get('universidad_id')?.invalid &&
+            oportunidadForm.get('universidad_id')?.touched
+          "
+        >
+          <option value="" disabled selected>Seleccione una universidad</option>
+          <option *ngFor="let universidad of universidades" [value]="universidad.id">
+            {{ universidad.nombre }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            oportunidadForm.get('universidad_id')?.invalid &&
+            oportunidadForm.get('universidad_id')?.touched
+          "
+          class="text-red-500 mt-1 text-sm"
+        >
+          Seleccione una universidad
+        </div>
+      </div>
+
+      <!-- Tipo de Oportunidad -->
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Tipo *</label>
+        <select
+          formControlName="opportunity_type_id"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+          [class.border-red-500]="
+            oportunidadForm.get('opportunity_type_id')?.invalid &&
+            oportunidadForm.get('opportunity_type_id')?.touched
+          "
+        >
+          <option value="" disabled selected>Seleccione el tipo</option>
+          <option *ngFor="let tipo of tiposOportunidad" [value]="tipo.id">
+            {{ tipo.name }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            oportunidadForm.get('opportunity_type_id')?.invalid &&
+            oportunidadForm.get('opportunity_type_id')?.touched
+          "
+          class="text-red-500 mt-1 text-sm"
+        >
+          Seleccione un tipo de oportunidad
+        </div>
+      </div>
+    </div>
+
+    <!-- Fecha y Modalidad -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <!-- Fecha Límite -->
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Fecha Límite *</label>
+        <input
+          type="date"
+          formControlName="fecha_limite"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+          [class.border-red-500]="
+            oportunidadForm.get('fecha_limite')?.invalid &&
+            oportunidadForm.get('fecha_limite')?.touched
+          "
+        />
+        <div
+          *ngIf="
+            oportunidadForm.get('fecha_limite')?.invalid &&
+            oportunidadForm.get('fecha_limite')?.touched
+          "
+          class="text-red-500 mt-1 text-sm"
+        >
+          <span *ngIf="oportunidadForm.get('fecha_limite')?.errors?.['required']"
+            >La fecha es requerida</span
+          >
+          <span *ngIf="oportunidadForm.get('fecha_limite')?.errors?.['pastDate']"
+            >La fecha debe ser futura</span
+          >
+        </div>
+      </div>
+
+      <!-- Modalidad -->
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Modalidad *</label>
+        <select
+          formControlName="modality_id"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+          [class.border-red-500]="
+            oportunidadForm.get('modality_id')?.invalid &&
+            oportunidadForm.get('modality_id')?.touched
+          "
+        >
+          <option value="" disabled selected>Seleccione modalidad</option>
+          <option *ngFor="let modalidad of modalidades" [value]="modalidad.id">
+            {{ modalidad.name }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            oportunidadForm.get('modality_id')?.invalid &&
+            oportunidadForm.get('modality_id')?.touched
+          "
+          class="text-red-500 mt-1 text-sm"
+        >
+          Seleccione una modalidad
+        </div>
+      </div>
+    </div>
+
+    <!-- Empresa -->
+    <div>
+      <label class="text-gray-700 mb-1 block text-sm font-medium">Empresa/Organización</label>
+      <input
+        type="text"
+        formControlName="empresa"
+        placeholder="Nombre de la empresa que ofrece la oportunidad"
+        class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+      />
+    </div>
+
+    <!-- Rango Salarial -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Salario Mínimo (USD)</label>
+        <input
+          type="number"
+          formControlName="salario_min"
+          min="0"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        />
+      </div>
+      <div>
+        <label class="text-gray-700 mb-1 block text-sm font-medium">Salario Máximo (USD)</label>
+        <input
+          type="number"
+          formControlName="salario_max"
+          min="0"
+          class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        />
+      </div>
+    </div>
+
+    <!-- Requisitos -->
+    <div>
+      <label class="text-gray-700 mb-1 block text-sm font-medium">Requisitos *</label>
+      <textarea
+        formControlName="requisitos"
+        rows="3"
+        class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        [class.border-red-500]="
+          oportunidadForm.get('requisitos')?.invalid && oportunidadForm.get('requisitos')?.touched
+        "
+        placeholder="Lista de requisitos para aplicar..."
+      ></textarea>
+      <div
+        *ngIf="
+          oportunidadForm.get('requisitos')?.invalid && oportunidadForm.get('requisitos')?.touched
+        "
+        class="text-red-500 mt-1 text-sm"
+      >
+        Los requisitos son requeridos
+      </div>
+    </div>
+
+    <!-- Beneficios -->
+    <div>
+      <label class="text-gray-700 mb-1 block text-sm font-medium">Beneficios</label>
+      <textarea
+        formControlName="beneficios"
+        rows="3"
+        class="border-gray-300 focus:ring-orange-500 focus:border-orange-500 w-full rounded-md border px-4 py-2"
+        placeholder="Beneficios ofrecidos..."
+      ></textarea>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4 pt-6">
+      <button
+        type="button"
+        routerLink="/promoter/dashboard"
+        class="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-md border bg-white px-6 py-2"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="oportunidadForm.invalid || isSubmitting"
+        class="flex-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-md transition hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <span *ngIf="!isSubmitting">Publicar Oportunidad</span>
+        <span *ngIf="isSubmitting">Publicando...</span>
+      </button>
+    </div>
+  </form>
+</div>

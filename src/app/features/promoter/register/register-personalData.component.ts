@@ -22,7 +22,7 @@ export class PromotorRegister2Component {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private apiClient: ApiClientService // Inyectamos el ApiClientService
+    private apiClient: ApiClientService, // Inyectamos el ApiClientService
   ) {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -51,9 +51,9 @@ export class PromotorRegister2Component {
 
       // Actualiza el usuario
       this.userService.update(this.usuario_id, userData).subscribe({
-        next: (userResponse) => {
+        next: userResponse => {
           console.log('Usuario actualizado:', userResponse);
-          
+
           // Preparamos los datos para actualizar el token
           const updateTokenData = {
             usado: true,
@@ -68,14 +68,14 @@ export class PromotorRegister2Component {
                 console.info('Token marcado como usado:', tokenResponse);
                 this.router.navigate(['/login']);
               },
-              error: (tokenError) => {
+              error: tokenError => {
                 console.error('Error al actualizar el token:', tokenError);
                 // Aunque falló la actualización del token, el usuario ya está registrado
                 this.router.navigate(['/login']);
-              }
+              },
             });
         },
-        error: (userError) => {
+        error: userError => {
           console.error('Error al actualizar el usuario:', userError);
           alert('Error al registrar el usuario. Inténtalo de nuevo.');
         },

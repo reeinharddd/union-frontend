@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '@app/core/services/auth/auth.service';
 //import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
-import { PostulationService } from '@app/core/services/postulation/postulation.service';
+//import { PostulationService } from '@app/core/services/postulation/postulation.service';
 
 @Component({
   selector: 'app-promoter-dashboard',
@@ -130,15 +130,15 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
             Acciones Rápidas
           </h3>
           <div class="space-y-3">
-            <button
-              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
-              (click)="navigateTo('create-opportunity')"
+            <a
+              href="promoter/opportunities/create"
+              class="group block w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
             >
               <div class="flex items-center space-x-3">
                 <span class="text-xl transition-transform group-hover:scale-110">➕</span>
                 <span class="text-sm font-medium">Crear Oportunidad</span>
               </div>
-            </button>
+            </a>
 
             <button
               class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-secondary-300 hover:bg-secondary-50"
@@ -198,7 +198,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
 export class PromoterDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
   //private readonly opportunityService = inject(OpportunityService);
-  private readonly postulationService = inject(PostulationService);
+  //private readonly postulationService = inject(PostulationService);
 
   readonly promoterStats = signal({
     activeOpportunities: 0,
@@ -236,24 +236,20 @@ export class PromoterDashboardComponent implements OnInit {
     // Cargar estadísticas de oportunidades
     // this.opportunityService.getByPromoter().subscribe(opportunities => {
     //   const activeOpportunities = opportunities.filter(opp => opp.activa).length;
-
     //   this.promoterStats.update(stats => ({
     //     ...stats,
     //     activeOpportunities: activeOpportunities,
     //   }));
     // });
-
     // Cargar postulaciones recientes
-    this.postulationService.getRecent().subscribe(postulations => {
-      this.recentPostulations.set(postulations);
-
-      this.promoterStats.update(stats => ({
-        ...stats,
-        totalPostulations: postulations.length,
-        newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
-      }));
-    });
-
+    // this.postulationService.getRecent().subscribe(postulations => {
+    //   this.recentPostulations.set(postulations);
+    //   this.promoterStats.update(stats => ({
+    //     ...stats,
+    //     totalPostulations: postulations.length,
+    //     newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
+    //   }));
+    // });
     // Cargar oportunidades con postulaciones pendientes
     // this.opportunityService.getPendingReview().subscribe(opportunities => {
     //   this.pendingOpportunities.set(opportunities);

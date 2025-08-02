@@ -41,10 +41,22 @@ export const API_ENDPOINTS = {
   OPPORTUNITIES: {
     BASE: '/oportunidades',
     BY_ID: (id: number) => `/oportunidades/${id}`,
-    BY_PROMOTER: '/oportunidades/promotor',
+    BY_PROMOTER: (userId: number) => `/oportunidades/creadas-por/${userId}`,
     PENDING_REVIEW: '/oportunidades/pending-review',
     UPDATE: (id: number) => `/oportunidades/${id}`,
     DELETE: (id: number) => `/oportunidades/${id}`,
+  },
+
+  //Oportunidades por tipo
+  OPPORTUNITIES_TYPE: {
+    BASE: '/opportunity-types',
+    BY_ID: (id: number) => `/opportunity-types/${id}`,
+  },
+
+  // Modalidades de trabajo
+  WORK_MODALITIES: {
+    BASE: '/work-modalities',
+    BY_ID: (id: number) => `/work-modalities/${id}`,
   },
 
   // Postulaciones

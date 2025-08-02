@@ -40,11 +40,11 @@ import {
           🏠 Dashboard
         </a>
         <a
-          routerLink="/promoter/projects"
+          routerLink="/promoter/opportunities"
           routerLinkActive="bg-primary text-white"
           class="rounded px-4 py-2 transition hover:bg-primary/10"
         >
-          📁 Mis Proyectos
+          📁 Oportunidades
         </a>
         <a
           routerLink="/promoter/clients"

@@ -33,7 +33,7 @@ export class PromotorRegisterComponent {
     if (this.tokenForm.valid) {
       const token = this.tokenForm.value.token;
 
-      this.apiClient.get(`/tokens-iniciales-acceso?token-acceso?token_acceso=${token}`).subscribe({
+      this.apiClient.get(`/tokens-iniciales-acceso/token-acceso?token_acceso=${token}`).subscribe({
         next: (response: any) => {
           let tokenEncontrado = null;
 

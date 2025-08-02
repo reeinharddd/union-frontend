@@ -18,13 +18,20 @@ export const PROMOTER_ROUTES: Routes = [
             m => m.PromoterDashboardComponent,
           ),
       },
-      // {
-      //   path: 'dashboard',
-      //   loadComponent: () =>
-      //     import('./dashboard/promoter-dashboard.component').then(
-      //       m => m.PromoterDashboardComponent,
-      //     ),
-      // },
+      {
+        path: 'opportunities',
+        loadComponent: () =>
+          import('./opportunities/opportunities.component').then(
+            m => m.OpportunitiesComponent,
+          ),
+      },
+      {
+        path: 'opportunities/create',
+        loadComponent: () =>
+          import('./opportunities/add-opportunities/add-opportunities.component').then(
+            m => m.NuevaOportunidadComponent,
+          ),
+      },
       // {
       //   path: 'events',
       //   loadComponent: () =>
