@@ -74,20 +74,19 @@ export class OpportunityService {
   }
 
   getByPromoter(userId: number): Observable<Opportunity[]> {
-  console.log('🔄 OpportunityService - Getting opportunities by promoter');
-  return this.apiClient.get<Opportunity[]>(API_ENDPOINTS.OPPORTUNITIES.BY_PROMOTER(userId)).pipe(
-    tap(opportunities => {
-      console.log(`✅ Loaded ${opportunities.length} opportunities for promoter`);
-      this._opportunities.set(opportunities);
-    }),
-    catchError(error => {
-      console.error('❌ Failed to load opportunities by promoter:', error);
-      this.toastService.showError('Error al cargar las oportunidades del promotor');
-      return throwError(() => error);
-    }),
-  );
-}
-
+    console.log('🔄 OpportunityService - Getting opportunities by promoter');
+    return this.apiClient.get<Opportunity[]>(API_ENDPOINTS.OPPORTUNITIES.BY_PROMOTER(userId)).pipe(
+      tap(opportunities => {
+        console.log(`✅ Loaded ${opportunities.length} opportunities for promoter`);
+        this._opportunities.set(opportunities);
+      }),
+      catchError(error => {
+        console.error('❌ Failed to load opportunities by promoter:', error);
+        this.toastService.showError('Error al cargar las oportunidades del promotor');
+        return throwError(() => error);
+      }),
+    );
+  }
 
   create(opportunity: CreateOpportunityRequest): Observable<Opportunity> {
     console.log('🔄 OpportunityService - Creating opportunity:', opportunity);

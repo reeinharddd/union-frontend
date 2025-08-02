@@ -1,34 +1,64 @@
 <div class="mx-auto max-w-6xl p-6">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Lista de Oportunidades</h2>
+  <h2 class="text-gray-800 mb-6 text-center text-2xl font-bold">Lista de Oportunidades</h2>
 
   <div class="overflow-x-auto rounded-lg shadow-md">
-    <table class="min-w-full divide-y divide-gray-200 bg-white">
+    <table class="divide-gray-200 min-w-full divide-y bg-white">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">Título</th>
-          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">Universidad</th>
-          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">Tipo</th>
-          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">Modalidad</th>
-          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">Fecha Límite</th>
-          <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-600">Acciones</th>
+          <th
+            class="text-gray-600 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+          >
+            Título
+          </th>
+          <th
+            class="text-gray-600 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+          >
+            Universidad
+          </th>
+          <th
+            class="text-gray-600 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+          >
+            Tipo
+          </th>
+          <th
+            class="text-gray-600 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+          >
+            Modalidad
+          </th>
+          <th
+            class="text-gray-600 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+          >
+            Fecha Límite
+          </th>
+          <th
+            class="text-gray-600 px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
+          >
+            Acciones
+          </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200">
+      <tbody class="divide-gray-200 divide-y">
         <tr *ngFor="let oportunidad of oportunidades">
-          <td class="px-6 py-4 text-sm text-gray-800">{{ oportunidad.titulo }}</td>
-          <td class="px-6 py-4 text-sm text-gray-800">{{ universidadesMap[oportunidad.universidad_id] || 'N/A' }}</td>
-          <td class="px-6 py-4 text-sm text-gray-800">{{ tiposOportunidadMap[oportunidad.opportunity_type_id] || 'N/A' }}</td>
-          <td class="px-6 py-4 text-sm text-gray-800">{{ modalidadesMap[oportunidad.modality_id] || 'N/A' }}</td>
-          <td class="px-6 py-4 text-sm text-gray-800">{{ oportunidad.fecha_limite}}</td>
-          <td class="px-6 py-4 text-sm text-center space-x-2">
+          <td class="text-gray-800 px-6 py-4 text-sm">{{ oportunidad.titulo }}</td>
+          <td class="text-gray-800 px-6 py-4 text-sm">
+            {{ universidadesMap[oportunidad.universidad_id] || 'N/A' }}
+          </td>
+          <td class="text-gray-800 px-6 py-4 text-sm">
+            {{ tiposOportunidadMap[oportunidad.opportunity_type_id] || 'N/A' }}
+          </td>
+          <td class="text-gray-800 px-6 py-4 text-sm">
+            {{ modalidadesMap[oportunidad.modality_id] || 'N/A' }}
+          </td>
+          <td class="text-gray-800 px-6 py-4 text-sm">{{ oportunidad.fecha_limite }}</td>
+          <td class="space-x-2 px-6 py-4 text-center text-sm">
             <button
-              class="inline-flex items-center rounded-md bg-blue-600 px-3 py-1 text-white text-sm hover:bg-blue-700 transition"
+              class="bg-blue-600 hover:bg-blue-700 inline-flex items-center rounded-md px-3 py-1 text-sm text-white transition"
               (click)="editarOportunidad(oportunidad)"
             >
               ✏️ Editar
             </button>
             <button
-              class="inline-flex items-center rounded-md bg-red-600 px-3 py-1 text-white text-sm hover:bg-red-700 transition"
+              class="bg-red-600 hover:bg-red-700 inline-flex items-center rounded-md px-3 py-1 text-sm text-white transition"
               (click)="eliminarOportunidad(oportunidad.id)"
             >
               🗑️ Eliminar
@@ -39,7 +69,7 @@
     </table>
   </div>
 
-  <div *ngIf="oportunidades.length === 0" class="text-center text-gray-600 mt-6">
+  <div *ngIf="oportunidades.length === 0" class="text-gray-600 mt-6 text-center">
     No hay oportunidades registradas.
   </div>
 </div>

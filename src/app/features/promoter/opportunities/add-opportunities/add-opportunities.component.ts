@@ -90,38 +90,38 @@ export class NuevaOportunidadComponent implements OnInit {
     return selectedDate >= today ? null : { pastDate: true };
   }
 
-onSubmit(): void {
-  if (this.oportunidadForm.invalid || this.isSubmitting) return;
+  onSubmit(): void {
+    if (this.oportunidadForm.invalid || this.isSubmitting) return;
 
-  this.isSubmitting = true;
-  const formValue = this.oportunidadForm.value;
-  const formData = {
-    ...formValue,
-    universidad_id: +formValue.universidad_id, // convierte a número
-  opportunity_type_id: +formValue.opportunity_type_id,
-    modality_id: +formValue.modality_id, // convierte a número
-    created_by: this.tokenService.getUserId(),
-  };
+    this.isSubmitting = true;
+    const formValue = this.oportunidadForm.value;
+    const formData = {
+      ...formValue,
+      universidad_id: +formValue.universidad_id, // convierte a número
+      opportunity_type_id: +formValue.opportunity_type_id,
+      modality_id: +formValue.modality_id, // convierte a número
+      created_by: this.tokenService.getUserId(),
+    };
 
-  // Agrega este console.log para ver los datos que se enviarán
-  console.log('Datos a enviar al servidor:', JSON.stringify(formData, null, 2));
+    // Agrega este console.log para ver los datos que se enviarán
+    console.log('Datos a enviar al servidor:', JSON.stringify(formData, null, 2));
 
-  this.opportunityService
-    .create(formData)
-    .pipe(finalize(() => (this.isSubmitting = false)))
-    .subscribe({
-      next: () => {
-        this.toastService.showSuccess('Oportunidad creada exitosamente');
-        this.router.navigate(['/promoter/dashboard']);
-      },
-      error: (error) => {
-        // Agrega este console.log para ver el error completo
-        console.error('Error completo del servidor:', error);
-        if (error.error?.details) {
-          console.error('Errores de validación:', error.error.details);
-        }
-        this.toastService.showError('Error al crear la oportunidad');
-      },
-    });
-}
+    this.opportunityService
+      .create(formData)
+      .pipe(finalize(() => (this.isSubmitting = false)))
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess('Oportunidad creada exitosamente');
+          this.router.navigate(['/promoter/dashboard']);
+        },
+        error: error => {
+          // Agrega este console.log para ver el error completo
+          console.error('Error completo del servidor:', error);
+          if (error.error?.details) {
+            console.error('Errores de validación:', error.error.details);
+          }
+          this.toastService.showError('Error al crear la oportunidad');
+        },
+      });
+  }
 }

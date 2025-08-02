@@ -21,9 +21,7 @@ export const PROMOTER_ROUTES: Routes = [
       {
         path: 'opportunities',
         loadComponent: () =>
-          import('./opportunities/opportunities.component').then(
-            m => m.OpportunitiesComponent,
-          ),
+          import('./opportunities/opportunities.component').then(m => m.OpportunitiesComponent),
       },
       {
         path: 'opportunities/create',
