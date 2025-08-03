@@ -1,0 +1,13 @@
+<ng-container *ngIf="show">
+  <div class="fixed bottom-4 right-60 -translate-x-12 z-50 w-full max-w-md">
+    <ng-container *ngIf="!selectedConversation; else chatView">
+      <app-conversations (selectConversation)="onSelectConversation($event)" (close)="close()"></app-conversations>
+    </ng-container>
+    <ng-template #chatView>
+      <app-chat [conversation]="selectedConversation" (back)="onBackToConversations()" (close)="close()"></app-chat>
+    </ng-template>
+  </div>
+</ng-container>
+<button *ngIf="!show" (click)="open()" class="fixed bottom-4 right-60 -translate-x-12 bg-[#EB6228] black rounded-lg shadow-lg px-10 py-2 text-xl font-bold focus:outline-none transition z-50">
+  Chat
+</button>

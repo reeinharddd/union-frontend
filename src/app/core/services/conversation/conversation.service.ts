@@ -15,10 +15,10 @@ export interface Conversation {
 export interface Message {
   id: number;
   conversacion_id: number;
-  usuario_id: number;
+  emisor_id: number; // Cambiado de usuario_id a emisor_id para coincidir con backend
   contenido: string;
   leido: boolean;
-  creado_en?: string;
+  enviado_en?: string; // Cambiado de creado_en a enviado_en para coincidir con backend
 }
 
 export interface CreateConversationRequest {
