@@ -29,6 +29,9 @@ export class OpportunityListComponent implements OnInit {
   filtroTipo: string = ''; // puede ser '' | '1' | '2'
   oportunidadesFiltradas: Opportunity[] = [];
   usuario_id: number | null = null;
+  postulacionesRealizadas: number[] = []; // IDs de oportunidades a las que ya se postuló
+  mensajeExito: string = '';
+  mensajeError: string = '';
 
   constructor(
     private opportunityService: OpportunityService,
@@ -99,9 +102,18 @@ export class OpportunityListComponent implements OnInit {
   postularse(id: number) {
     this.usuario_id = this.tokenService.getUserId();
     if (!this.usuario_id) {
-      console.error('❌ No se pudo obtener el ID del usuario.');
+      this.mensajeError = 'No se pudo obtener el ID del usuario.';
       return;
     }
+
+    // Verificar si ya se postuló
+    if (this.postulacionesRealizadas.includes(id)) {
+      this.mensajeError = 'Ya estás postulado a esta oportunidad.';
+      return;
+    }
+
+    const confirmacion = confirm('¿Estás seguro de que deseas postularte a esta oportunidad?');
+    if (!confirmacion) return;
 
     const nuevaPostulacion = {
       usuario_id: this.usuario_id,
@@ -111,11 +123,15 @@ export class OpportunityListComponent implements OnInit {
     };
 
     this.postulationService.create(nuevaPostulacion).subscribe({
-      next: postulation => {
-        console.log('🎉 Postulación realizada con éxito:', postulation);
+      next: _postulation => {
+        this.postulacionesRealizadas.push(id);
+        this.mensajeExito = '¡Postulación realizada con éxito!';
+        this.mensajeError = '';
       },
       error: err => {
         console.error('❌ Error al postularse:', err);
+        this.mensajeError = 'Error al postularse. Intenta de nuevo.';
+        this.mensajeExito = '';
       },
     });
   }

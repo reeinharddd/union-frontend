@@ -1,5 +1,12 @@
 <div class="mx-auto max-w-6xl p-6">
   <h2 class="text-gray-800 mb-6 text-center text-2xl font-bold">Lista de Oportunidades</h2>
+  <!-- Mensajes de estado -->
+  <div *ngIf="mensajeExito" class="bg-green-100 text-green-700 mb-4 rounded p-4 shadow">
+    {{ mensajeExito }}
+  </div>
+  <div *ngIf="mensajeError" class="bg-red-100 text-red-700 mb-4 rounded p-4 shadow">
+    {{ mensajeError }}
+  </div>
 
   <!-- Filtro por tipo de oportunidad -->
   <div class="mb-6 flex justify-end">
@@ -38,11 +45,16 @@
       </p>
 
       <button
+        *ngIf="!postulacionesRealizadas.includes(oportunidad.id); else yaPostulado"
         class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         (click)="postularse(oportunidad.id)"
       >
         Postularse
       </button>
+
+      <ng-template #yaPostulado>
+        <p class="text-green-700 mt-4 text-center font-semibold">✅ Ya estás postulado</p>
+      </ng-template>
     </div>
   </div>
 
