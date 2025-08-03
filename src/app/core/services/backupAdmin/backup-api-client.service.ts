@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -24,8 +24,8 @@ export class BackupApiClientService {
     return this.http.post(`${this.baseUrl}/restore-partial`, {});
   }
 
-  exportarTablaCsv(table: string, schema: string = 'public'): Observable<Blob> {
-    const params = new HttpParams().set('schema', schema);
-    return this.http.get(`${this.baseUrl}/export-csv/${table}`, { params, responseType: 'blob' });
+  exportarTablaCsv(table: string): Observable<Blob> {
+    //const params = new HttpParams().set('schema', schema);
+    return this.http.get(`${this.baseUrl}/export-csv/${table}`, { responseType: 'blob' });
   }
 }

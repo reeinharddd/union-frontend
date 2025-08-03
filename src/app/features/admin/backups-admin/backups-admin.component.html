@@ -79,19 +79,22 @@
       >
         {{ cargandoExportarCsv ? 'Exportando...' : 'Exportar a CSV' }}
       </button>
-      <input
+
+      <!-- 🔽 Dropdown en lugar del input -->
+      <select
         class="border-gray-300 ml-2 w-full rounded border p-2 md:w-48"
         [(ngModel)]="tablaExportarCsv"
-        placeholder="Escribe el nombre de la tabla"
-      />
-      <input
-        class="border-gray-300 ml-2 w-full rounded border p-2 md:w-48"
-        [(ngModel)]="schemaExportarCsv"
-        placeholder="Escribe el nombre del schema (opcional)"
-      />
+      >
+        <option value="" disabled selected>Selecciona una tabla</option>
+        <option *ngFor="let tabla of tablasDisponibles" [value]="tabla">
+          {{ tabla }}
+        </option>
+      </select>
+
       <div *ngIf="resultadoExportarCsv" class="text-green-700 mt-2 text-sm">
         {{ resultadoExportarCsv }}
       </div>
     </div>
   </div>
+
 </div>

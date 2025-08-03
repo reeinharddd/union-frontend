@@ -10,7 +10,7 @@ import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
       <!-- Dynamic Sidebar -->
-      <app-dynamic-sidebar class="w-64 flex-shrink-0"></app-dynamic-sidebar>
+      <app-dynamic-sidebar class="w-64 flex-shrink-0"> </app-dynamic-sidebar>
 
       <!-- Main Content Area -->
       <div class="flex flex-1 flex-col overflow-hidden">

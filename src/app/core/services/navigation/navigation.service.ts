@@ -3,6 +3,13 @@ import { Router } from '@angular/router';
 import { Roles } from '../../enums/roles';
 import { AuthService } from '../auth/auth.service';
 
+const ROLE_ID_TO_KEY: Record<number, keyof typeof Roles> = {
+  1: 'ADMIN',
+  9: 'ADMIN_UNI',
+  3: 'PROMOTER',
+  2: 'USER',
+};
+
 export interface NavigationItem {
   label: string;
   icon: string;
@@ -32,6 +39,43 @@ export class NavigationService {
         route: '/admin/dashboard',
       },
       {
+        label: 'Respaldos',
+        icon: 'package',
+        route: '/admin/backups',
+      },
+      {
+        label: 'Administración',
+        icon: 'settings',
+        route: '/admin/',
+        children: [
+          {
+            label: 'Tags',
+            icon: 'tag',
+            route: '/admin/tags',
+          },
+          {
+            label: 'Eventos',
+            icon: 'calendar',
+            route: '/admin/eventos',
+          },
+          {
+            label: 'Foros',
+            icon: 'message-square',
+            route: '/admin/foros',
+          },
+          {
+            label: 'Oportunidades',
+            icon: 'briefcase',
+            route: '/admin/opportunities',
+          },
+          {
+            label: 'Proyectos',
+            icon: 'folder',
+            route: '/admin/proyectos',
+          },
+        ],
+      },
+      /* {
         label: 'Gestión de Usuarios',
         icon: 'users',
         route: '/admin/users',
@@ -87,7 +131,7 @@ export class NavigationService {
         label: 'Conversaciones',
         icon: 'message-circle',
         route: '/admin/conversations',
-      },
+      }, */
     ],
     ADMIN_UNI: [
       {
@@ -119,7 +163,12 @@ export class NavigationService {
     if (!userRole) return [];
 
     // Convertir a string y mayúsculas para buscar en el config
-    const roleKey = String(userRole).toUpperCase() as keyof typeof Roles;
+    const roleKey = ROLE_ID_TO_KEY[userRole];
+    if (!roleKey) {
+      console.warn('❌ Rol no mapeado:', userRole);
+      return [];
+    }
+
     const navigation = this.navigationConfig[roleKey] || [];
 
     console.log('🗺️ NavigationService - Found navigation:', navigation.length, 'items');
