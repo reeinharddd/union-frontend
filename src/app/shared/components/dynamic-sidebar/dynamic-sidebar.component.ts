@@ -34,9 +34,6 @@ import {
 
       <!-- Navegación principal -->
       <nav class="flex-1 space-y-2 px-4 py-4">
-      
-          
-
         @for (item of navigation(); track item.route) {
           <div class="navigation-group">
             <!-- Item principal -->

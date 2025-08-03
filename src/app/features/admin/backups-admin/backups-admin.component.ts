@@ -12,6 +12,8 @@ import { BackupApiClientService } from '@app/core/services/backupAdmin/backup-ap
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackupsAdminComponent {
+
+  selectedTable = '';
   resultadoRespaldo: string | null = null;
   cargando: boolean = false;
 
@@ -31,34 +33,17 @@ export class BackupsAdminComponent {
   tablaRespaldoParcial: string = '';
   tablaRestaurarParcial: string = '';
   tablaExportarCsv: string = '';
-  schemaExportarCsv: string = '';
+  //schemaExportarCsv: string = '';
   tablasDisponibles: string[] = [
-    'actividad_usuario',
-    'asistencias_evento',
-    'bloques',
-    'conversaciones',
-    'eventos',
-    'experiencia_usuario',
-    'foros',
-    'hilos',
-    'mensajes',
-    'oportunidades',
-    'paginas_colaborativas',
-    'participaciones_proyecto',
-    'perfiles',
-    'postulaciones',
-    'proyectos',
-    'proyectos_validaciones',
-    'reportes',
-    'respuestas_hilo',
-    'roles_proyecto',
-    'roles_usuario',
-    'seguimientos',
-    'taggables',
-    'tags',
-    'universidades',
-    'usuarios',
-    'versiones_bloques',
+    'actividad_usuario', 'asistencias_evento', 'bloques', 'collaborative_page_permissions',
+    'content_types', 'conversaciones', 'event_types', 'eventos', 'experience_types',
+    'experiencia_usuario', 'foros', 'hilos', 'mensajes', 'ofertas_laborales', 'oportunidades',
+    'opportunity_types', 'paginas_colaborativas', 'participaciones_proyecto', 'perfiles',
+    'permission_types', 'postulaciones', 'postulaciones_laborales', 'project_technologies',
+    'proyectos', 'proyectos_validaciones', 'relaciones_bloques', 'report_evidences', 'reportes',
+    'respuestas_hilo', 'roles_proyecto', 'roles_usuario', 'seguimientos', 'system_states',
+    'taggables', 'tags', 'tokens_iniciales_acceso', 'universidades', 'user_skills',
+    'usuarios', 'validation_documents', 'versiones_bloques', 'work_modalities'
   ];
 
   constructor(private backupApi: BackupApiClientService) {}
@@ -130,29 +115,30 @@ export class BackupsAdminComponent {
   }
 
   exportarCsv() {
-    if (!this.tablaExportarCsv) {
-      this.resultadoExportarCsv = 'Debes seleccionar una tabla.';
-      return;
-    }
-    this.cargandoExportarCsv = true;
-    this.resultadoExportarCsv = null;
-    const schema = this.schemaExportarCsv?.trim() || 'public';
-    this.backupApi.exportarTablaCsv(this.tablaExportarCsv, schema).subscribe({
-      next: blob => {
-        // Descargar el archivo CSV
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${this.tablaExportarCsv}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.resultadoExportarCsv = 'Exportación CSV completada.';
-        this.cargandoExportarCsv = false;
-      },
-      error: err => {
-        this.resultadoExportarCsv = err?.error?.error || 'Error al exportar CSV.';
-        this.cargandoExportarCsv = false;
-      },
-    });
+  if (!this.tablaExportarCsv) {
+    this.resultadoExportarCsv = '❌ Debes seleccionar una tabla.';
+    return;
   }
+
+  this.cargandoExportarCsv = true;
+  this.resultadoExportarCsv = null;
+
+  this.backupApi.exportarTablaCsv(this.tablaExportarCsv).subscribe({
+    next: blob => {
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `${this.tablaExportarCsv}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+      this.resultadoExportarCsv = `✅ Exportación de ${this.tablaExportarCsv}.csv completada.`;
+      this.cargandoExportarCsv = false;
+    },
+    error: err => {
+      this.resultadoExportarCsv = `❌ Error al exportar CSV: ${err?.error?.error || 'Error desconocido.'}`;
+      this.cargandoExportarCsv = false;
+    }
+  });
+}
+
 }
