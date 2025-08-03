@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { EventService } from '@app/core/services/event/event.service';
 import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
@@ -8,7 +9,7 @@ import { OpportunityService } from '@app/core/services/opportunity/opportunity.s
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="space-y-6">
       <!-- Welcome Header -->
@@ -115,14 +116,15 @@ import { OpportunityService } from '@app/core/services/opportunity/opportunity.s
               </div>
             </button>
 
-            <button
-              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-accent-300 hover:bg-accent-50"
+            <a
+              [routerLink]="['/student/opportunities']"
+              class="group block w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
             >
               <div class="flex items-center space-x-3">
                 <span class="text-xl transition-transform group-hover:scale-110">💼</span>
                 <span class="text-sm font-medium">Buscar Oportunidades</span>
               </div>
-            </button>
+            </a>
 
             <button
               class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-info-300 hover:bg-info-50"

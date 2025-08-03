@@ -184,7 +184,7 @@ export class AdminDashboardComponent implements OnInit {
     this.userService.getAll().subscribe(users => {
       this.stats.update(current => ({
         ...current,
-        totalUsers: users.data?.length || 0,
+        totalUsers: users?.length || 0,
       }));
     });
 

@@ -77,7 +77,13 @@ export const STUDENT_ROUTES: Routes = [
             m => m.ProjectDetailComponent,
           ),
       },
-
+      {
+        path: 'opportunities',
+        loadComponent: () =>
+          import('./opportunities/opportunity-list/opportunity-list.component').then(
+            m => m.OpportunityListComponent,
+          ),
+      },
       // {
       //   path: 'events',
       //   loadChildren: () => import('./events/events.routes').then((m) => m.STUDENT_EVENTS_ROUTES),

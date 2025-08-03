@@ -1,1 +1,52 @@
-<p>opportunity-list works!</p>
+<div class="mx-auto max-w-6xl p-6">
+  <h2 class="text-gray-800 mb-6 text-center text-2xl font-bold">Lista de Oportunidades</h2>
+
+  <!-- Filtro por tipo de oportunidad -->
+  <div class="mb-6 flex justify-end">
+    <select
+      [(ngModel)]="filtroTipo"
+      (change)="filtrarPorTipo()"
+      class="border-gray-300 text-gray-700 focus:border-orange-500 focus:ring-orange-500 rounded-md border px-4 py-2 text-sm shadow-sm focus:outline-none"
+    >
+      <option value="">Todos</option>
+      <option value="2">Académico</option>
+      <option value="1">Laboral</option>
+    </select>
+  </div>
+
+  <!-- Cards de oportunidades -->
+  <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+    <div
+      *ngFor="let oportunidad of oportunidadesFiltradas"
+      class="border-gray-200 rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-md"
+    >
+      <h3 class="text-gray-800 mb-2 text-xl font-semibold">{{ oportunidad.titulo }}</h3>
+      <p class="text-gray-600 mb-1 text-sm">
+        <strong>Modalidad:</strong> {{ modalidadesMap[oportunidad.modality_id] || 'N/A' }}
+      </p>
+      <p class="text-gray-600 mb-1 text-sm">
+        <strong>Empresa:</strong> {{ oportunidad.empresa || 'N/A' }}
+      </p>
+      <p class="text-gray-600 mb-1 text-sm">
+        <strong>Requisitos:</strong> {{ oportunidad.requisitos || 'N/A' }}
+      </p>
+      <p class="text-gray-600 mb-1 text-sm">
+        <strong>Beneficios:</strong> {{ oportunidad.beneficios || 'N/A' }}
+      </p>
+      <p class="text-gray-600 mb-1 text-sm">
+        <strong>Fecha Límite:</strong> {{ oportunidad.fecha_limite || 'N/A' }}
+      </p>
+
+      <button
+        class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        (click)="postularse(oportunidad.id)"
+      >
+        Postularse
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="oportunidadesFiltradas.length === 0" class="text-gray-600 mt-6 text-center">
+    No hay oportunidades disponibles con este filtro.
+  </div>
+</div>

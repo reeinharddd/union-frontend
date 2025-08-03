@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { User, UsersFilters, UsersResponse } from '@app/core/models/auth/auth.interface';
+import { User } from '@app/core/models/auth/auth.interface';
 import { UpdateUserRequest } from '@app/core/models/user/user.interface';
 import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
@@ -13,23 +13,20 @@ export class UserService extends BaseService {
 
   // Estado local
   private readonly _users = signal<User[]>([]);
-  private readonly _totalUsers = signal(0);
 
   readonly users = this._users.asReadonly();
-  readonly totalUsers = this._totalUsers.asReadonly();
 
   readonly activeUsers = computed(() => this._users().filter(user => user.is_active));
 
-  getAll(filters: UsersFilters = {}): Observable<UsersResponse> {
+  getAll(): Observable<User[]> {
     return this.handleRequest(
-      this.apiClient.get<UsersResponse>(API_ENDPOINTS.USERS.BASE, filters),
+      this.apiClient.get<User[]>(API_ENDPOINTS.USERS.BASE),
       'users.getAll',
       { logRequest: true },
     ).pipe(
-      tap(response => {
-        this._users.set(response.data);
-        this._totalUsers.set(response.pagination.total);
-        console.log(`📊 Loaded ${response.data.length} users`);
+      tap(users => {
+        this._users.set(users);
+        console.log(`📊 Loaded ${users.length} users`);
       }),
     );
   }

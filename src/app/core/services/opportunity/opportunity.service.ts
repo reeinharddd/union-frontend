@@ -17,7 +17,7 @@ export interface Opportunity {
   requisitos?: string;
   beneficios?: string;
   fecha_limite: string;
-  created_by?: number; // ID del usuario que creó la oportunidad
+  created_by: number; // ID del usuario que creó la oportunidad
 }
 
 export interface CreateOpportunityRequest {

@@ -16,6 +16,7 @@ export interface CreatePostulationRequest {
   usuario_id: number;
   oportunidad_id: number;
   mensaje: string;
+  estado?: string; // Opcional, si no se proporciona, se puede establecer un valor por defecto en el backend
 }
 
 @Injectable({
