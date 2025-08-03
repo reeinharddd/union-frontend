@@ -24,13 +24,13 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () =>
           import('./backups-admin/backups-admin.component').then(m => m.BackupsAdminComponent),
       },
-      // {
-      //   path: 'tags',
-      //   loadComponent: () => import('./tags/tags.routes').then(m => m.TAGS_ROUTES),
-      // },
+      {
+        path: 'tags',
+        loadChildren: () => import('./tags/tag.routes').then(m => m.TAGS_ROUTES),
+      },
       // {
       //   path: 'taggables',
-      //   loadComponent: () => import('./taggables/taggables.routes').then(m => m.TAGGABLES_ROUTES),
+      //   loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
       // },
       // {
       //   path: 'users',
@@ -41,19 +41,23 @@ export const ADMIN_ROUTES: Routes = [
       //   loadChildren: () =>
       //     import('./universities/universities.routes').then(m => m.UNIVERSITIES_ROUTES),
       // },
-      // {
-      //   path: 'projects',
-      //   loadChildren: () => import('./projects/projects.routes').then(m => m.PROJECTS_ROUTES),
-      // },
-      // {
-      //   path: 'events',
-      //   loadChildren: () => import('./events/events.routes').then(m => m.EVENTS_ROUTES),
-      // },
-      // {
-      //   path: 'opportunities',
-      //   loadChildren: () =>
-      //     import('./opportunities/opportunities.routes').then(m => m.OPPORTUNITIES_ROUTES),
-      // },
+      {
+        path: 'proyectos',
+        loadChildren: () => import('./proyectos/proyectos.routers').then(m => m.PROYECTOS_ROUTES),
+      },
+      {
+        path: 'eventos',
+        loadChildren: () => import('./events/event.routes').then(m => m.EVENTS_ROUTES),
+      },
+      {
+        path: 'opportunities',
+        loadChildren: () =>
+          import('./opportunities/opportunity.routes').then(m => m.OPPORTUNITY_ROUTES),
+      },
+      {
+        path: 'foros',
+        loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
+      },
       // {
       //   path: 'reports',
       //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),

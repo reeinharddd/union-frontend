@@ -95,4 +95,9 @@ export const API_ENDPOINTS = {
     BASE: '/actividad-usuario',
     BY_USER: (userId: number) => `/actividad-usuario?usuario_id=${userId}`,
   },
+  // Reportes
+  REPORTES: {
+    BASE: '/reportes',
+    BY_ID: (id: number) => `/reportes/${id}`,
+  },
 } as const;
