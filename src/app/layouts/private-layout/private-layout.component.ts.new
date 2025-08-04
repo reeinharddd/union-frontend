@@ -1,0 +1,16 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { DynamicLayoutComponent } from '@app/layouts/dynamic-layout/dynamic-layout.component';
+
+@Component({
+  selector: 'app-private-layout',
+  standalone: true,
+  imports: [DynamicLayoutComponent, RouterOutlet],
+  template: `
+    <app-dynamic-layout>
+      <router-outlet></router-outlet>
+    </app-dynamic-layout>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PrivateLayoutComponent {}
