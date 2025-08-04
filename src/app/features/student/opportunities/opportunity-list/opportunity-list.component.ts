@@ -127,6 +127,11 @@ export class OpportunityListComponent implements OnInit {
         this.postulacionesRealizadas.push(id);
         this.mensajeExito = '¡Postulación realizada con éxito!';
         this.mensajeError = '';
+
+        // 🔻 Eliminar la oportunidad de la lista filtrada
+        this.oportunidadesFiltradas = this.oportunidadesFiltradas.filter(
+          oportunidad => oportunidad.id !== id,
+        );
       },
       error: err => {
         console.error('❌ Error al postularse:', err);

@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  OpportunityService,
-  Opportunity,
-} from '@app/core/services/opportunity/opportunity.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '@app/core/services/auth/token.service';
-import { WorkModalityService } from '@app/core/services/workModality/workModality.service';
-import { UniversityService } from '@app/core/services/university/university.service';
+import {
+  Opportunity,
+  OpportunityService,
+} from '@app/core/services/opportunity/opportunity.service';
 import { OpportunityTypeService } from '@app/core/services/opportunity/opportunityType.service';
+import { PostulationService } from '@app/core/services/postulation/postulation.service';
+import { UniversityService } from '@app/core/services/university/university.service';
+import { UserService } from '@app/core/services/user/user.service';
+import { WorkModalityService } from '@app/core/services/workModality/workModality.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-lista-oportunidades',
@@ -18,10 +21,15 @@ import { OpportunityTypeService } from '@app/core/services/opportunity/opportuni
 })
 export class OpportunitiesComponent implements OnInit {
   oportunidades: Opportunity[] = [];
-  isLoading = false;
+  postulaciones: any[] = [];
+  postulacionesPorOportunidad: { [key: number]: any[] } = {};
+
   universidadesMap: { [key: number]: string } = {};
   modalidadesMap: { [key: number]: string } = {};
   tiposOportunidadMap: { [key: number]: string } = {};
+
+  userId: number | null = null;
+  isLoading = false;
 
   constructor(
     private opportunityService: OpportunityService,
@@ -29,32 +37,61 @@ export class OpportunitiesComponent implements OnInit {
     private workModalityService: WorkModalityService,
     private universityService: UniversityService,
     private typeOpportunityService: OpportunityTypeService,
+    private postulationService: PostulationService,
+    private userService: UserService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.cargarOportunidades();
+    this.userId = this.tokenService.getUserId();
+    if (this.userId !== null) {
+      this.cargarOportunidades();
+    }
     this.cargarUniversidades();
     this.cargarModalidades();
     this.cargarTiposOportunidad();
-    this.cargarOportunidades(); // aquí cargas la lista principal
   }
 
   cargarOportunidades(): void {
-    const userId = this.tokenService.getUserId();
-    if (userId === null) {
-      //this.toastService.showDanger('No se pudo obtener el ID del usuario');
-      console.error('No se pudo obtener el ID del usuario');
-      return;
-    }
-    this.opportunityService.getByPromoter(userId).subscribe({
+    if (this.userId === null) return;
+    this.isLoading = true;
+
+    this.opportunityService.getAll().subscribe({
       next: data => {
-        this.oportunidades = data;
+        // Solo oportunidades creadas por este promotor
+        this.oportunidades = data.filter(op => op.created_by === this.userId);
+        this.cargarPostulaciones(); // Después de cargar las oportunidades
         this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
       },
+    });
+  }
+
+  cargarPostulaciones(): void {
+    this.postulationService.getAll().subscribe(postulaciones => {
+      this.postulaciones = postulaciones;
+      this.postulacionesPorOportunidad = {};
+
+      const peticionesUsuarios = postulaciones.map(p => this.userService.getById(p.usuario_id));
+
+      // Trae todos los usuarios en paralelo
+      forkJoin(peticionesUsuarios).subscribe(usuarios => {
+        this.postulaciones.forEach((postulacion, index) => {
+          const usuario = usuarios[index];
+
+          // Añade los datos directamente (sin necesidad de cambiar el modelo)
+          (postulacion as any).nombre_usuario = usuario.nombre;
+          (postulacion as any).correo_usuario = usuario.correo;
+
+          const oportunidadId = postulacion.oportunidad_id;
+          if (!this.postulacionesPorOportunidad[oportunidadId]) {
+            this.postulacionesPorOportunidad[oportunidadId] = [];
+          }
+          this.postulacionesPorOportunidad[oportunidadId].push(postulacion);
+        });
+      });
     });
   }
 
