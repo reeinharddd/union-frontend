@@ -48,6 +48,13 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/tags/${id}`,
   },
 
+  // Seguimientos
+  FOLLOWINGS: {
+    BASE: '/seguimientos',
+    BY_ID: (id: number) => `/seguimientos/${id}`,
+    MUTUAL_FOLLOWERS: (userId: number) => `/seguimientos/mutuos/${userId}`,
+  },
+
   // Conversaciones y Mensajes
   CONVERSATIONS: {
     BASE: '/conversaciones',

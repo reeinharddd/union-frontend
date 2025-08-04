@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '../../shared/components/header/header.component';
+import { ChatFloatContainerComponent } from '../../shared/components/chat/chat-float-container.component';
 import { DynamicSidebarComponent } from '../../shared/components/dynamic-sidebar/dynamic-sidebar.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { RightSidebarComponent } from '../../shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-private-layout',
   standalone: true,
-  imports: [HeaderComponent, DynamicSidebarComponent, RightSidebarComponent, RouterOutlet],
+  imports: [HeaderComponent, DynamicSidebarComponent, RightSidebarComponent, RouterOutlet, ChatFloatContainerComponent],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
       <!-- Dynamic Left Sidebar -->
@@ -22,6 +23,9 @@ import { RightSidebarComponent } from '../../shared/components/right-sidebar/rig
         <main class="flex-1 overflow-auto p-4">
           <router-outlet></router-outlet>
         </main>
+
+        <!-- Chat Float Container -->
+        <app-chat-float-container></app-chat-float-container>
       </div>
 
       <!-- Right Sidebar -->
