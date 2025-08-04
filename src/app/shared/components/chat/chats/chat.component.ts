@@ -1,5 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, inject, signal } from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  inject,
+  signal,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { API_ENDPOINTS } from '../../../../core/constants/api-endpoints';
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -13,43 +27,58 @@ import { SocketService } from '../../../../core/services/socket/socket.service';
   imports: [CommonModule],
   templateUrl: './chat.component.html',
   styles: `
-  @tailwind base;
-@tailwind components;
-@tailwind utilities;
-@layer utilities {
-    .dark .neo-shadow {
-        box-shadow: 5px 5px 10px #1a1a1a, -5px -5px 10px #2c2c2c;
-    }
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    @layer utilities {
+      .dark .neo-shadow {
+        box-shadow:
+          5px 5px 10px #1a1a1a,
+          -5px -5px 10px #2c2c2c;
+      }
 
-    .neo-inset {
-        box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
-    }
+      .neo-inset {
+        box-shadow:
+          inset 5px 5px 10px #d1d9e6,
+          inset -5px -5px 10px #ffffff;
+      }
 
-    .dark .neo-inset {
-        box-shadow: inset 5px 5px 10px #1a1a1a, inset -5px -5px 10px #2c2c2c;
-    }
+      .dark .neo-inset {
+        box-shadow:
+          inset 5px 5px 10px #1a1a1a,
+          inset -5px -5px 10px #2c2c2c;
+      }
 
-    .neo-button {
+      .neo-button {
         transition: all 0.2s ease-in-out;
-    }
+      }
 
-    .neo-button:hover {
-        box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
-    }
+      .neo-button:hover {
+        box-shadow:
+          inset 3px 3px 6px #d1d9e6,
+          inset -3px -3px 6px #ffffff;
+      }
 
-    .dark .neo-button:hover {
-        box-shadow: inset 3px 3px 6px #1a1a1a, inset -3px -3px 6px #2c2c2c;
-    }
+      .dark .neo-button:hover {
+        box-shadow:
+          inset 3px 3px 6px #1a1a1a,
+          inset -3px -3px 6px #2c2c2c;
+      }
 
-    .neo-button:active {
-        box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
-    }
+      .neo-button:active {
+        box-shadow:
+          inset 5px 5px 10px #d1d9e6,
+          inset -5px -5px 10px #ffffff;
+      }
 
-    .dark .neo-button:active {
-        box-shadow: inset 5px 5px 10px #1a1a1a, inset -5px -5px 10px #2c2c2c;
+      .dark .neo-button:active {
+        box-shadow:
+          inset 5px 5px 10px #1a1a1a,
+          inset -5px -5px 10px #2c2c2c;
+      }
     }
-}`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
   private readonly authService = inject(AuthService);
@@ -70,7 +99,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
 
   ngOnInit() {
     this.currentUser.set(this.authService.currentUser());
-    
+
     // Conectar socket si no está conectado
     if (!this.socketService.isConnected()) {
       this.socketService.connect();
@@ -91,11 +120,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
   private setupMessageListener() {
     // Escuchar mensajes nuevos
     this.messageSubscription = this.socketService.onNewMessage().subscribe(
-      (messageData) => {
+      messageData => {
         console.log('📨 Received message in chat component:', messageData);
         console.log('🔍 Current conversation ID:', this.currentConversationId);
         console.log('🔍 Message conversation ID:', messageData.conversationId);
-        
+
         // Solo agregar el mensaje si es de la conversación actual
         if (messageData.conversationId === this.currentConversationId) {
           console.log('✅ Message belongs to current conversation, adding to messages');
@@ -105,11 +134,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
             emisor_id: messageData.userId, // Cambiado de usuario_id a emisor_id
             contenido: messageData.message,
             leido: false,
-            enviado_en: messageData.timestamp // Cambiado de creado_en a enviado_en
+            enviado_en: messageData.timestamp, // Cambiado de creado_en a enviado_en
           };
-          
+
           this.messages.update(msgs => [...msgs, newMessage]);
-          
+
           // Forzar scroll hacia abajo después de agregar el mensaje
           setTimeout(() => {
             this.shouldScrollToBottom = true;
@@ -119,9 +148,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
           console.log('❌ Message does not belong to current conversation, ignoring');
         }
       },
-      (error) => {
+      error => {
         console.error('❌ Error in message subscription:', error);
-      }
+      },
     );
   }
 
@@ -160,7 +189,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
     this.currentConversationId = this.conversation.id;
     if (this.currentConversationId) {
       console.log(`🏠 About to join conversation with ID: ${this.currentConversationId}`);
-      
+
       // Pequeño retraso para asegurar que el socket esté autenticado
       setTimeout(() => {
         this.socketService.joinConversation(this.currentConversationId!);
@@ -174,33 +203,36 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
         this.showWelcomeMessage();
         return;
       }
-      
+
       const [user1Id, user2Id] = this.currentConversationId.toString().split('-').map(Number);
-      
+
       console.log('🔍 Loading messages for users:', user1Id, user2Id);
-      
+
       // Buscar la conversación real en la base de datos
       const conversations = await this.apiClient
         .get<any[]>(`${API_ENDPOINTS.CONVERSATIONS.BASE}`)
         .toPromise();
-      
+
       let realConversationId = null;
       if (conversations) {
-        const conversation = conversations.find(conv => 
-          (conv.usuario_1_id === user1Id && conv.usuario_2_id === user2Id) ||
-          (conv.usuario_1_id === user2Id && conv.usuario_2_id === user1Id)
+        const conversation = conversations.find(
+          conv =>
+            (conv.usuario_1_id === user1Id && conv.usuario_2_id === user2Id) ||
+            (conv.usuario_1_id === user2Id && conv.usuario_2_id === user1Id),
         );
         realConversationId = conversation?.id;
       }
-      
+
       console.log('🔍 Real conversation ID:', realConversationId);
-      
+
       if (realConversationId) {
         // Intentar cargar mensajes reales de la API usando el ID real de la conversación
         const messages = await this.apiClient
-          .get<Message[]>(`${API_ENDPOINTS.MESSAGES.BASE}?conversacion_id=${realConversationId}&order=asc`)
+          .get<
+            Message[]
+          >(`${API_ENDPOINTS.MESSAGES.BASE}?conversacion_id=${realConversationId}&order=asc`)
           .toPromise();
-        
+
         if (messages && messages.length > 0) {
           console.log('✅ Messages loaded:', messages);
           this.messages.set(messages);
@@ -232,7 +264,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
           console.log('📜 Auto-scroll realizado hacia abajo');
         }
       }, 0);
-    } catch(err) {
+    } catch (err) {
       console.error('Error al hacer scroll:', err);
     }
   }
@@ -244,10 +276,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
       emisor_id: this.conversation?.otherUserId || this.conversation?.userId || 0,
       contenido: `¡Hola! Inicia una conversación con ${this.conversation?.name || 'este usuario'}`,
       leido: false,
-      enviado_en: new Date().toISOString()
+      enviado_en: new Date().toISOString(),
     };
     this.messages.set([welcomeMessage]);
-    
+
     // Hacer scroll después de mostrar mensaje de bienvenida
     setTimeout(() => {
       this.scrollToBottom();
@@ -260,7 +292,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
       console.log('❌ No se puede enviar mensaje:', {
         messageText: !!messageText,
         currentUser: !!this.currentUser(),
-        conversationId: this.currentConversationId
+        conversationId: this.currentConversationId,
       });
       return;
     }
@@ -268,7 +300,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
     console.log('📤 Enviando mensaje:', {
       conversationId: this.currentConversationId,
       message: messageText,
-      userId: this.currentUser()?.id
+      userId: this.currentUser()?.id,
     });
 
     // Enviar via socket (el mensaje llegará via onNewMessage y se agregará automáticamente)
@@ -276,7 +308,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewChe
 
     // Limpiar el input
     this.newMessage.set('');
-    
+
     // Hacer scroll inmediatamente cuando el usuario envía un mensaje
     setTimeout(() => {
       this.scrollToBottom();

@@ -8,7 +8,13 @@ import { RightSidebarComponent } from '../../shared/components/right-sidebar/rig
 @Component({
   selector: 'app-private-layout',
   standalone: true,
-  imports: [HeaderComponent, DynamicSidebarComponent, RightSidebarComponent, RouterOutlet, ChatFloatContainerComponent],
+  imports: [
+    HeaderComponent,
+    DynamicSidebarComponent,
+    RightSidebarComponent,
+    RouterOutlet,
+    ChatFloatContainerComponent,
+  ],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
       <!-- Dynamic Left Sidebar -->

@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { TokenService } from '../auth/token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
   private socket: Socket | null = null;
@@ -26,31 +26,34 @@ export class SocketService {
     console.log('🔌 Connecting socket for user:', currentUser.id);
 
     this.socket = io('http://localhost:3000', {
-      transports: ['websocket']
+      transports: ['websocket'],
     });
 
     this.socket.on('connect', () => {
       console.log('🔌 Socket connected:', this.socket?.id);
-      
+
       // Autenticar después de conectar usando TokenService
       const token = this.tokenService.getToken();
-      console.log('🔍 Token from TokenService:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN FOUND');
-      
+      console.log(
+        '🔍 Token from TokenService:',
+        token ? `${token.substring(0, 20)}...` : 'NO TOKEN FOUND',
+      );
+
       if (token && this.socket) {
         console.log('🔐 Authenticating socket with token');
         this.socket.emit('authenticate', token);
       } else {
         console.error('❌ No token available for authentication');
       }
-      
+
       this.connectionStatus.next(true);
     });
 
-    this.socket.on('authenticated', (response) => {
+    this.socket.on('authenticated', response => {
       console.log('✅ Socket authentication response:', response);
       if (response.success) {
         this.isAuthenticated = true;
-        
+
         // Procesar cualquier unión pendiente a conversaciones
         this.pendingJoins.forEach(conversationId => {
           this.joinConversation(conversationId);
@@ -59,7 +62,7 @@ export class SocketService {
       }
     });
 
-    this.socket.on('joined-conversation', (data) => {
+    this.socket.on('joined-conversation', data => {
       console.log('✅ Successfully joined conversation:', data);
     });
 
@@ -69,12 +72,12 @@ export class SocketService {
       this.connectionStatus.next(false);
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', error => {
       console.error('❌ Socket connection error:', error);
       this.connectionStatus.next(false);
     });
 
-    this.socket.on('error', (error) => {
+    this.socket.on('error', error => {
       console.error('❌ Socket error:', error);
     });
   }
@@ -107,7 +110,7 @@ export class SocketService {
 
     console.log(`🏠 Joining conversation: ${conversationId}`);
     this.socket.emit('join-conversation', conversationId);
-    
+
     // Verificar que realmente nos hemos unido
     setTimeout(() => {
       console.log(`✅ Successfully joined conversation: ${conversationId}`);
@@ -129,7 +132,7 @@ export class SocketService {
       this.socket.emit('send-message', {
         conversationId,
         message,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } else {
       console.log('❌ Socket not connected, cannot send message');
@@ -141,13 +144,13 @@ export class SocketService {
     return new Observable(observer => {
       if (this.socket) {
         console.log('🎧 Setting up new-message listener');
-        this.socket.on('new-message', (data) => {
+        this.socket.on('new-message', data => {
           console.log('📨 New message received via Socket.IO:', data);
           observer.next(data);
         });
-        
+
         // También escuchar errores de Socket.IO
-        this.socket.on('error', (error) => {
+        this.socket.on('error', error => {
           console.error('❌ Socket.IO error:', error);
           observer.error(error);
         });

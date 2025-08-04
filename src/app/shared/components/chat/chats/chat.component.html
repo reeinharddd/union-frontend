@@ -1,56 +1,103 @@
-
-<div class="w-full max-w-md bg-gray-100 dark:bg-gray-800 rounded-2xl p-2 space-y-2 bg-white shadow-xl">
+<div
+  class="bg-gray-100 dark:bg-gray-800 w-full max-w-md space-y-2 rounded-2xl bg-white p-2 shadow-xl"
+>
   <!-- Chat header -->
   <div class="flex items-center justify-between">
     <div class="flex items-center space-x-4">
-      <div class="w-20 h-12 rounded-full neo-shadow flex items-center justify-center">
-        <button (click)="back.emit()" class="w-12 h-12 text-gray-500 hover:text-[#EB6228]" title="Volver">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-        <span class="text-xl font-semibold text-gray-700 dark:text-gray-300">{{conversation?.avatar || 'U'}}</span>
+      <div class="neo-shadow flex h-12 w-20 items-center justify-center rounded-full">
+        <button
+          (click)="back.emit()"
+          class="text-gray-500 h-12 w-12 hover:text-[#EB6228]"
+          title="Volver"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <span class="text-gray-700 dark:text-gray-300 text-xl font-semibold">{{
+          conversation?.avatar || 'U'
+        }}</span>
       </div>
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Chat con {{conversation?.name || 'Usuario'}}</h1>
+      <h1 class="text-gray-800 dark:text-gray-200 text-2xl font-bold">
+        Chat con {{ conversation?.name || 'Usuario' }}
+      </h1>
     </div>
     <div class="flex items-center space-x-2">
-      <button (click)="close.emit()" class="text-gray-500 hover:text-[#EB6228] text-3xl">&times;</button>
+      <button (click)="close.emit()" class="text-gray-500 text-3xl hover:text-[#EB6228]">
+        &times;
+      </button>
     </div>
   </div>
 
   <!-- Chat messages area -->
-  <div #messagesContainer class="h-96 overflow-y-auto neo-inset p-4 rounded-xl space-y-4">
-    <div *ngFor="let message of messages()" class="flex items-start space-x-2" 
-         [ngClass]="isMyMessage(message) ? 'justify-end' : ''">
-      
+  <div #messagesContainer class="neo-inset h-96 space-y-4 overflow-y-auto rounded-xl p-4">
+    <div
+      *ngFor="let message of messages()"
+      class="flex items-start space-x-2"
+      [ngClass]="isMyMessage(message) ? 'justify-end' : ''"
+    >
       <!-- Avatar para mensajes recibidos -->
-      <div *ngIf="!isMyMessage(message)" class="w-8 h-8 rounded-full neo-shadow flex-shrink-0 flex items-center justify-center">
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{conversation?.avatar || 'U'}}</span>
+      <div
+        *ngIf="!isMyMessage(message)"
+        class="neo-shadow flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
+      >
+        <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{
+          conversation?.avatar || 'U'
+        }}</span>
       </div>
-      
+
       <!-- Mensaje -->
-      <div class="p-3 rounded-lg neo-shadow max-w-xs"
-           [ngClass]="isMyMessage(message) ? 'bg-[#EB6228] text-white' : 'bg-[#FFEADb] dark:bg-gray-700 text-gray-700 dark:text-gray-300'">
-        <p class="text-sm">{{message.contenido}}</p>
+      <div
+        class="neo-shadow max-w-xs rounded-lg p-3"
+        [ngClass]="
+          isMyMessage(message)
+            ? 'bg-[#EB6228] text-white'
+            : 'dark:bg-gray-700 text-gray-700 dark:text-gray-300 bg-[#FFEADb]'
+        "
+      >
+        <p class="text-sm">{{ message.contenido }}</p>
       </div>
     </div>
   </div>
 
   <!-- Message input area -->
   <div class="flex items-center space-x-4">
-  <div class="flex-grow">
-    <input type="text" 
-           placeholder="Escribe tu mensaje..."
-           [value]="newMessage()"
-           (input)="updateNewMessage($event)"
-           (keydown.enter)="sendMessage()"
-           class="w-full p-4 rounded-xl neo-inset bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none border-none focus:border-none focus:ring-0 focus:neo-inset resize-none">
+    <div class="flex-grow">
+      <input
+        type="text"
+        placeholder="Escribe tu mensaje..."
+        [value]="newMessage()"
+        (input)="updateNewMessage($event)"
+        (keydown.enter)="sendMessage()"
+        class="neo-inset text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:neo-inset w-full resize-none rounded-xl border-none bg-transparent p-4 focus:border-none focus:outline-none focus:ring-0"
+      />
+    </div>
+    <button (click)="sendMessage()" class="neo-shadow neo-button rounded-xl p-4 focus:outline-none">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 rotate-45 transform text-[#EB6228]"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+        />
+      </svg>
+    </button>
   </div>
-  <button (click)="sendMessage()" class="p-4 rounded-xl neo-shadow neo-button focus:outline-none">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB6228] transform rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-    </svg>
-  </button>
-</div>
 </div>

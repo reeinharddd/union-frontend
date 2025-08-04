@@ -9,7 +9,7 @@ import { ConversationsComponent } from './conversations/conversations.component'
   imports: [CommonModule, ConversationsComponent, ChatComponent],
   templateUrl: './chat-float-container.component.html',
   styles: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatFloatContainerComponent {
   show = false;
