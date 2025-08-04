@@ -19,11 +19,78 @@
             />
           </svg>
         </div>
+        
+        <!-- ✅ Input de búsqueda de estudiantes según REQ-4.6.1 -->
         <input
           type="text"
+          [value]="searchTerm()"
+          (input)="onSearchChange($any($event.target).value)"
+          (keydown)="onSearchKeydown($event)"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
           class="block w-full rounded-md border border-border bg-surface py-2 pl-10 pr-3 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-          placeholder="Buscar..."
+          placeholder="Buscar estudiantes..."
+          autocomplete="off"
         />
+        
+        <!-- ✅ Indicador de carga -->
+        <div *ngIf="isSearching()" class="absolute inset-y-0 right-0 flex items-center pr-3">
+          <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
+        </div>
+        
+        <!-- ✅ Dropdown de resultados de búsqueda -->
+        <div *ngIf="showResults()" 
+             class="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600 shadow-lg max-h-96 overflow-y-auto">
+          
+          <!-- Lista de estudiantes encontrados -->
+          <div class="py-1">
+            <div *ngFor="let student of searchResults()" 
+                 (click)="goToStudentProfile(student.id)"
+                 class="search-result-item flex items-center px-4 py-3 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0">
+              
+              <!-- Avatar placeholder -->
+              <div class="avatar flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                <span class="text-black font-medium text-sm">
+                  {{student.nombre.charAt(0).toUpperCase()}}{{(student.apellido || '').charAt(0).toUpperCase()}}
+                </span>
+              </div>
+              
+              <!-- Información del estudiante -->
+              <div class="ml-3 flex-1">
+                <div class="flex items-center space-x-2">
+                  <p class="student-name text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {{student.nombre}} {{student.apellido || ''}}
+                  </p>
+                  
+                  <!-- Insignia de verificación -->
+                  <svg *ngIf="student.verificado" 
+                       class="w-4 h-4 text-green-500" 
+                       fill="currentColor" 
+                       viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                
+                <p class="student-info text-xs text-gray-500 dark:text-gray-400">
+                  {{student.universidad?.nombre || 'Universidad'}} • Estudiante
+                </p>
+              </div>
+              
+              <!-- Icono de perfil -->
+              <div class="flex-shrink-0">
+                <svg class="arrow-icon w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mensaje cuando no hay resultados -->
+          <div *ngIf="searchResults().length === 0 && searchTerm() && !isSearching()" 
+               class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+            No se encontraron estudiantes
+          </div>
+        </div>
       </div>
     </div>
 
