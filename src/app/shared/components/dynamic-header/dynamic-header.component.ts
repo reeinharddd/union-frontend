@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { LayoutConfigService } from '@app/core/services/layout/layout-config.service';
+import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layout-config.service';
 
 @Component({
   selector: 'app-dynamic-header',
@@ -25,123 +25,123 @@ export class DynamicHeaderComponent {
 
   // Navegación contextual por rol
   getContextualNavigation() {
-    const role = this.currentRole();
+    const config = this.layoutConfigService.getCurrentLayoutConfig();
 
-    switch(role) {
-      case 'admin':
-        return [
-          { label: 'Dashboard', link: '/admin/dashboard', icon: '📊', active: false, badge: 0 },
-          { label: 'Usuarios', link: '/admin/users', icon: '👥', active: false, badge: this.layoutConfigService.getBadgeCount('pending-users') },
-          { label: 'Universidades', link: '/admin/universities', icon: '🏢', active: false, badge: 0 },
-          { label: 'Reportes', link: '/admin/reports', icon: '📋', active: false, badge: this.layoutConfigService.getBadgeCount('pending-reports') }
-        ];
+    // Filtra y retorna navegación específica para el header
+    const items = (config.leftSidebar as SidebarItem[]).slice(0, 6).map(item => ({
+      label: item.label,
+      link: item.route || '', // Proporcionar valor por defecto
+      icon: item.icon,
+      active: this.isActiveRoute(item.route || ''), // Proporcionar valor por defecto
+      badge: item.badge ? item.badge.text : '0',
+      hasDropdown: !!(item.children && item.children.length > 0),
+      children: item.children?.slice(0, 3) || [],
+    }));
 
-      case 'student':
-        return [
-          { label: 'Inicio', link: '/student/dashboard', icon: '🏠', active: false, badge: 0 },
-          { label: 'Foros', link: '/student/forums', icon: '💬', active: false, badge: 0 },
-          { label: 'Proyectos', link: '/student/projects', icon: '📁', active: false, badge: 0 },
-          { label: 'Oportunidades', link: '/student/opportunities', icon: '🎯', active: false, badge: this.layoutConfigService.getBadgeCount('new-opportunities') },
-          { label: 'Eventos', link: '/student/events', icon: '📅', active: false, badge: this.layoutConfigService.getBadgeCount('upcoming-events') }
-        ];
-
-      case 'university_admin':
-        return [
-          { label: 'Dashboard', link: '/admin-uni/dashboard', icon: '📊', active: false, badge: 0 },
-          { label: 'Estudiantes', link: '/admin-uni/students', icon: '🎓', active: false, badge: 0 },
-          { label: 'Proyectos', link: '/admin-uni/projects', icon: '📁', active: false, badge: this.layoutConfigService.getBadgeCount('projects-review') },
-          { label: 'Eventos', link: '/admin-uni/events', icon: '📅', active: false, badge: 0 }
-        ];
-
-      case 'promoter':
-        return [
-          { label: 'Dashboard', link: '/promoter/dashboard', icon: '📊', active: false, badge: 0 },
-          { label: 'Ofertas', link: '/promoter/jobs', icon: '💼', active: false, badge: 0 },
-          { label: 'Candidatos', link: '/promoter/candidates', icon: '👥', active: false, badge: this.layoutConfigService.getBadgeCount('new-applications') }
-        ];
-
-      default:
-        return [];
-    }
+    return items;
   }
 
   // Acciones rápidas por rol
   getQuickActions() {
     const role = this.currentRole();
 
-    switch(role) {
-      case 'admin':
-        return [
-          { label: 'Nuevo Usuario', link: '/admin/users/create', icon: '➕' }
-        ];
+    const actions = {
+      admin: [
+        { label: 'Nuevo Usuario', link: '/admin/users/new', icon: '👤', color: 'primary' },
+        {
+          label: 'Nueva Universidad',
+          link: '/admin/universities/new',
+          icon: '🏛️',
+          color: 'secondary',
+        },
+        { label: 'Respaldo', link: '/admin/backups', icon: '💾', color: 'accent' },
+      ],
+      student: [
+        { label: 'Nuevo Proyecto', link: '/student/projects/new', icon: '🚀', color: 'primary' },
+        { label: 'Unirse a Evento', link: '/student/events', icon: '📅', color: 'secondary' },
+        { label: 'Explorar Foros', link: '/student/forums', icon: '💬', color: 'accent' },
+      ],
+      university_admin: [
+        {
+          label: 'Registrar Estudiante',
+          link: '/admin-uni/students/register',
+          icon: '🎓',
+          color: 'primary',
+        },
+        { label: 'Crear Evento', link: '/admin-uni/events/new', icon: '📅', color: 'secondary' },
+        { label: 'Ver Reportes', link: '/admin-uni/reports', icon: '📊', color: 'accent' },
+      ],
+      promoter: [
+        {
+          label: 'Nueva Oportunidad',
+          link: '/promoter/opportunities/create',
+          icon: '💼',
+          color: 'primary',
+        },
+        { label: 'Ver Candidatos', link: '/promoter/candidates', icon: '👥', color: 'secondary' },
+      ],
+      public: [],
+    };
 
-      case 'student':
-        return [
-          { label: 'Nuevo Proyecto', link: '/student/projects/create', icon: '📁' }
-        ];
+    return actions[role as keyof typeof actions] || [];
+  }
 
-      case 'university_admin':
-        return [
-          { label: 'Nuevo Evento', link: '/admin-uni/events/create', icon: '📅' }
-        ];
+  // Filtros por rol
+  getFilters(): string[] {
+    const role = this.currentRole();
 
-      case 'promoter':
-        return [
-          { label: 'Nueva Oferta', link: '/promoter/jobs/create', icon: '💼' }
-        ];
+    const filters = {
+      admin: ['Usuarios', 'Universidades', 'Proyectos', 'Reportes'],
+      student: ['Proyectos', 'Foros', 'Eventos', 'Oportunidades', 'Cursos'],
+      university_admin: ['Estudiantes', 'Proyectos', 'Eventos'],
+      promoter: ['Oportunidades', 'Candidatos'],
+      public: [],
+    };
 
-      default:
-        return [];
-    }
+    return filters[role as keyof typeof filters] || [];
   }
 
   // Menú items del usuario
   getUserMenuItems() {
     const role = this.currentRole();
     const baseItems = [
-      { label: 'Mi Perfil', link: `/${role}/profile`, icon: '👤' },
-      { label: 'Configuración', link: `/${role}/settings`, icon: '⚙️' }
+      { label: 'Mi Perfil', link: this.getProfileRoute(), icon: '👤' },
+      { label: 'Configuración', link: this.getSettingsRoute(), icon: '⚙️' },
     ];
 
     // Items específicos por rol
-    switch(role) {
-      case 'student':
-        return [
-          ...baseItems,
-          { label: 'Mis Proyectos', link: '/student/projects/my', icon: '📁' },
-          { label: 'Mis Postulaciones', link: '/student/applications', icon: '📤' },
-          { label: 'Historial Académico', link: '/student/academic-history', icon: '🎓' }
-        ];
+    const roleSpecificItems = {
+      admin: [
+        { label: 'Panel Admin', link: '/admin/dashboard', icon: '🔧' },
+        { label: 'Reportes', link: '/admin/reports', icon: '📊' },
+      ],
+      student: [
+        { label: 'Mis Proyectos', link: '/student/projects/my', icon: '📁' },
+        { label: 'Mis Postulaciones', link: '/student/applications', icon: '📤' },
+      ],
+      university_admin: [
+        { label: 'Panel Universidad', link: '/admin-uni/dashboard', icon: '🏛️' },
+        { label: 'Estudiantes', link: '/admin-uni/students', icon: '🎓' },
+      ],
+      promoter: [
+        { label: 'Mis Ofertas', link: '/promoter/opportunities', icon: '💼' },
+        { label: 'Estadísticas', link: '/promoter/stats', icon: '📈' },
+      ],
+      public: [],
+    };
 
-      case 'university_admin':
-        return [
-          ...baseItems,
-          { label: 'Mi Universidad', link: '/admin-uni/university', icon: '🏢' },
-          { label: 'Configuración Institucional', link: '/admin-uni/institution-settings', icon: '⚙️' }
-        ];
+    const specificItems = roleSpecificItems[role as keyof typeof roleSpecificItems] || [];
 
-      case 'promoter':
-        return [
-          ...baseItems,
-          { label: 'Mi Empresa', link: '/promoter/company', icon: '🏢' },
-          { label: 'Plan de Suscripción', link: '/promoter/subscription', icon: '💎' }
-        ];
-
-      case 'admin':
-        return [
-          ...baseItems,
-          { label: 'Configuración del Sistema', link: '/admin/system-config', icon: '🔧' },
-          { label: 'Logs del Sistema', link: '/admin/logs', icon: '📋' }
-        ];
-
-      default:
-        return baseItems;
-    }
+    return [
+      ...baseItems,
+      ...specificItems,
+      { label: 'Cerrar Sesión', link: '#', icon: '🚪', action: 'logout' },
+    ];
   }
 
   // Control de menús
   toggleUserMenu() {
-    this.showUserMenu.set(!this.showUserMenu());
+    this.showUserMenu.update(value => !value);
     this.showMobileMenu.set(false);
   }
 
@@ -150,7 +150,7 @@ export class DynamicHeaderComponent {
   }
 
   toggleMobileMenu() {
-    this.showMobileMenu.set(!this.showMobileMenu());
+    this.showMobileMenu.update(value => !value);
     this.showUserMenu.set(false);
   }
 
@@ -162,9 +162,14 @@ export class DynamicHeaderComponent {
   getUserInitials(): string {
     const user = this.authService.currentUser();
     if (user?.nombre) {
-      return user.nombre.split(' ').map((n: string) => n[0]).join('').toUpperCase();
+      return user.nombre
+        .split(' ')
+        .map((n: string) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
     }
-    return 'U';
+    return user?.correo?.slice(0, 2).toUpperCase() || 'U';
   }
 
   getUserName(): string {
@@ -180,28 +185,65 @@ export class DynamicHeaderComponent {
   getRoleDisplayName(): string {
     const role = this.currentRole();
     const roleNames = {
-      'admin': 'Administrador',
-      'student': 'Estudiante',
-      'university_admin': 'Admin Universidad',
-      'promoter': 'Promotor',
-      'public': 'Público'
+      admin: 'Administrador',
+      student: 'Estudiante',
+      university_admin: 'Admin Universidad',
+      promoter: 'Promotor',
+      public: 'Público',
     };
     return roleNames[role as keyof typeof roleNames] || 'Usuario';
   }
 
   // Contadores de badges
   getNotificationCount(): number {
-    return this.layoutConfigService.getBadgeCount('notifications');
+    return 3; // Mock data - integrate with real notification service
   }
 
   getMessageCount(): number {
-    return this.layoutConfigService.getBadgeCount('messages');
+    return 5; // Mock data - integrate with real message service
   }
 
-  // Logout
+  // Utilidades
+  isActiveRoute(route: string): boolean {
+    return this.router.url.startsWith(route);
+  }
+
+  getProfileRoute(): string {
+    const role = this.currentRole();
+    const routeMap: Record<string, string> = {
+      admin: '/admin/profile',
+      student: '/student/profile',
+      university_admin: '/admin-uni/profile',
+      promoter: '/promoter/profile',
+      public: '/profile',
+    };
+    return routeMap[role] || '/profile';
+  }
+
+  getSettingsRoute(): string {
+    const role = this.currentRole();
+    const routeMap: Record<string, string> = {
+      admin: '/admin/settings',
+      student: '/student/settings',
+      university_admin: '/admin-uni/settings',
+      promoter: '/promoter/settings',
+      public: '/settings',
+    };
+    return routeMap[role] || '/settings';
+  }
+
+  // Actions
+  onMenuItemClick(item: { label: string; link: string; icon: string; action?: string }) {
+    if (item.action === 'logout') {
+      this.logout();
+    } else if (item.link && item.link !== '#') {
+      this.router.navigate([item.link]);
+    }
+    this.closeUserMenu();
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
-    this.closeUserMenu();
   }
 }

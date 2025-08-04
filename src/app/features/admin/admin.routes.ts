@@ -25,25 +25,21 @@ export const ADMIN_ROUTES: Routes = [
           import('./backups-admin/backups-admin.component').then(m => m.BackupsAdminComponent),
       },
       {
+        path: 'users',
+        loadChildren: () => import('./users/users.routes').then(m => m.USERS_ROUTES),
+      },
+      {
         path: 'tags',
         loadChildren: () => import('./tags/tag.routes').then(m => m.TAGS_ROUTES),
       },
-      // {
-      //   path: 'taggables',
-      //   loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
-      // },
-      // {
-      //   path: 'users',
-      //   loadChildren: () => import('./users/users.routes').then(m => m.USERS_ROUTES),
-      // },
-      // {
-      //   path: 'universities',
-      //   loadChildren: () =>
-      //     import('./universities/universities.routes').then(m => m.UNIVERSITIES_ROUTES),
-      // },
+      {
+        path: 'universities',
+        loadChildren: () =>
+          import('./universities/universities.routes').then(m => m.UNIVERSITIES_ROUTES),
+      },
       {
         path: 'proyectos',
-        loadChildren: () => import('./proyectos/proyectos.routers').then(m => m.PROYECTOS_ROUTES),
+        loadChildren: () => import('./proyectos/proyectos.routes').then(m => m.PROYECTOS_ROUTES),
       },
       {
         path: 'eventos',
@@ -58,8 +54,10 @@ export const ADMIN_ROUTES: Routes = [
         path: 'foros',
         loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
       },
-      // {
-      //   path: 'reports',
+      {
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
+      },
       //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
       // },
       // {

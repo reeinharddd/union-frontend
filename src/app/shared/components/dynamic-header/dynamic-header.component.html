@@ -1,234 +1,158 @@
-<!-- Header universal responsive -->
-<header class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-  <div class="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3">
+<!-- Header UniON - Elegante y Funcional -->
+<header class="bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50">
+  <div class="max-w-full px-4 lg:px-6">
+    <div class="flex justify-between items-center h-14">
 
-    <!-- Logo y navegación izquierda -->
-    <div class="flex items-center space-x-4">
-      <!-- Logo -->
-      <div class="flex items-center space-x-3">
-        <img src="/assets/images/logo.png" alt="UniON" class="h-8 w-8 rounded-lg">
-        <h1 class="text-xl font-bold text-blue-600 hidden sm:block">UniON</h1>
-      </div>
-
-      <!-- Navegación contextual por rol -->
-      @if (currentRole() !== 'public') {
-        <nav class="hidden md:flex space-x-1">
-          @for (navItem of getContextualNavigation(); track navItem.label) {
-            <a
-              [routerLink]="navItem.link"
-              class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-gray-100 flex items-center space-x-1"
-              [class.bg-blue-50]="navItem.active"
-              [class.text-blue-600]="navItem.active"
-              [class.text-gray-700]="!navItem.active"
-            >
-              <span class="text-base">{{ navItem.icon }}</span>
-              <span>{{ navItem.label }}</span>
-              @if (navItem.badge && navItem.badge > 0) {
-                <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-1">
-                  {{ navItem.badge }}
-                </span>
-              }
-            </a>
-          }
-        </nav>
-      }
-    </div>
-
-    <!-- Sección central - Barra de búsqueda -->
-    @if (currentRole() !== 'public') {
-      <div class="flex-1 max-w-lg mx-4 hidden sm:block">
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span class="text-gray-400">🔍</span>
+      <!-- Logo y marca -->
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-md">
+            <span class="text-white font-bold text-sm">U</span>
           </div>
-          <input
-            type="text"
-            placeholder="Buscar usuarios, proyectos, oportunidades..."
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-gray-50"
-          >
+          <div class="hidden sm:block">
+            <h1 class="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              UniON
+            </h1>
+          </div>
         </div>
       </div>
-    }
 
-    <!-- Navegación derecha -->
-    <div class="flex items-center space-x-3">
-
-      <!-- Notificaciones -->
+      <!-- Barra de búsqueda y filtros (centrada) -->
       @if (currentRole() !== 'public') {
-        <div class="relative">
-          <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200">
-            <span class="text-lg">🔔</span>
+        <div class="flex-1 max-w-xl mx-6">
+          <div class="flex items-center space-x-3">
+            <!-- Búsqueda principal -->
+            <div class="flex-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar proyectos, usuarios, eventos..."
+                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent text-sm transition-all duration-200"
+              >
+            </div>
+            
+            <!-- Filtros compactos -->
+            <div class="flex items-center space-x-1">
+              @for (filter of getFilters(); track $index) {
+                <button 
+                  class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-primary-200"
+                >
+                  {{ filter }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Acciones de la derecha -->
+      @if (currentRole() !== 'public') {
+        <div class="flex items-center space-x-2">
+          
+          <!-- Crear contenido -->
+          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200" title="Crear">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+
+          <!-- Notificaciones -->
+          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Notificaciones">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M15 17h5l-5 5v-3.09c0-.26.06-.52.17-.757L12 9.757l-3.17 3.486c.11.237.17.497.17.757V17H4l5-5V7a3 3 0 116 0v5z" />
+            </svg>
             @if (getNotificationCount() > 0) {
-              <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+              <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
                 {{ getNotificationCount() }}
               </span>
             }
           </button>
-        </div>
-      }
 
-      <!-- Mensajes -->
-      @if (currentRole() === 'student' || currentRole() === 'university_admin') {
-        <div class="relative">
-          <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200">
-            <span class="text-lg">💬</span>
+          <!-- Mensajes -->
+          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Mensajes">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
             @if (getMessageCount() > 0) {
-              <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+              <span class="absolute -top-0.5 -right-0.5 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
                 {{ getMessageCount() }}
               </span>
             }
           </button>
-        </div>
-      }
 
-      <!-- Acciones rápidas por rol -->
-      @if (currentRole() !== 'public') {
-        <div class="hidden lg:flex space-x-2">
-          @for (action of getQuickActions(); track action.label) {
+          <!-- Avatar del usuario -->
+          <div class="relative ml-2">
             <button
-              [routerLink]="action.link"
-              class="px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-1"
+              (click)="toggleUserMenu()"
+              class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+              title="{{ getUserName() }}"
             >
-              <span>{{ action.icon }}</span>
-              <span>{{ action.label }}</span>
+              <div class="w-7 h-7 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold text-xs shadow-sm">
+                {{ getUserInitials() }}
+              </div>
+              <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-          }
+
+            <!-- Dropdown del usuario - Mejorado -->
+            @if (showUserMenu()) {
+              <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+                <!-- Header del dropdown -->
+                <div class="p-4 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-gray-100">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold shadow-sm">
+                      {{ getUserInitials() }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-semibold text-gray-900 truncate">{{ getUserName() }}</p>
+                      <p class="text-sm text-gray-500 truncate">{{ getUserEmail() }}</p>
+                      <span class="inline-block mt-1 px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
+                        {{ getRoleDisplayName() }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Menu items -->
+                <div class="py-2">
+                  @for (menuItem of getUserMenuItems(); track menuItem.label) {
+                    <a
+                      [routerLink]="menuItem.link"
+                      (click)="onMenuItemClick(menuItem)"
+                      class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors group"
+                      [class.text-red-600]="menuItem.label === 'Cerrar Sesión'"
+                      [class.hover:bg-red-50]="menuItem.label === 'Cerrar Sesión'"
+                    >
+                      <span class="mr-3 text-base group-hover:scale-110 transition-transform">{{ menuItem.icon }}</span>
+                      <span class="font-medium">{{ menuItem.label }}</span>
+                      @if (menuItem.label === 'Cerrar Sesión') {
+                        <svg class="ml-auto h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                      }
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
       }
-
-      <!-- Menú de usuario -->
-      @if (currentRole() !== 'public') {
-        <div class="relative">
-          <button
-            class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-            (click)="toggleUserMenu()"
-          >
-            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-              {{ getUserInitials() }}
-            </div>
-            <div class="hidden sm:block text-left">
-              <p class="text-sm font-medium text-gray-900">{{ getUserName() }}</p>
-              <p class="text-xs text-gray-500">{{ getRoleDisplayName() }}</p>
-            </div>
-            <span class="text-gray-400">▼</span>
-          </button>
-
-          <!-- Dropdown del usuario -->
-          @if (showUserMenu()) {
-            <div class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              <div class="px-4 py-3 border-b border-gray-100">
-                <p class="text-sm font-medium text-gray-900">{{ getUserName() }}</p>
-                <p class="text-xs text-gray-500">{{ getUserEmail() }}</p>
-                <span class="inline-block mt-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                  {{ getRoleDisplayName() }}
-                </span>
-              </div>
-
-              @for (menuItem of getUserMenuItems(); track menuItem.label) {
-                <a
-                  [routerLink]="menuItem.link"
-                  class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-                  (click)="closeUserMenu()"
-                >
-                  <span class="mr-3">{{ menuItem.icon }}</span>
-                  {{ menuItem.label }}
-                </a>
-              }
-
-              <div class="border-t border-gray-100 mt-2">
-                <button
-                  (click)="logout()"
-                  class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
-                >
-                  <span class="mr-3">🚪</span>
-                  Cerrar Sesión
-                </button>
-              </div>
-            </div>
-          }
-        </div>
-      } @else {
-        <!-- Botones para usuarios públicos -->
-        <div class="flex space-x-3">
-          <a
-            routerLink="/login"
-            class="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
-          >
-            Iniciar Sesión
-          </a>
-          <a
-            routerLink="/register"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors duration-200"
-          >
-            Registrarse
-          </a>
-        </div>
-      }
-
-      <!-- Menú móvil -->
-      <button
-        class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-        (click)="toggleMobileMenu()"
-      >
-        <span class="text-lg">☰</span>
-      </button>
     </div>
   </div>
 
-  <!-- Menú móvil expandible -->
-  @if (showMobileMenu() && currentRole() !== 'public') {
-    <div class="md:hidden bg-white border-t border-gray-200 px-4 py-3">
-      <!-- Barra de búsqueda móvil -->
-      <div class="mb-4">
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span class="text-gray-400">🔍</span>
-          </div>
-          <input
-            type="text"
-            placeholder="Buscar..."
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-        </div>
-      </div>
-
-      <!-- Navegación móvil -->
-      <nav class="space-y-2">
-        @for (navItem of getContextualNavigation(); track navItem.label) {
-          <a
-            [routerLink]="navItem.link"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-            [class.bg-blue-50]="navItem.active"
-            [class.text-blue-600]="navItem.active"
-            [class.text-gray-700]="!navItem.active"
-            (click)="closeMobileMenu()"
-          >
-            <span class="text-lg">{{ navItem.icon }}</span>
-            <span class="font-medium">{{ navItem.label }}</span>
-            @if (navItem.badge && navItem.badge > 0) {
-              <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">
-                {{ navItem.badge }}
-              </span>
-            }
-          </a>
-        }
-      </nav>
-
-      <!-- Acciones rápidas móvil -->
-      <div class="mt-4 pt-4 border-t border-gray-200">
-        <div class="grid grid-cols-2 gap-2">
-          @for (action of getQuickActions(); track action.label) {
-            <button
-              [routerLink]="action.link"
-              class="flex items-center justify-center space-x-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-              (click)="closeMobileMenu()"
-            >
-              <span>{{ action.icon }}</span>
-              <span class="text-sm font-medium">{{ action.label }}</span>
-            </button>
-          }
-        </div>
-      </div>
-    </div>
+  <!-- Overlay para cerrar menús -->
+  @if (showUserMenu()) {
+    <div
+      class="fixed inset-0 z-40"
+      (click)="closeUserMenu()"
+    ></div>
   }
 </header>

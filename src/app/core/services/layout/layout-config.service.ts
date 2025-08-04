@@ -1,376 +1,501 @@
-import { Injectable, inject, computed } from '@angular/core';
-import { AuthService } from '@app/core/services/auth/auth.service';
-
-export type UserRole = 'admin' | 'promoter' | 'student' | 'university_admin' | 'public';
-
-export interface LayoutConfig {
-  showLeftSidebar: boolean;
-  showRightSidebar: boolean;
-  headerType: 'admin' | 'student' | 'university' | 'public';
-  leftSidebarItems: SidebarItem[];
-  rightSidebarItems?: SidebarItem[];
-}
+import { Injectable, inject } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 
 export interface SidebarItem {
   label: string;
-  route: string;
   icon: string;
+  route?: string;
+  color?: string;
+  description?: string;
+  badge?: {
+    text: string;
+    color: string;
+  };
   children?: SidebarItem[];
-  badge?: string;
-  permissions?: string[];
+}
+
+export interface HeaderConfig {
+  title: string;
+  showSearch: boolean;
+  searchPlaceholder?: string;
+  actions?: SidebarItem[];
+}
+
+export interface RightSidebarSection {
+  title: string;
+  type: 'welcome' | 'quick-actions' | 'stats' | 'activity' | 'notifications' | 'events' | 'projects';
+  items?: SidebarItem[];
+  content?: {
+    message?: string;
+    timeOfDay?: boolean;
+    stats?: Array<{ label: string; value: string; color: string; }>;
+    activities?: Array<{ text: string; time: string; type: string; }>;
+    notifications?: Array<{ text: string; time: string; type: string; }>;
+  };
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LayoutConfigService {
-  private readonly authService = inject(AuthService);
+  private authService = inject(AuthService);
 
-  // Señal reactiva para el usuario actual
-  private readonly currentUser = computed(() => this.authService.currentUser());
-
-  // Configuraciones de layout por rol
-  private readonly roleConfigs: Record<UserRole, LayoutConfig> = {
+  private configurations = {
     admin: {
-      showLeftSidebar: true,
-      showRightSidebar: false, // Admin solo tiene sidebar izquierdo
-      headerType: 'admin',
-      leftSidebarItems: [
+      leftSidebar: [
         {
           label: 'Dashboard',
+          icon: 'dashboard',
           route: '/admin/dashboard',
-          icon: '📊',
-          badge: '3'
+          color: 'text-blue-500'
         },
         {
-          label: 'Gestión de Usuarios',
+          label: 'Usuarios',
+          icon: 'people',
           route: '/admin/users',
-          icon: '👥',
-          children: [
-            { label: 'Lista de Usuarios', route: '/admin/users', icon: '📋' },
-            { label: 'Usuarios Pendientes', route: '/admin/users/pending', icon: '⏳', badge: '5' },
-            { label: 'Reportes de Usuario', route: '/admin/users/reports', icon: '🚨', badge: '2' }
-          ]
+          color: 'text-green-500',
+          badge: { text: 'Nuevo', color: 'bg-green-100 text-green-800' }
         },
         {
           label: 'Universidades',
+          icon: 'school',
           route: '/admin/universities',
-          icon: '🏢',
-          children: [
-            { label: 'Lista de Universidades', route: '/admin/universities', icon: '📋' },
-            { label: 'Registros Pendientes', route: '/admin/universities/pending', icon: '⏳', badge: '1' },
-            { label: 'Configuración', route: '/admin/universities/config', icon: '⚙️' }
-          ]
+          color: 'text-purple-500'
         },
         {
-          label: 'Contenido y Moderación',
-          route: '/admin/content',
-          icon: '🛡️',
-          children: [
-            { label: 'Foros', route: '/admin/forums', icon: '💬' },
-            { label: 'Proyectos', route: '/admin/projects', icon: '📁' },
-            { label: 'Reportes', route: '/admin/reports', icon: '📋', badge: '8' },
-            { label: 'Tags y Etiquetas', route: '/admin/tags', icon: '🏷️' }
-          ]
+          label: 'Respaldos',
+          icon: 'backup',
+          route: '/admin/backups',
+          color: 'text-orange-500'
         },
         {
-          label: 'Eventos y Oportunidades',
-          route: '/admin/events',
-          icon: '📅',
-          children: [
-            { label: 'Eventos', route: '/admin/events', icon: '📅' },
-            { label: 'Oportunidades', route: '/admin/opportunities', icon: '🎯' }
-          ]
-        },
-        {
-          label: 'Analíticas',
-          route: '/admin/analytics',
-          icon: '📈',
-          children: [
-            { label: 'Métricas Generales', route: '/admin/analytics', icon: '📊' },
-            { label: 'Usuarios Activos', route: '/admin/analytics/users', icon: '👥' },
-            { label: 'Contenido Popular', route: '/admin/analytics/content', icon: '🔥' }
-          ]
-        },
-        {
-          label: 'Configuración del Sistema',
-          route: '/admin/settings',
-          icon: '⚙️',
-          children: [
-            { label: 'Configuración General', route: '/admin/settings', icon: '⚙️' },
-            { label: 'Roles y Permisos', route: '/admin/roles', icon: '🔐' },
-            { label: 'Respaldos', route: '/admin/backup', icon: '💾' }
-          ]
-        },
-        {
-          label: 'Soporte',
-          route: '/admin/support',
-          icon: '🎧',
-          badge: '12'
+          label: 'Reportes',
+          icon: 'bar_chart',
+          route: '/admin/reports',
+          color: 'text-red-500'
         }
-      ]
-      // Admin NO tiene rightSidebarItems
-    },
-
-    student: {
-      showLeftSidebar: true,
-      showRightSidebar: true, // Estudiante tiene ambos sidebars
-      headerType: 'student',
-      leftSidebarItems: [
+      ],
+      rightSidebar: [
         {
-          label: 'Inicio',
+          title: 'Bienvenido Administrador',
+          type: 'welcome' as const,
+          content: {
+            message: 'Gestiona la plataforma de manera eficiente',
+            timeOfDay: true
+          }
+        },
+        {
+          title: 'Acciones Rápidas',
+          type: 'quick-actions' as const,
+          items: [
+            {
+              label: 'Crear Respaldo',
+              icon: 'backup',
+              route: '/admin/backups/create',
+              color: 'text-blue-500'
+            },
+            {
+              label: 'Verificar Usuarios',
+              icon: 'verified_user',
+              route: '/admin/users/pending',
+              color: 'text-green-500'
+            },
+            {
+              label: 'Ver Reportes Urgentes',
+              icon: 'priority_high',
+              route: '/admin/reports/urgent',
+              color: 'text-red-500',
+              badge: { text: '3', color: 'bg-red-100 text-red-800' }
+            }
+          ]
+        },
+        {
+          title: 'Estadísticas en Vivo',
+          type: 'stats' as const,
+          content: {
+            stats: [
+              { label: 'Usuarios Activos', value: '1,234', color: 'text-green-600' },
+              { label: 'Proyectos Activos', value: '89', color: 'text-blue-600' },
+              { label: 'Reportes Pendientes', value: '12', color: 'text-orange-600' }
+            ]
+          }
+        },
+        {
+          title: 'Actividad Reciente',
+          type: 'activity' as const,
+          content: {
+            activities: [
+              { text: 'Usuario Ana Torres registrado', time: '2 min ago', type: 'user' },
+              { text: 'Proyecto "UniApp" verificado', time: '15 min ago', type: 'project' },
+              { text: 'Reporte de contenido inapropiado', time: '1 hour ago', type: 'report' }
+            ]
+          }
+        }
+      ],
+      header: {
+        title: 'Administración General',
+        showSearch: true,
+        searchPlaceholder: 'Buscar usuarios, proyectos, reportes...'
+      }
+    },
+    student: {
+      leftSidebar: [
+        {
+          label: 'Dashboard',
+          icon: 'dashboard',
           route: '/student/dashboard',
-          icon: '🏠'
+          color: 'text-blue-500'
         },
         {
           label: 'Mi Perfil',
+          icon: 'person',
           route: '/student/profile',
-          icon: '👤',
-          children: [
-            { label: 'Ver Perfil', route: '/student/profile', icon: '👤' },
-            { label: 'Editar Información', route: '/student/profile/edit', icon: '✏️' },
-            { label: 'Experiencias', route: '/student/profile/experiences', icon: '💼' },
-            { label: 'Configuración', route: '/student/profile/settings', icon: '⚙️' }
-          ]
-        },
-        {
-          label: 'Foros Académicos',
-          route: '/student/forums',
-          icon: '💬',
-          badge: '24'
+          color: 'text-indigo-500'
         },
         {
           label: 'Proyectos',
+          icon: 'work',
           route: '/student/projects',
-          icon: '📁',
-          children: [
-            { label: 'Mis Proyectos', route: '/student/projects/my', icon: '📁' },
-            { label: 'Explorar Proyectos', route: '/student/projects', icon: '🔍' },
-            { label: 'Crear Proyecto', route: '/student/projects/create', icon: '➕' }
-          ]
+          color: 'text-green-500',
+          badge: { text: '3', color: 'bg-green-100 text-green-800' }
         },
         {
-          label: 'Oportunidades',
-          route: '/student/opportunities',
-          icon: '🎯',
-          badge: '7'
+          label: 'Foros',
+          icon: 'forum',
+          route: '/student/forums',
+          color: 'text-orange-500'
         },
         {
           label: 'Eventos',
+          icon: 'event',
           route: '/student/events',
-          icon: '📅',
-          badge: '3'
+          color: 'text-purple-500'
         },
         {
-          label: 'Cursos y Calificaciones',
-          route: '/student/courses',
-          icon: '📚'
+          label: 'Oportunidades',
+          icon: 'work_outline',
+          route: '/student/opportunities',
+          color: 'text-teal-500'
         }
       ],
-      rightSidebarItems: [
+      rightSidebar: [
         {
-          label: 'Actividad Reciente',
-          route: '',
-          icon: '🔔'
+          title: 'Bienvenido Estudiante',
+          type: 'welcome' as const,
+          content: {
+            message: 'Explora, aprende y colabora',
+            timeOfDay: true
+          }
         },
         {
-          label: 'Proyectos Sugeridos',
-          route: '/student/projects/suggested',
-          icon: '💡'
+          title: 'Proyectos Activos',
+          type: 'projects' as const,
+          items: [
+            {
+              label: 'App Móvil UTT',
+              icon: 'phone_android',
+              route: '/student/projects/1',
+              color: 'text-blue-500',
+              description: 'Progreso: 75%',
+              badge: { text: 'En desarrollo', color: 'bg-blue-100 text-blue-800' }
+            },
+            {
+              label: 'Sistema IoT',
+              icon: 'sensors',
+              route: '/student/projects/2',
+              color: 'text-green-500',
+              description: 'Progreso: 45%',
+              badge: { text: 'Planificación', color: 'bg-yellow-100 text-yellow-800' }
+            },
+            {
+              label: 'Web Colaborativa',
+              icon: 'web',
+              route: '/student/projects/3',
+              color: 'text-purple-500',
+              description: 'Progreso: 90%',
+              badge: { text: 'Finalizando', color: 'bg-green-100 text-green-800' }
+            }
+          ]
         },
         {
-          label: 'Conexiones',
-          route: '/student/connections',
-          icon: '🤝',
-          badge: '15'
+          title: 'Foros Populares',
+          type: 'activity' as const,
+          items: [
+            {
+              label: 'Desarrollo Web',
+              icon: 'code',
+              route: '/student/forums/web-dev',
+              color: 'text-blue-500',
+              description: '234 mensajes hoy'
+            },
+            {
+              label: 'Machine Learning',
+              icon: 'psychology',
+              route: '/student/forums/ml',
+              color: 'text-indigo-500',
+              description: '156 mensajes hoy'
+            },
+            {
+              label: 'Emprendimiento',
+              icon: 'trending_up',
+              route: '/student/forums/entrepreneurship',
+              color: 'text-green-500',
+              description: '89 mensajes hoy'
+            }
+          ]
         },
         {
-          label: 'Eventos Próximos',
-          route: '/student/events/upcoming',
-          icon: '📅',
-          badge: '3'
+          title: 'Próximos Eventos',
+          type: 'events' as const,
+          items: [
+            {
+              label: 'Workshop Angular 17',
+              icon: 'event',
+              route: '/student/events/1',
+              color: 'text-red-500',
+              description: 'Mañana 10:00 AM'
+            },
+            {
+              label: 'Hackathon UTT',
+              icon: 'code',
+              route: '/student/events/2',
+              color: 'text-blue-500',
+              description: 'Viernes 15 Nov'
+            }
+          ]
+        },
+        {
+          title: 'Notificaciones',
+          type: 'notifications' as const,
+          content: {
+            notifications: [
+              { text: 'Nueva oportunidad de prácticas en TechCorp', time: '1 hour ago', type: 'opportunity' },
+              { text: 'Comentario en tu proyecto "App Móvil UTT"', time: '3 hours ago', type: 'comment' },
+              { text: 'Evento "Workshop Angular" mañana', time: '1 day ago', type: 'event' }
+            ]
+          }
         }
-      ]
+      ],
+      header: {
+        title: 'Portal Estudiantil',
+        showSearch: true,
+        searchPlaceholder: 'Buscar proyectos, foros, eventos...'
+      }
     },
-
     university_admin: {
-      showLeftSidebar: true,
-      showRightSidebar: true, // Admin Uni tiene ambos sidebars
-      headerType: 'university',
-      leftSidebarItems: [
+      leftSidebar: [
         {
           label: 'Dashboard',
+          icon: 'dashboard',
           route: '/admin-uni/dashboard',
-          icon: '📊'
+          color: 'text-blue-500'
         },
         {
-          label: 'Gestión de Estudiantes',
+          label: 'Estudiantes',
+          icon: 'school',
           route: '/admin-uni/students',
-          icon: '🎓',
-          children: [
-            { label: 'Lista de Estudiantes', route: '/admin-uni/students', icon: '📋' },
-            { label: 'Validación de Registros', route: '/admin-uni/students/validation', icon: '✅', badge: '12' },
-            { label: 'Graduados', route: '/admin-uni/students/graduates', icon: '🎓' }
-          ]
+          color: 'text-green-500'
         },
         {
-          label: 'Proyectos Estudiantiles',
+          label: 'Proyectos',
+          icon: 'work',
           route: '/admin-uni/projects',
-          icon: '📁',
-          children: [
-            { label: 'Todos los Proyectos', route: '/admin-uni/projects', icon: '📁' },
-            { label: 'Pendientes de Verificación', route: '/admin-uni/projects/pending', icon: '⏳', badge: '8' },
-            { label: 'Proyectos Verificados', route: '/admin-uni/projects/verified', icon: '✅' }
-          ]
+          color: 'text-purple-500',
+          badge: { text: '5 Pendientes', color: 'bg-yellow-100 text-yellow-800' }
         },
         {
-          label: 'Eventos y Webinars',
+          label: 'Eventos',
+          icon: 'event',
           route: '/admin-uni/events',
-          icon: '📅',
-          children: [
-            { label: 'Mis Eventos', route: '/admin-uni/events', icon: '📅' },
-            { label: 'Crear Evento', route: '/admin-uni/events/create', icon: '➕' },
-            { label: 'Asistencias', route: '/admin-uni/events/attendance', icon: '📊' }
-          ]
+          color: 'text-orange-500'
         },
         {
-          label: 'Oportunidades Académicas',
+          label: 'Oportunidades',
+          icon: 'work_outline',
           route: '/admin-uni/opportunities',
-          icon: '🎯',
-          children: [
-            { label: 'Mis Oportunidades', route: '/admin-uni/opportunities', icon: '🎯' },
-            { label: 'Crear Oportunidad', route: '/admin-uni/opportunities/create', icon: '➕' },
-            { label: 'Postulaciones', route: '/admin-uni/opportunities/applications', icon: '📝', badge: '23' }
-          ]
-        },
-        {
-          label: 'Reportes Institucionales',
-          route: '/admin-uni/reports',
-          icon: '📈'
+          color: 'text-teal-500'
         }
       ],
-      rightSidebarItems: [
+      rightSidebar: [
         {
-          label: 'Estadísticas Rápidas',
-          route: '',
-          icon: '📊'
+          title: 'Bienvenido Admin Universitario',
+          type: 'welcome' as const,
+          content: {
+            message: 'Gestiona tu institución académica',
+            timeOfDay: true
+          }
         },
         {
-          label: 'Estudiantes Activos',
-          route: '/admin-uni/students/active',
-          icon: '👥',
-          badge: '245'
+          title: 'Acciones Pendientes',
+          type: 'quick-actions' as const,
+          items: [
+            {
+              label: 'Verificar Proyectos',
+              icon: 'fact_check',
+              route: '/admin-uni/projects/pending',
+              color: 'text-orange-500',
+              badge: { text: '5', color: 'bg-orange-100 text-orange-800' }
+            },
+            {
+              label: 'Aprobar Estudiantes',
+              icon: 'how_to_reg',
+              route: '/admin-uni/students/pending',
+              color: 'text-blue-500',
+              badge: { text: '12', color: 'bg-blue-100 text-blue-800' }
+            },
+            {
+              label: 'Revisar Reportes',
+              icon: 'report',
+              route: '/admin-uni/reports',
+              color: 'text-red-500',
+              badge: { text: '2', color: 'bg-red-100 text-red-800' }
+            }
+          ]
         },
         {
-          label: 'Proyectos Pendientes',
-          route: '/admin-uni/projects/pending',
-          icon: '⏳',
-          badge: '8'
-        },
-        {
-          label: 'Eventos Próximos',
-          route: '/admin-uni/events/upcoming',
-          icon: '📅',
-          badge: '2'
+          title: 'Estadísticas Rápidas',
+          type: 'stats' as const,
+          content: {
+            stats: [
+              { label: 'Estudiantes Activos', value: '456', color: 'text-green-600' },
+              { label: 'Proyectos en Curso', value: '23', color: 'text-blue-600' },
+              { label: 'Eventos este Mes', value: '8', color: 'text-purple-600' }
+            ]
+          }
         }
-      ]
+      ],
+      header: {
+        title: 'Administración Universitaria',
+        showSearch: true,
+        searchPlaceholder: 'Buscar estudiantes, proyectos...'
+      }
     },
-
     promoter: {
-      showLeftSidebar: true,
-      showRightSidebar: false, // Promotor solo sidebar izquierdo
-      headerType: 'public',
-      leftSidebarItems: [
+      leftSidebar: [
         {
           label: 'Dashboard',
+          icon: 'dashboard',
           route: '/promoter/dashboard',
-          icon: '📊'
+          color: 'text-blue-500'
         },
         {
-          label: 'Gestión de Ofertas',
-          route: '/promoter/jobs',
-          icon: '💼',
-          children: [
-            { label: 'Mis Ofertas', route: '/promoter/jobs', icon: '💼' },
-            { label: 'Crear Oferta', route: '/promoter/jobs/create', icon: '➕' },
-            { label: 'Ofertas Archivadas', route: '/promoter/jobs/archived', icon: '📦' }
-          ]
+          label: 'Oportunidades',
+          icon: 'work',
+          route: '/promoter/opportunities',
+          color: 'text-green-500'
         },
         {
           label: 'Candidatos',
+          icon: 'people',
           route: '/promoter/candidates',
-          icon: '👥',
-          children: [
-            { label: 'Todos los Candidatos', route: '/promoter/candidates', icon: '👥' },
-            { label: 'Nuevas Postulaciones', route: '/promoter/candidates/new', icon: '📥', badge: '15' },
-            { label: 'Favoritos', route: '/promoter/candidates/favorites', icon: '⭐' }
-          ]
+          color: 'text-purple-500'
         },
         {
-          label: 'Búsqueda de Talento',
-          route: '/promoter/search',
-          icon: '🔍'
-        },
-        {
-          label: 'Reportes y Analíticas',
-          route: '/promoter/analytics',
-          icon: '📈'
+          label: 'Mi Perfil',
+          icon: 'business',
+          route: '/promoter/profile',
+          color: 'text-indigo-500'
         }
-      ]
-      // Promotor NO tiene rightSidebarItems
-    },
-
-    public: {
-      showLeftSidebar: false,
-      showRightSidebar: false, // Público sin sidebars
-      headerType: 'public',
-      leftSidebarItems: []
-      // Público NO tiene rightSidebarItems
+      ],
+      rightSidebar: [
+        {
+          title: 'Bienvenido Promotor',
+          type: 'welcome' as const,
+          content: {
+            message: 'Encuentra el talento que necesitas',
+            timeOfDay: true
+          }
+        },
+        {
+          title: 'Métricas',
+          type: 'stats' as const,
+          content: {
+            stats: [
+              { label: 'Postulaciones Activas', value: '34', color: 'text-green-600' },
+              { label: 'Candidatos Nuevos', value: '12', color: 'text-blue-600' },
+              { label: 'Entrevistas Programadas', value: '6', color: 'text-orange-600' }
+            ]
+          }
+        },
+        {
+          title: 'Candidatos Destacados',
+          type: 'activity' as const,
+          items: [
+            {
+              label: 'Ana Torres',
+              icon: 'person',
+              route: '/promoter/candidates/1',
+              color: 'text-blue-500',
+              description: 'Ing. Sistemas - UTT'
+            },
+            {
+              label: 'Luis Pérez',
+              icon: 'person',
+              route: '/promoter/candidates/2',
+              color: 'text-green-500',
+              description: 'Ing. Software - UABC'
+            },
+            {
+              label: 'María García',
+              icon: 'person',
+              route: '/promoter/candidates/3',
+              color: 'text-purple-500',
+              description: 'Ing. Industrial - CETYS'
+            }
+          ]
+        }
+      ],
+      header: {
+        title: 'Portal Empresarial',
+        showSearch: true,
+        searchPlaceholder: 'Buscar candidatos, habilidades...'
+      }
     }
   };
 
-  /**
-   * Obtiene el rol del usuario actual
-   */
-  getCurrentUserRole(): UserRole {
-    const user = this.currentUser();
-    if (!user) return 'public';
+  getCurrentLayoutConfig() {
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      return this.configurations.student; // Default fallback
+    }
 
-    // Mapear el rol del usuario a UserRole
-    const roleMapping: Record<string, UserRole> = {
-      'admin': 'admin',
-      'student': 'student',
-      'university_admin': 'university_admin',
-      'promoter': 'promoter'
-    };
+    const roleKey = currentUser.rol_id === 1 ? 'admin' :
+                   currentUser.rol_id === 2 ? 'student' :
+                   currentUser.rol_id === 3 ? 'university_admin' :
+                   currentUser.rol_id === 4 ? 'promoter' : 'student';
 
-    return roleMapping[user.rol_id] || 'public';
+    return this.configurations[roleKey as keyof typeof this.configurations];
   }
 
-  /**
-   * Obtiene la configuración de layout para el usuario actual
-   */
-  getCurrentLayoutConfig(): LayoutConfig {
-    const role = this.getCurrentUserRole();
-    return this.roleConfigs[role];
+  getLeftSidebarItems(): SidebarItem[] {
+    return this.getCurrentLayoutConfig().leftSidebar;
   }
 
-  /**
-   * Obtiene el conteo de badges dinámico
-   */
-  getBadgeCount(badgeType: string): number {
-    // Simulación de conteos dinámicos
-    const counts: Record<string, number> = {
-      'pending-users': 5,
-      'pending-reports': 8,
-      'new-opportunities': 7,
-      'upcoming-events': 3,
-      'projects-review': 8,
-      'new-applications': 15,
-      'notifications': 12,
-      'messages': 4
-    };
+  getRightSidebarSections(): RightSidebarSection[] {
+    return this.getCurrentLayoutConfig().rightSidebar;
+  }
 
-    return counts[badgeType] || 0;
+  getHeaderConfig(): HeaderConfig {
+    return this.getCurrentLayoutConfig().header;
+  }
+
+  getCurrentUserRole(): string {
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      return 'student'; // Default fallback
+    }
+
+    const roleKey = currentUser.rol_id === 1 ? 'admin' :
+                   currentUser.rol_id === 2 ? 'student' :
+                   currentUser.rol_id === 3 ? 'university_admin' :
+                   currentUser.rol_id === 4 ? 'promoter' : 'student';
+
+    return roleKey;
+  }
+
+  hasPermission(_item: SidebarItem): boolean {
+    // Para ahora, todos los items son visibles
+    // En el futuro se puede implementar lógica de permisos más compleja
+    return true;
   }
 }
