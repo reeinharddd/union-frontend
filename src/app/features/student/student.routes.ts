@@ -121,13 +121,20 @@ export const STUDENT_ROUTES: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('./projects/colab/colab.component').then(m => m.ColabComponent),
       },
-      // {
-      //   path: 'public-profile',
-      //   loadComponent: () =>
-      //     import('./profile/student-public-profile/student-public-profile.component').then(
-      //       m => m.StudentPublicProfileComponent,
-      //     ),
-      // },
+      {
+        path: 'public-profile',
+        loadComponent: () =>
+          import('./profile/student-profile-public/student-profile-public.component').then(
+            m => m.StudentProfilePublicComponent,
+          ),
+      },
+      {
+        path: 'public-profile/:id',
+        loadComponent: () =>
+          import('./profile/student-profile-public/student-profile-public.component').then(
+            m => m.StudentProfilePublicComponent,
+          ),
+      },
 
       // {
       //   path: 'messages',
