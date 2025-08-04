@@ -1,3 +1,4 @@
+// src/app/core/services/auth/auth.service.ts
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthResponse, LoginRequest, RegisterRequest } from '@app/core/models/auth/auth.interface';
