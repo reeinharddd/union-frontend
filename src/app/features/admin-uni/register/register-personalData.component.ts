@@ -8,10 +8,10 @@ import { UserService } from '@app/core/services/user/user.service';
 @Component({
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  selector: 'app-promoter-register-personal-data',
+  selector: 'app-adminUni-register-personal-data',
   templateUrl: './register-personalData.component.html',
 })
-export class PromotorRegister2Component {
+export class AdminUniRegister2Component {
   registerForm: FormGroup;
   token: string = '';
   usuario_id: number | null = null;

@@ -1,0 +1,68 @@
+<div class="flex min-h-screen bg-neutral-100 px-6 py-12">
+  <!-- Columna izquierda -->
+  <div class="flex flex-1 flex-col justify-center">
+    <h1 class="mb-4 text-4xl font-bold text-black">Completa tu registro</h1>
+    <p class="mb-8 text-lg text-neutral-600">
+      Por favor ingresa tus datos personales para finalizar el registro en UniON.
+    </p>
+    <a class="login-link" routerLink="/login">Ya tengo cuenta</a>
+  </div>
+
+  <!-- Columna derecha -->
+  <div class="flex flex-1 items-center justify-center">
+    <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+      <!-- Header de "ventana" -->
+      <div class="mb-6 flex items-center justify-between">
+        <span class="text-sm font-semibold text-black">Datos Personales</span>
+        <div class="flex space-x-2">
+          <span class="bg-red-500 h-3 w-3 rounded-full"></span>
+          <span class="bg-yellow-500 h-3 w-3 rounded-full"></span>
+          <span class="bg-green-500 h-3 w-3 rounded-full"></span>
+        </div>
+      </div>
+
+      <p class="mb-6 text-center text-sm font-semibold text-neutral-800">Formulario</p>
+
+      <!-- Formulario -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <!-- Aquí irían los campos del formulario de registro -->
+        <div>
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Nombre completo"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2"
+          />
+        </div>
+        <div>
+          <input
+            type="email"
+            formControlName="correo"
+            placeholder="Correo electrónico"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2"
+          />
+        </div>
+
+        <div>
+          <input
+            type="password"
+            formControlName="contrasena"
+            placeholder="Contraseña"
+            class="border-gray-300 w-full rounded-lg border px-4 py-2"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+        >
+          Completar Registro
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="px-6 py-4 text-right text-xs text-neutral-600">
+  © 2025 UniON, todos los derechos reservados
+</footer>

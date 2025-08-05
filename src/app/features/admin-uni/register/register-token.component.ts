@@ -5,12 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiClientService } from '../../../core/services/base/api-client.service';
 
 @Component({
-  selector: 'app-promoter-register',
+  selector: 'app-adminUni-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register-token.component.html',
 })
-export class PromotorRegisterComponent {
+export class AdminUniRegisterComponent {
   tokenForm: FormGroup;
   tieneToken: boolean | null = null;
   isLoading = false;
@@ -57,7 +57,7 @@ export class PromotorRegisterComponent {
           // console.info('Token válido, navegando a la siguiente página');
 
           // Navegar a la siguiente parte del formulario con el token y el usuario_id
-          this.router.navigate(['/register/promotor/datos-personales'], {
+          this.router.navigate(['/register/institucion/datos-personales'], {
             queryParams: {
               token_id: tokenEncontrado.id,
               token: token,

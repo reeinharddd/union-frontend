@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '@app/core/services/auth/auth.service';
-//import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
-//import { PostulationService } from '@app/core/services/postulation/postulation.service';
+import { TokenService } from '@app/core/services/auth/token.service';
+import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
+import { PostulationService } from '@app/core/services/postulation/postulation.service';
 
 @Component({
   selector: 'app-promoter-dashboard',
@@ -197,8 +198,9 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 })
 export class PromoterDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
-  //private readonly opportunityService = inject(OpportunityService);
-  //private readonly postulationService = inject(PostulationService);
+  private readonly tokenService = inject(TokenService);
+  private readonly opportunityService = inject(OpportunityService);
+  private readonly postulationService = inject(PostulationService);
 
   readonly promoterStats = signal({
     activeOpportunities: 0,
@@ -208,6 +210,7 @@ export class PromoterDashboardComponent implements OnInit {
 
   readonly recentPostulations = signal<any[]>([]);
   readonly pendingOpportunities = signal<any[]>([]);
+  userId: number | null = null;
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -232,27 +235,39 @@ export class PromoterDashboardComponent implements OnInit {
     console.log('Navegar a:', route);
   }
 
-  private loadDashboardData(): void {
-    // Cargar estadísticas de oportunidades
-    // this.opportunityService.getByPromoter().subscribe(opportunities => {
-    //   const activeOpportunities = opportunities.filter(opp => opp.activa).length;
-    //   this.promoterStats.update(stats => ({
-    //     ...stats,
-    //     activeOpportunities: activeOpportunities,
-    //   }));
-    // });
-    // Cargar postulaciones recientes
-    // this.postulationService.getRecent().subscribe(postulations => {
-    //   this.recentPostulations.set(postulations);
-    //   this.promoterStats.update(stats => ({
-    //     ...stats,
-    //     totalPostulations: postulations.length,
-    //     newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
-    //   }));
-    // });
-    // Cargar oportunidades con postulaciones pendientes
-    // this.opportunityService.getPendingReview().subscribe(opportunities => {
-    //   this.pendingOpportunities.set(opportunities);
-    // });
-  }
+private loadDashboardData(): void {
+  const userId = this.tokenService.getUserId()!; // Asegúrate de tener el ID del usuario promotor
+
+  // Cargar estadísticas de oportunidades del promotor
+  this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
+    const activeOpportunities = opportunities.filter(opp => !!opp).length;
+    this.promoterStats.update(stats => ({
+      ...stats,
+      activeOpportunities: activeOpportunities,
+    }));
+  });
+
+  // Cargar postulaciones recientes (usamos getAll y limitamos manualmente)
+  this.postulationService.getAll().subscribe(postulations => {
+    const recentPostulations = postulations
+      .sort((a, b) => new Date(b.fecha!).getTime() - new Date(a.fecha!).getTime()) // Asegura que tenga campo `fecha`
+      .slice(0, 5); // Limitar a las 5 más recientes
+
+    this.recentPostulations.set(recentPostulations);
+    this.promoterStats.update(stats => ({
+      ...stats,
+      totalPostulations: postulations.length,
+      newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
+    }));
+  });
+
+  // Cargar oportunidades con postulaciones pendientes (lo puedes filtrar así:)
+  this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
+    const pendingOpportunities = opportunities.filter(op =>
+      this.postulationService.postulations().some(p => p.oportunidad_id === op.id && p.estado === 'pendiente')
+    );
+    this.pendingOpportunities.set(pendingOpportunities);
+  });
+}
+
 }
