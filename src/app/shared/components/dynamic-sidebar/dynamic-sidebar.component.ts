@@ -55,9 +55,9 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                 (click)="item.children ? toggleSubmenu(item) : null"
               >
                 <div class="flex items-center space-x-3">
-                  <span class="text-base transition-transform duration-200 group-hover:scale-105">{{
+                  <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 {{ item.color || 'text-gray-500' }}">{{
                     item.icon
-                  }}</span>
+                  }}</i>
                   <span class="font-medium">{{ item.label }}</span>
                   @if (item.badge) {
                     <span
@@ -98,9 +98,9 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                     class="hover:bg-gray-50 border-l-3 text-gray-600 group flex items-center justify-between rounded-md border-transparent px-3 py-2 text-sm transition-all duration-200 hover:text-primary-600"
                   >
                     <div class="flex items-center space-x-3">
-                      <span class="text-sm transition-transform group-hover:scale-105">{{
+                      <i class="material-icons text-sm transition-transform group-hover:scale-105 {{ child.color || 'text-gray-500' }}">{{
                         child.icon
-                      }}</span>
+                      }}</i>
                       <span>{{ child.label }}</span>
                     </div>
                     @if (child.badge) {
@@ -279,8 +279,8 @@ export class DynamicSidebarComponent {
     const roleNames: { [key: number]: string } = {
       1: 'Administrador',
       2: 'Estudiante',
-      3: 'Admin Universitario',
-      4: 'Promotor',
+      3: 'Promotor',
+      9: 'Admin Universitario',
     };
     return roleNames[user?.rol_id || 2] || 'Usuario';
   }

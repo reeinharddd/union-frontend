@@ -13,64 +13,110 @@ import {
   imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `
     <aside class="flex h-full w-full flex-col border-r border-border bg-white p-4">
-      <div class="border-b border-border p-6">
+      <div class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4">
         <div class="flex items-center space-x-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
-            <span class="text-sm font-semibold text-primary-600">
+          <div class="relative">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 font-bold text-white shadow-sm"
+            >
               {{ getUserInitials() }}
-            </span>
+            </div>
+            <div
+              class="bg-green-500 absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white"
+            ></div>
           </div>
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-medium text-text-base">
-              {{ currentUser()?.nombre || currentUser()?.correo }}
-            </p>
-            <p class="text-xs capitalize text-text-muted">
+            <p class="text-gray-900 truncate text-sm font-semibold">{{ getUserName() }}</p>
+            <p class="text-gray-500 truncate text-xs">{{ getUserEmail() }}</p>
+            <span
+              class="mt-1 inline-block rounded-md bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700"
+            >
               {{ getRoleDisplayName() }}
-            </p>
+            </span>
           </div>
         </div>
       </div>
 
-      <nav class="flex flex-col space-y-2">
+      <nav class="flex-1 space-y-1 overflow-y-auto p-3">
         <a
           routerLink="/promoter/dashboard"
-          routerLinkActive="bg-primary text-white"
-          class="rounded px-4 py-2 transition hover:bg-primary/10"
+          routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
+          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
         >
-          🏠 Dashboard
+          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-blue-500">dashboard</i>
+          <span class="font-medium">Dashboard</span>
         </a>
         <a
           routerLink="/promoter/opportunities"
-          routerLinkActive="bg-primary text-white"
-          class="rounded px-4 py-2 transition hover:bg-primary/10"
+          routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
+          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
         >
-          📁 Oportunidades
+          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-green-500">work</i>
+          <span class="font-medium">Oportunidades</span>
         </a>
         <a
           routerLink="/promoter/clients"
-          routerLinkActive="bg-primary text-white"
-          class="rounded px-4 py-2 transition hover:bg-primary/10"
+          routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
+          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
         >
-          👥 Clientes
+          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-purple-500">people</i>
+          <span class="font-medium">Clientes</span>
         </a>
         <a
           routerLink="/promoter/settings"
-          routerLinkActive="bg-primary text-white"
-          class="rounded px-4 py-2 transition hover:bg-primary/10"
+          routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
+          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
         >
-          ⚙️ Configuración
+          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-gray-500">settings</i>
+          <span class="font-medium">Configuración</span>
         </a>
       </nav>
 
-      <!-- Footer con acciones -->
-      <div class="border-t border-border p-4">
-        <button
-          (click)="logout()"
-          class="flex w-full items-center justify-center space-x-2 rounded-lg bg-neutral-50 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors duration-200 hover:bg-neutral-100"
-        >
-          <i class="icon-log-out h-4 w-4"></i>
-          <span>Cerrar Sesión</span>
-        </button>
+      <!-- Footer del sidebar -->
+      <div class="border-gray-50 bg-gray-50/30 border-t p-3">
+        <div class="space-y-1">
+          <!-- Acceso rápido a perfil -->
+          <a
+            routerLink="/promoter/profile"
+            class="text-gray-600 group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+          >
+            <svg
+              class="h-4 w-4 transition-transform group-hover:scale-105"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <span class="font-medium">Mi Perfil</span>
+          </a>
+
+          <!-- Cerrar sesión -->
+          <button
+            (click)="logout()"
+            class="hover:bg-red-50 hover:text-red-600 text-gray-600 group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200"
+          >
+            <svg
+              class="h-4 w-4 transition-transform group-hover:scale-105"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span class="font-medium">Cerrar Sesión</span>
+          </button>
+        </div>
       </div>
     </aside>
   `,
@@ -241,11 +287,21 @@ export class PromoterSidebarComponent {
     return user?.correo?.slice(0, 2).toUpperCase() || 'US';
   }
 
+  getUserName(): string {
+    const user = this.currentUser();
+    return user?.nombre || 'Usuario';
+  }
+
+  getUserEmail(): string {
+    const user = this.currentUser();
+    return user?.correo || 'email@ejemplo.com';
+  }
+
   private getRoleName(role: number | undefined): string {
     const roleNames = {
       1: 'Administrador',
       2: 'Estudiante',
-      3: 'Profesor',
+      3: 'Promotor',
       9: 'Admin Universitario',
     };
 

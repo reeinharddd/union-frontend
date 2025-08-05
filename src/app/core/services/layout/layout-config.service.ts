@@ -54,7 +54,7 @@ export class LayoutConfigService {
           icon: 'people',
           route: '/admin/users',
           color: 'text-green-500',
-          badge: { text: 'Nuevo', color: 'bg-green-100 text-green-800' }
+          badge: { text: 'Gestionar', color: 'bg-green-100 text-green-800' }
         },
         {
           label: 'Universidades',
@@ -157,7 +157,7 @@ export class LayoutConfigService {
           icon: 'work',
           route: '/student/projects',
           color: 'text-green-500',
-          badge: { text: '3', color: 'bg-green-100 text-green-800' }
+          badge: { text: 'Activos', color: 'bg-green-100 text-green-800' }
         },
         {
           label: 'Foros',
@@ -461,8 +461,8 @@ export class LayoutConfigService {
 
     const roleKey = currentUser.rol_id === 1 ? 'admin' :
                    currentUser.rol_id === 2 ? 'student' :
-                   currentUser.rol_id === 3 ? 'university_admin' :
-                   currentUser.rol_id === 4 ? 'promoter' : 'student';
+                   currentUser.rol_id === 3 ? 'promoter' :
+                   currentUser.rol_id === 9 ? 'university_admin' : 'student';
 
     return this.configurations[roleKey as keyof typeof this.configurations];
   }
@@ -487,8 +487,8 @@ export class LayoutConfigService {
 
     const roleKey = currentUser.rol_id === 1 ? 'admin' :
                    currentUser.rol_id === 2 ? 'student' :
-                   currentUser.rol_id === 3 ? 'university_admin' :
-                   currentUser.rol_id === 4 ? 'promoter' : 'student';
+                   currentUser.rol_id === 3 ? 'promoter' :
+                   currentUser.rol_id === 9 ? 'university_admin' : 'student';
 
     return roleKey;
   }
