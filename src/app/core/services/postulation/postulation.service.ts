@@ -72,7 +72,7 @@ export class PostulationService {
   }
   update(id: number, data: Partial<Postulation>): Observable<Postulation> {
     console.log('🔄 PostulationService - Updating postulation:', id, data);
-    return this.apiClient.put<Postulation>(API_ENDPOINTS.POSTULATIONS.BY_ID(id), data).pipe(
+    return this.apiClient.put<Postulation>(API_ENDPOINTS.POSTULATIONS.UPDATE(id), data).pipe(
       tap(updatedPostulation => {
         this._postulations.update(postulations =>
           postulations.map(postulation =>

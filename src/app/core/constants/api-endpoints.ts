@@ -63,6 +63,7 @@ export const API_ENDPOINTS = {
   POSTULATIONS: {
     BASE: '/postulaciones',
     BY_ID: (id: number) => `/postulaciones/${id}`,
+    UPDATE: (id: number) => `/postulaciones/${id}`,
     RECENT: '/postulaciones/recent',
     PENDING_REVIEW: '/postulaciones/pending-review',
     BY_OPPORTUNITY: (opportunityId: number) => `/postulaciones?oportunidad_id=${opportunityId}`,

@@ -4,6 +4,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
 import { TokenService } from '@app/core/services/auth/token.service';
 import { OpportunityService } from '@app/core/services/opportunity/opportunity.service';
 import { PostulationService } from '@app/core/services/postulation/postulation.service';
+import { UserService } from '@app/core/services/user/user.service';
 
 @Component({
   selector: 'app-promoter-dashboard',
@@ -30,7 +31,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="border-blue-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-blue-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Oportunidades Activas</p>
@@ -42,7 +43,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
           </div>
         </div>
 
-        <div class="border-green-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-green-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Postulaciones Totales</p>
@@ -54,7 +55,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
           </div>
         </div>
 
-        <div class="border-purple-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-purple-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Postulaciones Nuevas</p>
@@ -97,7 +98,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
                       {{ postulation.oportunidad_titulo }}
                     </td>
                     <td class="px-4 py-3 text-sm text-neutral-500">
-                      {{ formatDate(postulation.fecha_postulacion) }}
+                      {{ formatDate(postulation.fecha) }}
                     </td>
                     <td class="px-4 py-3">
                       <span
@@ -141,17 +142,17 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
               </div>
             </a>
 
-            <button
-              class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-secondary-300 hover:bg-secondary-50"
-              (click)="navigateTo('manage-postulations')"
+            <a
+              href="promoter/postulation"
+              class="group block w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
             >
               <div class="flex items-center space-x-3">
                 <span class="text-xl transition-transform group-hover:scale-110">📋</span>
                 <span class="text-sm font-medium">Gestionar Postulaciones</span>
               </div>
-            </button>
+            </a>
 
-            <button
+            <!-- <button
               class="group w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-accent-300 hover:bg-accent-50"
               (click)="navigateTo('view-students')"
             >
@@ -159,7 +160,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
                 <span class="text-xl transition-transform group-hover:scale-110">👥</span>
                 <span class="text-sm font-medium">Ver Estudiantes</span>
               </div>
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -199,6 +200,7 @@ import { PostulationService } from '@app/core/services/postulation/postulation.s
 export class PromoterDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly tokenService = inject(TokenService);
+  private readonly userService = inject(UserService);
   private readonly opportunityService = inject(OpportunityService);
   private readonly postulationService = inject(PostulationService);
 
@@ -223,11 +225,13 @@ export class PromoterDashboardComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+    return date
+      .toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+      .replace('.', ''); // Elimina el punto que algunos navegadores ponen en 'jul.'
   }
 
   navigateTo(route: string): void {
@@ -235,39 +239,55 @@ export class PromoterDashboardComponent implements OnInit {
     console.log('Navegar a:', route);
   }
 
-private loadDashboardData(): void {
-  const userId = this.tokenService.getUserId()!; // Asegúrate de tener el ID del usuario promotor
+  private loadDashboardData(): void {
+    const userId = this.tokenService.getUserId()!;
 
-  // Cargar estadísticas de oportunidades del promotor
-  this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
-    const activeOpportunities = opportunities.filter(opp => !!opp).length;
-    this.promoterStats.update(stats => ({
-      ...stats,
-      activeOpportunities: activeOpportunities,
-    }));
-  });
+    // Estadísticas de oportunidades activas
+    this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
+      const activeOpportunities = opportunities.length;
+      this.promoterStats.update(stats => ({
+        ...stats,
+        activeOpportunities: activeOpportunities,
+      }));
+    });
 
-  // Cargar postulaciones recientes (usamos getAll y limitamos manualmente)
-  this.postulationService.getAll().subscribe(postulations => {
-    const recentPostulations = postulations
-      .sort((a, b) => new Date(b.fecha!).getTime() - new Date(a.fecha!).getTime()) // Asegura que tenga campo `fecha`
-      .slice(0, 5); // Limitar a las 5 más recientes
+    // Cargar todas las postulaciones y enriquecerlas
+    this.postulationService.getAll().subscribe(async postulations => {
+      const recentPostulations = await Promise.all(
+        postulations
+          .sort((a, b) => new Date(b.fecha!).getTime() - new Date(a.fecha!).getTime())
+          .slice(0, 5) // solo las 5 más recientes
+          .map(async postulation => {
+            const estudiante = await this.userService.getById(postulation.usuario_id).toPromise();
+            const oportunidad = await this.opportunityService
+              .getById(postulation.oportunidad_id)
+              .toPromise();
 
-    this.recentPostulations.set(recentPostulations);
-    this.promoterStats.update(stats => ({
-      ...stats,
-      totalPostulations: postulations.length,
-      newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
-    }));
-  });
+            return {
+              ...postulation,
+              estudiante_nombre: estudiante?.nombre || 'Desconocido',
+              oportunidad_titulo: oportunidad?.titulo || 'Sin título',
+            };
+          }),
+      );
 
-  // Cargar oportunidades con postulaciones pendientes (lo puedes filtrar así:)
-  this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
-    const pendingOpportunities = opportunities.filter(op =>
-      this.postulationService.postulations().some(p => p.oportunidad_id === op.id && p.estado === 'pendiente')
-    );
-    this.pendingOpportunities.set(pendingOpportunities);
-  });
-}
+      this.recentPostulations.set(recentPostulations);
 
+      this.promoterStats.update(stats => ({
+        ...stats,
+        totalPostulations: postulations.length,
+        newPostulations: postulations.filter(p => p.estado === 'pendiente').length,
+      }));
+    });
+
+    // Oportunidades con postulaciones pendientes
+    this.opportunityService.getByPromoter(userId).subscribe(opportunities => {
+      this.postulationService.getAll().subscribe(postulations => {
+        const pendingOpportunities = opportunities.filter(op =>
+          postulations.some(p => p.oportunidad_id === op.id && p.estado === 'pendiente'),
+        );
+        this.pendingOpportunities.set(pendingOpportunities);
+      });
+    });
+  }
 }

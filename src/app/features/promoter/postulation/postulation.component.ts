@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TokenService } from '@app/core/services/auth/token.service';
 import {
   Opportunity,
@@ -14,14 +14,16 @@ import { WorkModalityService } from '@app/core/services/workModality/workModalit
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-lista-oportunidades',
-  templateUrl: './opportunities.component.html',
-  imports: [CommonModule],
+  selector: 'app-postuation-candidate',
+  templateUrl: './postulation.component.html',
+  imports: [CommonModule, FormsModule],
   standalone: true,
 })
-export class OpportunitiesComponent implements OnInit {
+export class PostulationComponent implements OnInit {
   oportunidades: Opportunity[] = [];
   postulaciones: any[] = [];
+  postulacionesFiltradas: any[] = [];
+  estadoSeleccionado: string = '';
   postulacionesPorOportunidad: { [key: number]: any[] } = {};
 
   universidadesMap: { [key: number]: string } = {};
@@ -39,7 +41,7 @@ export class OpportunitiesComponent implements OnInit {
     private typeOpportunityService: OpportunityTypeService,
     private postulationService: PostulationService,
     private userService: UserService,
-    private router: Router,
+    //private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,26 +72,42 @@ export class OpportunitiesComponent implements OnInit {
   }
 
   cargarPostulaciones(): void {
-    this.postulationService.getAll().subscribe(postulaciones => {
-      this.postulaciones = postulaciones;
+    const userId = this.tokenService.getUserId();
+
+    if (userId === null) {
+      console.error('El ID del usuario es null');
+      return;
+    }
+
+    this.opportunityService.getByPromoter(userId).subscribe(oportunidades => {
+      this.postulaciones = [];
       this.postulacionesPorOportunidad = {};
 
-      const peticionesUsuarios = postulaciones.map(p => this.userService.getById(p.usuario_id));
+      this.postulationService.getAll().subscribe(todasLasPostulaciones => {
+        const oportunidadesIds = oportunidades.map(o => o.id);
 
-      // Trae todos los usuarios en paralelo
-      forkJoin(peticionesUsuarios).subscribe(usuarios => {
-        this.postulaciones.forEach((postulacion, index) => {
-          const usuario = usuarios[index];
+        const postulacionesFiltradas = todasLasPostulaciones.filter(p =>
+          oportunidadesIds.includes(p.oportunidad_id),
+        );
 
-          // Añade los datos directamente (sin necesidad de cambiar el modelo)
-          (postulacion as any).nombre_usuario = usuario.nombre;
-          (postulacion as any).correo_usuario = usuario.correo;
+        this.postulaciones = postulacionesFiltradas;
 
-          const oportunidadId = postulacion.oportunidad_id;
-          if (!this.postulacionesPorOportunidad[oportunidadId]) {
-            this.postulacionesPorOportunidad[oportunidadId] = [];
-          }
-          this.postulacionesPorOportunidad[oportunidadId].push(postulacion);
+        oportunidadesIds.forEach(id => {
+          this.postulacionesPorOportunidad[id] = postulacionesFiltradas.filter(
+            p => p.oportunidad_id === id,
+          );
+        });
+
+        const peticionesUsuarios = this.postulaciones.map(p =>
+          this.userService.getById(p.usuario_id),
+        );
+
+        forkJoin(peticionesUsuarios).subscribe(usuarios => {
+          this.postulaciones.forEach((postulacion, index) => {
+            const usuario = usuarios[index];
+            (postulacion as any).nombre_usuario = usuario.nombre;
+            (postulacion as any).correo_usuario = usuario.correo;
+          });
         });
       });
     });
@@ -122,17 +140,24 @@ export class OpportunitiesComponent implements OnInit {
     });
   }
 
-  editarOportunidad(oportunidad: Opportunity): void {
-    this.router.navigate(['/promoter/opportunity/edit', oportunidad.id]);
+  filtrarPostulaciones(): void {
+    if (this.estadoSeleccionado) {
+      this.postulacionesFiltradas = this.postulaciones.filter(
+        post => post.estado === this.estadoSeleccionado,
+      );
+    } else {
+      this.postulacionesFiltradas = this.postulaciones;
+    }
   }
 
-  eliminarOportunidad(id: number): void {
-    if (confirm('¿Estás seguro de eliminar esta oportunidad?')) {
-      this.opportunityService.delete(id).subscribe({
-        next: () => {
-          this.oportunidades = this.oportunidades.filter(o => o.id !== id);
-        },
-      });
-    }
+  actualizarEstado(postulacionId: number, nuevoEstado: string): void {
+    this.postulationService.update(postulacionId, { estado: nuevoEstado }).subscribe({
+      next: () => {
+        this.cargarPostulaciones(); // Refresca la vista
+      },
+      error: () => {
+        alert('Error al actualizar el estado de la postulación');
+      },
+    });
   }
 }

@@ -7,7 +7,7 @@
     <div class="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
       <button
         (click)="cerrarModalHilo()"
-        class="text-gray-500 absolute right-2 top-2 text-xl hover:text-black"
+        class="absolute right-2 top-2 text-xl text-gray-500 hover:text-black"
       >
         &times;
       </button>
@@ -35,19 +35,19 @@
           <button
             type="button"
             (click)="cerrarModalHilo()"
-            class="bg-gray-300 rounded px-4 py-1 text-black"
+            class="rounded bg-gray-300 px-4 py-1 text-black"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            class="bg-blue-600 rounded px-4 py-1 text-black"
+            class="rounded bg-blue-600 px-4 py-1 text-black"
             [disabled]="creandoHilo"
           >
             Crear hilo
           </button>
         </div>
-        <div class="text-red-600 mt-2" *ngIf="errorCrearHilo">{{ errorCrearHilo }}</div>
+        <div class="mt-2 text-red-600" *ngIf="errorCrearHilo">{{ errorCrearHilo }}</div>
       </form>
     </div>
   </div>
@@ -58,11 +58,11 @@
     >
       ← Volver
     </button>
-    <h1 class="text-gray-800 flex-1 text-2xl font-bold">{{ foro?.nombre }}</h1>
+    <h1 class="flex-1 text-2xl font-bold text-gray-800">{{ foro?.nombre }}</h1>
     <div class="flex flex-1 justify-end">
       <button
         (click)="abrirModalHilo()"
-        class="bg-blue-600 hover:bg-blue-700 rounded px-5 py-2 text-black shadow transition"
+        class="rounded bg-blue-600 px-5 py-2 text-black shadow transition hover:bg-blue-700"
       >
         Nuevo hilo
       </button>

@@ -11,15 +11,23 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Sidebar UniON - Compacto y Elegante -->
-    <aside class="w-56 border-r border-gray-100/50 flex h-full flex-col bg-white/95 backdrop-blur-sm">
+    <aside
+      class="flex h-full w-56 flex-col border-r border-gray-100/50 bg-white/95 backdrop-blur-sm"
+    >
       <!-- Header del sidebar con info del usuario -->
-      <div class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4">
+      <div
+        class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4"
+      >
         <div class="flex items-center space-x-3">
           <div class="relative">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 font-bold text-white shadow-sm">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 font-bold text-white shadow-sm"
+            >
               {{ getUserInitials() }}
             </div>
-            <div class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-green-500"></div>
+            <div
+              class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-green-500"
+            ></div>
           </div>
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-semibold text-gray-900">{{ getUserName() }}</p>
@@ -42,7 +50,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
               <a
                 [routerLink]="item.route"
                 routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-                class="hover:bg-gray-50 group flex w-full items-center justify-between rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:text-primary-600"
+                class="group flex w-full items-center justify-between rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
                 [class.cursor-pointer]="!item.children"
                 (click)="item.children ? toggleSubmenu(item) : null"
               >
@@ -53,7 +61,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                   <span class="font-medium">{{ item.label }}</span>
                   @if (item.badge && item.badge > 0) {
                     <span
-                      class="min-w-[18px] animate-pulse rounded-full bg-accent-500 px-1.5 py-0.5 text-center text-xs text-white font-medium"
+                      class="min-w-[18px] animate-pulse rounded-full bg-accent-500 px-1.5 py-0.5 text-center text-xs font-medium text-white"
                     >
                       {{ item.badge }}
                     </span>
@@ -86,7 +94,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                   <a
                     [routerLink]="child.route"
                     routerLinkActive="bg-primary-50 text-primary-600 border-l-3 border-primary-500 font-medium"
-                    class="hover:bg-gray-50 group flex items-center justify-between rounded-md border-l-3 border-transparent px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:text-primary-600"
+                    class="border-l-3 group flex items-center justify-between rounded-md border-transparent px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
                   >
                     <div class="flex items-center space-x-3">
                       <span class="text-sm transition-transform group-hover:scale-105">{{
@@ -96,7 +104,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                     </div>
                     @if (child.badge && child.badge > 0) {
                       <span
-                        class="min-w-[16px] rounded-full bg-accent-500 px-1.5 py-0.5 text-center text-xs text-white font-medium"
+                        class="min-w-[16px] rounded-full bg-accent-500 px-1.5 py-0.5 text-center text-xs font-medium text-white"
                       >
                         {{ child.badge }}
                       </span>
@@ -110,7 +118,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
       </nav>
 
       <!-- Footer del sidebar -->
-      <div class="border-gray-50 bg-gray-50/30 border-t p-3">
+      <div class="border-t border-gray-50 bg-gray-50/30 p-3">
         <div class="space-y-1">
           <!-- Acceso rápido a perfil -->
           <a
@@ -136,7 +144,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
           <!-- Configuración -->
           <a
             [routerLink]="getSettingsRoute()"
-            class="hover:bg-gray-50 group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:text-gray-700"
+            class="group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-gray-700"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -163,7 +171,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
           <!-- Cerrar sesión -->
           <button
             (click)="logout()"
-            class="hover:bg-red-50 hover:text-red-600 group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200"
+            class="group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -270,7 +278,7 @@ export class DynamicSidebarComponent {
       1: 'Administrador',
       2: 'Estudiante',
       3: 'Admin Universitario',
-      4: 'Promotor'
+      4: 'Promotor',
     };
     return roleNames[user?.roleId || 2] || 'Usuario';
   }
@@ -279,10 +287,10 @@ export class DynamicSidebarComponent {
   getProfileRoute(): string {
     const role = this.layoutConfigService.getCurrentUserRole();
     const routes: { [key: string]: string } = {
-      'admin': '/admin/profile',
-      'student': '/student/profile',
-      'university_admin': '/admin-uni/profile',
-      'promoter': '/promoter/profile'
+      admin: '/admin/profile',
+      student: '/student/profile',
+      university_admin: '/admin-uni/profile',
+      promoter: '/promoter/profile',
     };
     return routes[role] || '/student/profile';
   }
@@ -290,10 +298,10 @@ export class DynamicSidebarComponent {
   getSettingsRoute(): string {
     const role = this.layoutConfigService.getCurrentUserRole();
     const routes: { [key: string]: string } = {
-      'admin': '/admin/settings',
-      'student': '/student/settings',
-      'university_admin': '/admin-uni/settings',
-      'promoter': '/promoter/settings'
+      admin: '/admin/settings',
+      student: '/student/settings',
+      university_admin: '/admin-uni/settings',
+      promoter: '/promoter/settings',
     };
     return routes[role] || '/student/settings';
   }

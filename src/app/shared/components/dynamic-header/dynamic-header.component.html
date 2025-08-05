@@ -1,16 +1,19 @@
 <!-- Header UniON - Elegante y Funcional -->
-<header class="bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50">
+<header class="sticky top-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md">
   <div class="max-w-full px-4 lg:px-6">
-    <div class="flex justify-between items-center h-14">
-
+    <div class="flex h-14 items-center justify-between">
       <!-- Logo y marca -->
       <div class="flex items-center space-x-4">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-md">
-            <span class="text-white font-bold text-sm">U</span>
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-md"
+          >
+            <span class="text-sm font-bold text-white">U</span>
           </div>
           <div class="hidden sm:block">
-            <h1 class="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            <h1
+              class="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-lg font-bold text-transparent"
+            >
               UniON
             </h1>
           </div>
@@ -19,20 +22,30 @@
 
       <!-- Barra de búsqueda y filtros (centrada) -->
       @if (currentRole() !== 'public') {
-        <div class="flex-1 max-w-xl mx-6">
+        <div class="mx-6 max-w-xl flex-1">
           <div class="flex items-center space-x-3">
             <!-- Búsqueda principal -->
-            <div class="flex-1 relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <div class="relative flex-1">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg
+                  class="h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
               <input
                 type="text"
                 placeholder="Buscar proyectos, usuarios, eventos..."
-                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent text-sm transition-all duration-200"
-              >
+                class="w-full rounded-xl border border-gray-200 bg-gray-50/50 py-2 pl-9 pr-4 text-sm transition-all duration-200 focus:border-transparent focus:bg-white focus:ring-2 focus:ring-primary-400"
+              />
             </div>
 
             <!-- Filtros compactos -->
@@ -40,7 +53,7 @@
               @for (filter of getFilters(); track $index) {
                 <button
                   (click)="onFilterClick(filter)"
-                  class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-primary-200"
+                  class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition-all duration-200 hover:border-primary-200 hover:bg-primary-50 hover:text-primary-600"
                 >
                   {{ filter }}
                 </button>
@@ -53,35 +66,60 @@
       <!-- Acciones de la derecha -->
       @if (currentRole() !== 'public') {
         <div class="flex items-center space-x-2">
-
           <!-- Crear contenido -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200" title="Crear">
+          <button
+            class="rounded-xl p-2 text-gray-500 transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+            title="Crear"
+          >
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
             </svg>
           </button>
 
           <!-- Notificaciones -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Notificaciones">
+          <button
+            class="relative rounded-xl p-2 text-gray-500 transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+            title="Notificaciones"
+          >
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-5 5v-3.09c0-.26.06-.52.17-.757L12 9.757l-3.17 3.486c.11.237.17.497.17.757V17H4l5-5V7a3 3 0 116 0v5z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-5 5v-3.09c0-.26.06-.52.17-.757L12 9.757l-3.17 3.486c.11.237.17.497.17.757V17H4l5-5V7a3 3 0 116 0v5z"
+              />
             </svg>
             @if (getNotificationCount() > 0) {
-              <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+              <span
+                class="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white"
+              >
                 {{ getNotificationCount() }}
               </span>
             }
           </button>
 
           <!-- Mensajes -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Mensajes">
+          <button
+            class="relative rounded-xl p-2 text-gray-500 transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+            title="Mensajes"
+          >
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
             </svg>
             @if (getMessageCount() > 0) {
-              <span class="absolute -top-0.5 -right-0.5 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+              <span
+                class="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-xs font-medium text-white"
+              >
                 {{ getMessageCount() }}
               </span>
             }
@@ -91,30 +129,50 @@
           <div class="relative ml-2">
             <button
               (click)="toggleUserMenu()"
-              class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+              class="flex items-center space-x-2 rounded-xl border border-transparent p-1.5 transition-all duration-200 hover:border-gray-200 hover:bg-gray-50"
               title="{{ getUserName() }}"
             >
-              <div class="w-7 h-7 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold text-xs shadow-sm">
+              <div
+                class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 text-xs font-semibold text-white shadow-sm"
+              >
                 {{ getUserInitials() }}
               </div>
-              <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <svg
+                class="h-4 w-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
             <!-- Dropdown del usuario - Mejorado -->
             @if (showUserMenu()) {
-              <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+              <div
+                class="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg"
+              >
                 <!-- Header del dropdown -->
-                <div class="p-4 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-gray-100">
+                <div
+                  class="border-b border-gray-100 bg-gradient-to-r from-primary-50 to-accent-50 p-4"
+                >
                   <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold shadow-sm">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 font-semibold text-white shadow-sm"
+                    >
                       {{ getUserInitials() }}
                     </div>
-                    <div class="flex-1 min-w-0">
-                      <p class="font-semibold text-gray-900 truncate">{{ getUserName() }}</p>
-                      <p class="text-sm text-gray-500 truncate">{{ getUserEmail() }}</p>
-                      <span class="inline-block mt-1 px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate font-semibold text-gray-900">{{ getUserName() }}</p>
+                      <p class="truncate text-sm text-gray-500">{{ getUserEmail() }}</p>
+                      <span
+                        class="mt-1 inline-block rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700"
+                      >
                         {{ getRoleDisplayName() }}
                       </span>
                     </div>
@@ -127,15 +185,27 @@
                     <a
                       [routerLink]="menuItem.link"
                       (click)="onMenuItemClick(menuItem)"
-                      class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors group"
+                      class="group flex items-center px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                       [class.text-red-600]="menuItem.label === 'Cerrar Sesión'"
                       [class.hover:bg-red-50]="menuItem.label === 'Cerrar Sesión'"
                     >
-                      <span class="mr-3 text-base group-hover:scale-110 transition-transform">{{ menuItem.icon }}</span>
+                      <span class="mr-3 text-base transition-transform group-hover:scale-110">{{
+                        menuItem.icon
+                      }}</span>
                       <span class="font-medium">{{ menuItem.label }}</span>
                       @if (menuItem.label === 'Cerrar Sesión') {
-                        <svg class="ml-auto h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        <svg
+                          class="ml-auto h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                          />
                         </svg>
                       }
                     </a>
@@ -151,9 +221,6 @@
 
   <!-- Overlay para cerrar menús -->
   @if (showUserMenu()) {
-    <div
-      class="fixed inset-0 z-40"
-      (click)="closeUserMenu()"
-    ></div>
+    <div class="fixed inset-0 z-40" (click)="closeUserMenu()"></div>
   }
 </header>

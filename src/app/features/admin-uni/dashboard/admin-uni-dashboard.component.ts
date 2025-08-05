@@ -7,21 +7,21 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="p-6 space-y-6">
+    <div class="space-y-6 p-6">
       <!-- Header del Dashboard -->
-      <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
+      <div class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-bold">Dashboard Administrativo Universitario</h1>
-            <p class="text-blue-100 mt-1">Gestiona tu institución académica</p>
+            <p class="mt-1 text-blue-100">Gestiona tu institución académica</p>
           </div>
           <div class="text-4xl">🏛️</div>
         </div>
       </div>
 
       <!-- Métricas principales -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow-sm border">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border bg-white p-6 shadow-sm">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Estudiantes</p>
@@ -29,10 +29,10 @@ import { RouterLink } from '@angular/router';
             </div>
             <div class="text-2xl">👥</div>
           </div>
-          <p class="text-xs text-green-600 mt-2">+5% este mes</p>
+          <p class="mt-2 text-xs text-green-600">+5% este mes</p>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border">
+        <div class="rounded-xl border bg-white p-6 shadow-sm">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Proyectos Pendientes</p>
@@ -40,10 +40,10 @@ import { RouterLink } from '@angular/router';
             </div>
             <div class="text-2xl">📋</div>
           </div>
-          <p class="text-xs text-orange-600 mt-2">5 requieren verificación</p>
+          <p class="text-orange-600 mt-2 text-xs">5 requieren verificación</p>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border">
+        <div class="rounded-xl border bg-white p-6 shadow-sm">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Eventos Activos</p>
@@ -51,10 +51,10 @@ import { RouterLink } from '@angular/router';
             </div>
             <div class="text-2xl">📅</div>
           </div>
-          <p class="text-xs text-blue-600 mt-2">3 próximos</p>
+          <p class="mt-2 text-xs text-blue-600">3 próximos</p>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border">
+        <div class="rounded-xl border bg-white p-6 shadow-sm">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Oportunidades</p>
@@ -62,20 +62,20 @@ import { RouterLink } from '@angular/router';
             </div>
             <div class="text-2xl">💼</div>
           </div>
-          <p class="text-xs text-purple-600 mt-2">2 nuevas hoy</p>
+          <p class="mt-2 text-xs text-purple-600">2 nuevas hoy</p>
         </div>
       </div>
 
       <!-- Sección de actividades y acciones -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <!-- Actividad reciente -->
-        <div class="bg-white rounded-xl shadow-sm border">
+        <div class="rounded-xl border bg-white shadow-sm">
           <div class="p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 Actividad Reciente</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-900">📊 Actividad Reciente</h3>
             <div class="space-y-4">
               <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <span class="text-green-600 text-sm">✓</span>
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+                  <span class="text-sm text-green-600">✓</span>
                 </div>
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-900">Proyecto verificado</p>
@@ -85,8 +85,8 @@ import { RouterLink } from '@angular/router';
               </div>
 
               <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span class="text-blue-600 text-sm">👤</span>
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+                  <span class="text-sm text-blue-600">👤</span>
                 </div>
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-900">Nuevo estudiante registrado</p>
@@ -96,8 +96,8 @@ import { RouterLink } from '@angular/router';
               </div>
 
               <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span class="text-purple-600 text-sm">📅</span>
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
+                  <span class="text-sm text-purple-600">📅</span>
                 </div>
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-900">Evento programado</p>
@@ -113,12 +113,14 @@ import { RouterLink } from '@angular/router';
         </div>
 
         <!-- Acciones rápidas -->
-        <div class="bg-white rounded-xl shadow-sm border">
+        <div class="rounded-xl border bg-white shadow-sm">
           <div class="p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">⚡ Acciones Rápidas</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-900">⚡ Acciones Rápidas</h3>
             <div class="space-y-3">
-              <button class="w-full flex items-center space-x-3 p-3 text-left bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <button
+                class="flex w-full items-center space-x-3 rounded-lg bg-blue-50 p-3 text-left transition-colors hover:bg-blue-100"
+              >
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                   <span class="text-blue-600">✓</span>
                 </div>
                 <div>
@@ -127,8 +129,10 @@ import { RouterLink } from '@angular/router';
                 </div>
               </button>
 
-              <button class="w-full flex items-center space-x-3 p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <button
+                class="flex w-full items-center space-x-3 rounded-lg bg-green-50 p-3 text-left transition-colors hover:bg-green-100"
+              >
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
                   <span class="text-green-600">👥</span>
                 </div>
                 <div>
@@ -137,8 +141,10 @@ import { RouterLink } from '@angular/router';
                 </div>
               </button>
 
-              <button class="w-full flex items-center space-x-3 p-3 text-left bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <button
+                class="flex w-full items-center space-x-3 rounded-lg bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100"
+              >
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
                   <span class="text-purple-600">📅</span>
                 </div>
                 <div>
@@ -147,8 +153,10 @@ import { RouterLink } from '@angular/router';
                 </div>
               </button>
 
-              <button class="w-full flex items-center space-x-3 p-3 text-left bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+              <button
+                class="bg-orange-50 hover:bg-orange-100 flex w-full items-center space-x-3 rounded-lg p-3 text-left transition-colors"
+              >
+                <div class="bg-orange-100 flex h-10 w-10 items-center justify-center rounded-lg">
                   <span class="text-orange-600">💼</span>
                 </div>
                 <div>
@@ -162,13 +170,13 @@ import { RouterLink } from '@angular/router';
       </div>
 
       <!-- Próximos eventos -->
-      <div class="bg-white rounded-xl shadow-sm border">
+      <div class="rounded-xl border bg-white shadow-sm">
         <div class="p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">📅 Próximos Eventos</h3>
-          <div class="text-center py-8">
-            <div class="text-4xl mb-2">📅</div>
+          <h3 class="mb-4 text-lg font-semibold text-gray-900">📅 Próximos Eventos</h3>
+          <div class="py-8 text-center">
+            <div class="mb-2 text-4xl">📅</div>
             <p class="text-gray-600">No hay eventos próximos</p>
-            <button class="mt-2 text-blue-600 hover:text-blue-800 text-sm">
+            <button class="mt-2 text-sm text-blue-600 hover:text-blue-800">
               Crear nuevo evento
             </button>
           </div>

@@ -10,35 +10,44 @@ import { ProfileService } from '../../../../core/services/user/profile.service';
   imports: [CommonModule],
   templateUrl: './student-profile-public.component.html',
   styles: `
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
 
-@layer utilities {
-    .neo-shadow {
-        box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
-    }
+    @layer utilities {
+      .neo-shadow {
+        box-shadow:
+          5px 5px 10px #d1d9e6,
+          -5px -5px 10px #ffffff;
+      }
 
-    .dark .neo-shadow {
-        box-shadow: 5px 5px 10px #1a1a1a, -5px -5px 10px #2c2c2c;
-    }
+      .dark .neo-shadow {
+        box-shadow:
+          5px 5px 10px #1a1a1a,
+          -5px -5px 10px #2c2c2c;
+      }
 
-    .neo-inset {
-        box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff;
-    }
+      .neo-inset {
+        box-shadow:
+          inset 5px 5px 10px #d1d9e6,
+          inset -5px -5px 10px #ffffff;
+      }
 
-    .dark .neo-inset {
-        box-shadow: inset 5px 5px 10px #1a1a1a, inset -5px -5px 10px #2c2c2c;
-    }
+      .dark .neo-inset {
+        box-shadow:
+          inset 5px 5px 10px #1a1a1a,
+          inset -5px -5px 10px #2c2c2c;
+      }
 
-    .line-clamp-2 {
+      .line-clamp-2 {
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
+      }
     }
-}`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StudentProfilePublicComponent implements OnInit, OnDestroy {
   // ✅ Servicios inyectados según arquitectura UniON
@@ -67,7 +76,7 @@ export class StudentProfilePublicComponent implements OnInit, OnDestroy {
     // ✅ Suscribirse a cambios de parámetros de ruta para detectar cambios de usuario
     this.routeSubscription = this.route.paramMap.subscribe(params => {
       const studentId = params.get('id');
-      
+
       if (!studentId || isNaN(Number(studentId))) {
         console.error('❌ ID de estudiante inválido');
         return;
@@ -75,7 +84,7 @@ export class StudentProfilePublicComponent implements OnInit, OnDestroy {
 
       // Limpiar estado anterior antes de cargar nuevo perfil
       this.profileService.clearProfile();
-      
+
       // Usar el servicio para cargar el perfil
       console.log('👤 Cargando perfil del estudiante:', studentId);
       this.profileService.loadStudentProfile(Number(studentId)).subscribe();
@@ -85,7 +94,7 @@ export class StudentProfilePublicComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Limpiar suscripción para evitar memory leaks
     this.routeSubscription?.unsubscribe();
-    
+
     // Limpiar estado al destruir el componente
     this.profileService.clearProfile();
   }
@@ -153,7 +162,7 @@ export class StudentProfilePublicComponent implements OnInit, OnDestroy {
       id: item.id,
       tipo: item.tipo,
       titulo: item.titulo,
-      contenido: item.contenido?.substring(0, 50) + '...'
+      contenido: item.contenido?.substring(0, 50) + '...',
     });
     return item.id + '_' + item.tipo;
   }

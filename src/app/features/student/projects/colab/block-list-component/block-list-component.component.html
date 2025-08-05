@@ -28,7 +28,7 @@
     <div class="flex items-center space-x-4">
       <label class="font-semibold text-black">
         Tipo:
-        <select [(ngModel)]="newType" class="bg-gray-50 ml-2 rounded border p-1 text-black">
+        <select [(ngModel)]="newType" class="ml-2 rounded border bg-gray-50 p-1 text-black">
           <option value="texto">Texto</option>
           <option value="video">Vídeo</option>
           <option value="embed">Embed</option>
@@ -42,21 +42,21 @@
       <textarea
         [(ngModel)]="newText"
         placeholder="Contenido de texto"
-        class="bg-gray-50 w-full rounded border p-3 text-black"
+        class="w-full rounded border bg-gray-50 p-3 text-black"
       ></textarea>
     </div>
     <div *ngIf="newType() === 'video'">
       <input
         [(ngModel)]="newVideoUrl"
         placeholder="URL de vídeo"
-        class="bg-gray-50 w-full rounded border p-3 text-black"
+        class="w-full rounded border bg-gray-50 p-3 text-black"
       />
     </div>
     <div *ngIf="newType() === 'embed'">
       <input
         [(ngModel)]="newEmbedUrl"
         placeholder="URL embebida"
-        class="bg-gray-50 w-full rounded border p-3 text-black"
+        class="w-full rounded border bg-gray-50 p-3 text-black"
       />
     </div>
     <!-- <div *ngIf="newType() === 'image'">
@@ -80,7 +80,7 @@
           (newType() === 'video' && !newVideoUrl()) ||
           (newType() === 'embed' && !newEmbedUrl())
         "
-        class="disabled:bg-gray-300 disabled:text-gray-500 flex items-center justify-center rounded-2xl border-2 border-primary-200 bg-primary-500 px-8 py-3 text-lg font-bold text-white shadow-xl transition-all duration-150 hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-200"
+        class="flex items-center justify-center rounded-2xl border-2 border-primary-200 bg-primary-500 px-8 py-3 text-lg font-bold text-white shadow-xl transition-all duration-150 hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-200 disabled:bg-gray-300 disabled:text-gray-500"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -193,14 +193,14 @@
       <button
         type="button"
         (click)="editBlock(b); closeActionMenu()"
-        class="hover:bg-gray-100 w-full px-4 py-2 text-left text-primary-700"
+        class="w-full px-4 py-2 text-left text-primary-700 hover:bg-gray-100"
       >
         Editar
       </button>
       <button
         type="button"
         (click)="confirmDeleteBlock(b)"
-        class="hover:bg-gray-100 w-full px-4 py-2 text-left text-accent-700"
+        class="w-full px-4 py-2 text-left text-accent-700 hover:bg-gray-100"
       >
         Eliminar
       </button>
@@ -225,7 +225,7 @@
           </ng-container>
           <ng-template #videoBlocked>
             <div
-              class="bg-yellow-100 border-yellow-400 rounded border p-4 font-semibold text-primary-700"
+              class="rounded border border-yellow-400 bg-yellow-100 p-4 font-semibold text-primary-700"
             >
               No es posible mostrar este video embebido por restricciones del sitio de origen.
             </div>
@@ -245,7 +245,7 @@
           </ng-container>
           <ng-template #embedBlocked>
             <div
-              class="bg-yellow-100 border-yellow-400 rounded border p-4 font-semibold text-primary-700"
+              class="rounded border border-yellow-400 bg-yellow-100 p-4 font-semibold text-primary-700"
             >
               No es posible mostrar este contenido embebido por restricciones del sitio de origen.
             </div>
@@ -256,7 +256,7 @@
         <img
           *ngSwitchCase="'imagen'"
           [src]="b.contenido['imageUrl']"
-          class="border-gray-200 h-48 w-full rounded-xl border object-cover"
+          class="h-48 w-full rounded-xl border border-gray-200 object-cover"
           alt="Imagen de bloque"
           (error)="onImgError($event)"
         />

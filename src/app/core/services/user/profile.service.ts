@@ -143,7 +143,7 @@ export class ProfileService {
       tap(student => {
         this._student.set(student);
         console.log('👤 Estudiante cargado:', student);
-        
+
         // Cargar datos relacionados según especificaciones
         this.loadUniversity(student.universidad_id);
         this.loadExperiences(studentId);
@@ -158,7 +158,7 @@ export class ProfileService {
         this._error.set('No se pudo cargar el perfil del estudiante');
         this._loading.set(false);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -166,16 +166,19 @@ export class ProfileService {
    * ✅ Cargar información de la universidad según REQ-4.6.1
    */
   private loadUniversity(universityId: number): void {
-    this.apiClient.get<University>(`/universidades/${universityId}`).pipe(
-      tap(university => {
-        this._university.set(university);
-        console.log('🏛️ Universidad cargada:', university);
-      }),
-      catchError(error => {
-        console.error('❌ Error cargando universidad:', error);
-        return of(null);
-      })
-    ).subscribe();
+    this.apiClient
+      .get<University>(`/universidades/${universityId}`)
+      .pipe(
+        tap(university => {
+          this._university.set(university);
+          console.log('🏛️ Universidad cargada:', university);
+        }),
+        catchError(error => {
+          console.error('❌ Error cargando universidad:', error);
+          return of(null);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -183,33 +186,36 @@ export class ProfileService {
    */
   private loadExperiences(studentId: number): void {
     console.log('🔍 Cargando experiencias para usuario:', studentId);
-    
-    this.apiClient.get<Experience[]>(`/experiencia-usuario`).pipe(
-      tap(allExperiences => {
-        console.log('📋 Todas las experiencias del servidor:', allExperiences);
-        
-        // Filtrar solo las experiencias del usuario específico
-        const userExperiences = allExperiences.filter(exp => exp.usuario_id === studentId);
-        console.log('🎯 Experiencias filtradas para usuario', studentId, ':', userExperiences);
-        
-        if (userExperiences && userExperiences.length > 0) {
-          // Ordenar por fecha de inicio descendente según REQ-4.22.4
-          const sortedExperiences = userExperiences.sort((a, b) => 
-            new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime()
-          );
-          this._experiences.set(sortedExperiences);
-          console.log('💼 Experiencias finales cargadas y ordenadas:', sortedExperiences);
-        } else {
-          console.log('ℹ️ No se encontraron experiencias para el usuario', studentId);
+
+    this.apiClient
+      .get<Experience[]>(`/experiencia-usuario`)
+      .pipe(
+        tap(allExperiences => {
+          console.log('📋 Todas las experiencias del servidor:', allExperiences);
+
+          // Filtrar solo las experiencias del usuario específico
+          const userExperiences = allExperiences.filter(exp => exp.usuario_id === studentId);
+          console.log('🎯 Experiencias filtradas para usuario', studentId, ':', userExperiences);
+
+          if (userExperiences && userExperiences.length > 0) {
+            // Ordenar por fecha de inicio descendente según REQ-4.22.4
+            const sortedExperiences = userExperiences.sort(
+              (a, b) => new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime(),
+            );
+            this._experiences.set(sortedExperiences);
+            console.log('💼 Experiencias finales cargadas y ordenadas:', sortedExperiences);
+          } else {
+            console.log('ℹ️ No se encontraron experiencias para el usuario', studentId);
+            this._experiences.set([]);
+          }
+        }),
+        catchError(error => {
+          console.error('❌ Error cargando experiencias:', error);
           this._experiences.set([]);
-        }
-      }),
-      catchError(error => {
-        console.error('❌ Error cargando experiencias:', error);
-        this._experiences.set([]);
-        return of([]);
-      })
-    ).subscribe();
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -217,26 +223,29 @@ export class ProfileService {
    */
   private loadProjects(studentId: number): void {
     console.log('🔍 Cargando proyectos para usuario:', studentId);
-    
-    this.apiClient.get<Project[]>(`/proyectos`).pipe(
-      tap(allProjects => {
-        console.log('📋 Todos los proyectos del servidor:', allProjects);
-        
-        // Filtrar solo los proyectos del usuario específico
-        const userProjects = allProjects.filter(project => project.creador_id === studentId);
-        console.log('🎯 Proyectos filtrados para usuario', studentId, ':', userProjects);
-        
-        this._projects.set(userProjects);
-        console.log('📊 Proyectos finales cargados:', userProjects);
-        this._loading.set(false);
-      }),
-      catchError(error => {
-        console.error('❌ Error cargando proyectos para usuario', studentId, ':', error);
-        this._projects.set([]);
-        this._loading.set(false);
-        return of([]);
-      })
-    ).subscribe();
+
+    this.apiClient
+      .get<Project[]>(`/proyectos`)
+      .pipe(
+        tap(allProjects => {
+          console.log('📋 Todos los proyectos del servidor:', allProjects);
+
+          // Filtrar solo los proyectos del usuario específico
+          const userProjects = allProjects.filter(project => project.creador_id === studentId);
+          console.log('🎯 Proyectos filtrados para usuario', studentId, ':', userProjects);
+
+          this._projects.set(userProjects);
+          console.log('📊 Proyectos finales cargados:', userProjects);
+          this._loading.set(false);
+        }),
+        catchError(error => {
+          console.error('❌ Error cargando proyectos para usuario', studentId, ':', error);
+          this._projects.set([]);
+          this._loading.set(false);
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -244,27 +253,30 @@ export class ProfileService {
    */
   private loadUserSkills(studentId: number): void {
     console.log('🔍 Cargando habilidades para usuario:', studentId);
-    
-    this.apiClient.get<UserSkill[]>(`/user-skills`).pipe(
-      tap(allSkills => {
-        console.log('📋 Todas las habilidades del servidor:', allSkills);
-        
-        // Filtrar solo las habilidades del usuario específico
-        const userSkills = allSkills.filter(skill => skill.usuario_id === studentId);
-        console.log('🎯 Habilidades filtradas para usuario', studentId, ':', userSkills);
-        
-        this._userSkills.set(userSkills);
-        console.log('🛠️ Habilidades finales cargadas:', userSkills);
-      }),
-      catchError(error => {
-        console.error('❌ Error cargando habilidades para usuario', studentId, ':', error);
-        this._userSkills.set([]);
-        return of([]);
-      })
-    ).subscribe();
+
+    this.apiClient
+      .get<UserSkill[]>(`/user-skills`)
+      .pipe(
+        tap(allSkills => {
+          console.log('📋 Todas las habilidades del servidor:', allSkills);
+
+          // Filtrar solo las habilidades del usuario específico
+          const userSkills = allSkills.filter(skill => skill.usuario_id === studentId);
+          console.log('🎯 Habilidades filtradas para usuario', studentId, ':', userSkills);
+
+          this._userSkills.set(userSkills);
+          console.log('🛠️ Habilidades finales cargadas:', userSkills);
+        }),
+        catchError(error => {
+          console.error('❌ Error cargando habilidades para usuario', studentId, ':', error);
+          this._userSkills.set([]);
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
-    /**
+  /**
    * ✅ Cargar actividad en foros según REQ-4.19.1
    * hilos = foros de discusión, respuestas_hilo = comentarios en foros
    * ❌ COMENTADO TEMPORALMENTE PARA DEBUGGING
@@ -355,7 +367,7 @@ export class ProfileService {
   */
   // private loadForumActivity(studentId: number): void {
   //   console.log('🔍 Cargando actividad en foros para usuario:', studentId);
-    
+
   //   // Cargar foros de discusión creados por el usuario (tabla hilos)
   //   const hilosCreados$ = this.apiClient.get<any[]>(`/hilos`).pipe(
   //     tap(allHilos => console.log('📋 Todos los foros de discusión del servidor:', allHilos)),
@@ -377,37 +389,37 @@ export class ProfileService {
   //       return of([]);
   //     })
   //   );
-    
-    // Cargar respuestas hechas por el usuario en hilos/discusiones
-    // const respuestasUsuario$ = this.apiClient.get<any[]>(`/respuestas-hilos`).pipe(
-    //   tap(allRespuestas => console.log('� Todas las respuestas del servidor:', allRespuestas)),
-    //   map(allRespuestas => {
-    //     const userRespuestas = allRespuestas.filter(respuesta => respuesta.usuario_id === studentId);
-    //     console.log('💭 Respuestas hechas por usuario:', userRespuestas);
-    //     return userRespuestas.map(respuesta => ({
-    //       id: respuesta.id,
-    //       contenido: respuesta.contenido,
-    //       creado_en: respuesta.creado_en,
-    //       tipo: 'respuesta' as const,
-    //       hilo_id: respuesta.hilo_id,
-    //       usuario_id: respuesta.usuario_id
-    //     }));
-    //   }),
-    //   catchError(error => {
-    //     console.error('❌ Error cargando respuestas:', error);
-    //     return of([]);
-    //   })
-    // );
-    
-    // Combinar hilos y respuestas
+
+  // Cargar respuestas hechas por el usuario en hilos/discusiones
+  // const respuestasUsuario$ = this.apiClient.get<any[]>(`/respuestas-hilos`).pipe(
+  //   tap(allRespuestas => console.log('� Todas las respuestas del servidor:', allRespuestas)),
+  //   map(allRespuestas => {
+  //     const userRespuestas = allRespuestas.filter(respuesta => respuesta.usuario_id === studentId);
+  //     console.log('💭 Respuestas hechas por usuario:', userRespuestas);
+  //     return userRespuestas.map(respuesta => ({
+  //       id: respuesta.id,
+  //       contenido: respuesta.contenido,
+  //       creado_en: respuesta.creado_en,
+  //       tipo: 'respuesta' as const,
+  //       hilo_id: respuesta.hilo_id,
+  //       usuario_id: respuesta.usuario_id
+  //     }));
+  //   }),
+  //   catchError(error => {
+  //     console.error('❌ Error cargando respuestas:', error);
+  //     return of([]);
+  //   })
+  // );
+
+  // Combinar hilos y respuestas
   //   combineLatest([hilosCreados$, respuestasUsuario$]).pipe(
   //     map(([hilos, respuestas]) => {
   //       console.log('🧵 Hilos procesados:', hilos);
   //       console.log('💬 Respuestas procesadas:', respuestas);
-        
+
   //       const allActivity: ForumActivity[] = [...hilos, ...respuestas];
   //       console.log('🎯 Actividad combinada para usuario', studentId, ':', allActivity);
-        
+
   //       // Verificar que los tipos están correctos
   //       allActivity.forEach((item, index) => {
   //         console.log(`📝 Item ${index}:`, {
@@ -418,12 +430,12 @@ export class ProfileService {
   //           esRespuesta: item.tipo === 'respuesta'
   //         });
   //       });
-        
+
   //       // Ordenar por fecha más reciente y limitar a 5
   //       const recentActivity = allActivity
   //         .sort((a, b) => new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime())
   //         .slice(0, 5);
-        
+
   //       console.log('💬 Actividad en foros final (5 más recientes):', recentActivity);
   //       return recentActivity;
   //     }),
@@ -447,22 +459,25 @@ export class ProfileService {
     }
 
     // Obtener todos los seguimientos y filtrar en el frontend
-    this.apiClient.get<Following[]>('/seguimientos').pipe(
-      tap(allFollowings => {
-        // Buscar si existe un seguimiento del usuario actual hacia el estudiante
-        const isFollowing = allFollowings.some(follow => 
-          follow.seguidor_id === currentUser.id && 
-          follow.seguido_usuario_id === studentId
-        );
-        this._isFollowing.set(isFollowing);
-        console.log('👥 Estado de seguimiento:', isFollowing);
-      }),
-      catchError(error => {
-        console.error('❌ Error verificando estado de seguimiento:', error);
-        this._isFollowing.set(false);
-        return of([]);
-      })
-    ).subscribe();
+    this.apiClient
+      .get<Following[]>('/seguimientos')
+      .pipe(
+        tap(allFollowings => {
+          // Buscar si existe un seguimiento del usuario actual hacia el estudiante
+          const isFollowing = allFollowings.some(
+            follow =>
+              follow.seguidor_id === currentUser.id && follow.seguido_usuario_id === studentId,
+          );
+          this._isFollowing.set(isFollowing);
+          console.log('👥 Estado de seguimiento:', isFollowing);
+        }),
+        catchError(error => {
+          console.error('❌ Error verificando estado de seguimiento:', error);
+          this._isFollowing.set(false);
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -488,118 +503,139 @@ export class ProfileService {
 
     const isCurrentlyFollowing = this._isFollowing();
     this._loading.set(true); // ✅ Activar estado de carga
-    
+
     if (!isCurrentlyFollowing) {
       // ✅ Verificar primero si ya existe el seguimiento antes de crear
-      this.apiClient.get<Following[]>('/seguimientos').pipe(
-        tap(allFollowings => {
-          // Verificar si ya existe el seguimiento
-          const existingFollow = allFollowings.find(follow => 
-            follow.seguidor_id === currentUser.id && 
-            follow.seguido_usuario_id === studentId
-          );
+      this.apiClient
+        .get<Following[]>('/seguimientos')
+        .pipe(
+          tap(allFollowings => {
+            // Verificar si ya existe el seguimiento
+            const existingFollow = allFollowings.find(
+              follow =>
+                follow.seguidor_id === currentUser.id && follow.seguido_usuario_id === studentId,
+            );
 
-          if (existingFollow) {
-            // Ya existe, solo actualizar el estado local
-            this._isFollowing.set(true);
-            this.toastService.showInfo('Ya sigues a este usuario');
+            if (existingFollow) {
+              // Ya existe, solo actualizar el estado local
+              this._isFollowing.set(true);
+              this.toastService.showInfo('Ya sigues a este usuario');
+              this._loading.set(false);
+            } else {
+              // No existe, proceder a crear
+              const followData: CreateFollowing = {
+                seguidor_id: currentUser.id,
+                seguido_usuario_id: studentId,
+                seguido_proyecto_id: null,
+              };
+
+              console.log('📤 Enviando datos de seguimiento:', followData);
+
+              this.apiClient
+                .post<Following & { message: string }>('/seguimientos', followData)
+                .pipe(
+                  tap(response => {
+                    this._isFollowing.set(true);
+                    this.toastService.showSuccess('Ahora sigues a este usuario');
+                    // ✅ Actualizar conteo de seguidores del usuario seguido
+                    this._followersCount.update(count => count + 1);
+                    console.log(`👥 Follow exitoso:`, {
+                      followId: response.id,
+                      seguidor: response.seguidor_id,
+                      seguido: response.seguido_usuario_id,
+                      fecha: response.creado_en,
+                    });
+                  }),
+                  catchError(error => {
+                    console.error(`❌ Error en follow:`, error);
+                    if (error.status === 409) {
+                      this.toastService.showWarning('Ya sigues a este usuario');
+                      this._isFollowing.set(true);
+                    } else if (
+                      error.status === 500 &&
+                      error.error?.error?.includes?.('llave duplicada')
+                    ) {
+                      this.toastService.showError(
+                        'Error de base de datos: La secuencia de IDs necesita ser reparada. Contacta al administrador.',
+                      );
+                      console.error(
+                        "🔧 Error de secuencia de IDs en base de datos. Ejecutar: SELECT setval('seguimientos_id_seq', (SELECT MAX(id) FROM seguimientos));",
+                      );
+                    } else {
+                      this.toastService.showError('Error al seguir usuario');
+                    }
+                    return of(null);
+                  }),
+                  // ✅ Siempre desactivar loading al finalizar
+                  tap(() => this._loading.set(false)),
+                )
+                .subscribe();
+            }
+          }),
+          catchError(error => {
+            console.error('❌ Error verificando seguimientos existentes:', error);
+            this.toastService.showError('Error al verificar seguimientos');
             this._loading.set(false);
-          } else {
-            // No existe, proceder a crear
-            const followData: CreateFollowing = {
-              seguidor_id: currentUser.id,
-              seguido_usuario_id: studentId,
-              seguido_proyecto_id: null
-            };
-
-            console.log('📤 Enviando datos de seguimiento:', followData);
-
-            this.apiClient.post<Following & { message: string }>('/seguimientos', followData).pipe(
-              tap((response) => {
-                this._isFollowing.set(true);
-                this.toastService.showSuccess('Ahora sigues a este usuario');
-                // ✅ Actualizar conteo de seguidores del usuario seguido
-                this._followersCount.update(count => count + 1);
-                console.log(`👥 Follow exitoso:`, {
-                  followId: response.id,
-                  seguidor: response.seguidor_id,
-                  seguido: response.seguido_usuario_id,
-                  fecha: response.creado_en
-                });
-              }),
-              catchError(error => {
-                console.error(`❌ Error en follow:`, error);
-                if (error.status === 409) {
-                  this.toastService.showWarning('Ya sigues a este usuario');
-                  this._isFollowing.set(true);
-                } else if (error.status === 500 && error.error?.error?.includes?.('llave duplicada')) {
-                  this.toastService.showError('Error de base de datos: La secuencia de IDs necesita ser reparada. Contacta al administrador.');
-                  console.error('🔧 Error de secuencia de IDs en base de datos. Ejecutar: SELECT setval(\'seguimientos_id_seq\', (SELECT MAX(id) FROM seguimientos));');
-                } else {
-                  this.toastService.showError('Error al seguir usuario');
-                }
-                return of(null);
-              }),
-              // ✅ Siempre desactivar loading al finalizar
-              tap(() => this._loading.set(false))
-            ).subscribe();
-          }
-        }),
-        catchError(error => {
-          console.error('❌ Error verificando seguimientos existentes:', error);
-          this.toastService.showError('Error al verificar seguimientos');
-          this._loading.set(false);
-          return of([]);
-        })
-      ).subscribe();
+            return of([]);
+          }),
+        )
+        .subscribe();
     } else {
       // ✅ Eliminar seguimiento: primero buscar el ID, luego eliminar
-      this.apiClient.get<Following[]>('/seguimientos').pipe(
-        tap(allFollowings => {
-          // Buscar el seguimiento específico
-          const followingToDelete = allFollowings.find(follow => 
-            follow.seguidor_id === currentUser.id && 
-            follow.seguido_usuario_id === studentId
-          );
+      this.apiClient
+        .get<Following[]>('/seguimientos')
+        .pipe(
+          tap(allFollowings => {
+            // Buscar el seguimiento específico
+            const followingToDelete = allFollowings.find(
+              follow =>
+                follow.seguidor_id === currentUser.id && follow.seguido_usuario_id === studentId,
+            );
 
-          if (followingToDelete) {
-            // Eliminar usando el ID encontrado
-            this.apiClient.delete<{message: string}>(`/seguimientos/${followingToDelete.id}`).pipe(
-              tap((response) => {
-                this._isFollowing.set(false);
-                this.toastService.showSuccess('Has dejado de seguir a este usuario');
-                // ✅ Actualizar conteo de seguidores del usuario que se deja de seguir
-                this._followersCount.update(count => Math.max(0, count - 1));
-                console.log(`👥 Unfollow exitoso para usuario ${studentId}:`, response.message);
-              }),
-              catchError(error => {
-                console.error(`❌ Error en unfollow:`, error);
-                this.toastService.showError('Error al dejar de seguir usuario');
-                return of(null);
-              }),
-              // ✅ Siempre desactivar loading al finalizar
-              tap(() => this._loading.set(false))
-            ).subscribe();
-          } else {
-            this.toastService.showWarning('No sigues a este usuario');
-            this._isFollowing.set(false);
+            if (followingToDelete) {
+              // Eliminar usando el ID encontrado
+              this.apiClient
+                .delete<{ message: string }>(`/seguimientos/${followingToDelete.id}`)
+                .pipe(
+                  tap(response => {
+                    this._isFollowing.set(false);
+                    this.toastService.showSuccess('Has dejado de seguir a este usuario');
+                    // ✅ Actualizar conteo de seguidores del usuario que se deja de seguir
+                    this._followersCount.update(count => Math.max(0, count - 1));
+                    console.log(`👥 Unfollow exitoso para usuario ${studentId}:`, response.message);
+                  }),
+                  catchError(error => {
+                    console.error(`❌ Error en unfollow:`, error);
+                    this.toastService.showError('Error al dejar de seguir usuario');
+                    return of(null);
+                  }),
+                  // ✅ Siempre desactivar loading al finalizar
+                  tap(() => this._loading.set(false)),
+                )
+                .subscribe();
+            } else {
+              this.toastService.showWarning('No sigues a este usuario');
+              this._isFollowing.set(false);
+              this._loading.set(false);
+            }
+          }),
+          catchError(error => {
+            console.error(`❌ Error buscando seguimiento para eliminar:`, error);
+            this.toastService.showError('Error al dejar de seguir usuario');
             this._loading.set(false);
-          }
-        }),
-        catchError(error => {
-          console.error(`❌ Error buscando seguimiento para eliminar:`, error);
-          this.toastService.showError('Error al dejar de seguir usuario');
-          this._loading.set(false);
-          return of([]);
-        })
-      ).subscribe();
+            return of([]);
+          }),
+        )
+        .subscribe();
     }
   }
 
   /**
    * ✅ Iniciar conversación según REQ-4.14.1 y REQ-4.14.3
    */
-  async startConversation(studentId: number): Promise<{ success: boolean; conversationId?: number }> {
+  async startConversation(
+    studentId: number,
+  ): Promise<{ success: boolean; conversationId?: number }> {
     const currentUser = this.authService.currentUser();
     if (!currentUser) {
       this.toastService.showError('Debes iniciar sesión para enviar mensajes');
@@ -621,20 +657,22 @@ export class ProfileService {
     try {
       // Crear o encontrar conversación existente
       const conversation = await firstValueFrom(
-        this.conversationService.createConversation({
-          usuario_1_id: currentUser.id,
-          usuario_2_id: studentId
-        }).pipe(
-          tap(conv => {
-            console.log('💬 Conversación creada/encontrada:', conv);
-            this.toastService.showSuccess('Conversación iniciada');
-          }),
-          catchError(error => {
-            console.error('❌ Error creando conversación:', error);
-            this.toastService.showError('Error al iniciar conversación');
-            throw error;
+        this.conversationService
+          .createConversation({
+            usuario_1_id: currentUser.id,
+            usuario_2_id: studentId,
           })
-        )
+          .pipe(
+            tap(conv => {
+              console.log('💬 Conversación creada/encontrada:', conv);
+              this.toastService.showSuccess('Conversación iniciada');
+            }),
+            catchError(error => {
+              console.error('❌ Error creando conversación:', error);
+              this.toastService.showError('Error al iniciar conversación');
+              throw error;
+            }),
+          ),
       );
 
       return { success: true, conversationId: conversation.id };
@@ -651,19 +689,15 @@ export class ProfileService {
       const currentUser = this.authService.currentUser();
       if (!currentUser) return false;
 
-      const allFollowings = await firstValueFrom(
-        this.apiClient.get<Following[]>('/seguimientos')
-      );
+      const allFollowings = await firstValueFrom(this.apiClient.get<Following[]>('/seguimientos'));
 
       // Verificar si ambos usuarios se siguen mutuamente
-      const userFollowsStudent = allFollowings.some(follow => 
-        follow.seguidor_id === currentUser.id && 
-        follow.seguido_usuario_id === studentId
+      const userFollowsStudent = allFollowings.some(
+        follow => follow.seguidor_id === currentUser.id && follow.seguido_usuario_id === studentId,
       );
-      
-      const studentFollowsUser = allFollowings.some(follow => 
-        follow.seguidor_id === studentId && 
-        follow.seguido_usuario_id === currentUser.id
+
+      const studentFollowsUser = allFollowings.some(
+        follow => follow.seguidor_id === studentId && follow.seguido_usuario_id === currentUser.id,
       );
 
       return userFollowsStudent && studentFollowsUser;
@@ -688,23 +722,26 @@ export class ProfileService {
    */
   private loadFollowersCount(studentId: number): void {
     console.log('👥 Cargando conteo de seguidores para usuario:', studentId);
-    
-    this.apiClient.get<Following[]>('/seguimientos').pipe(
-      tap(allFollowings => {
-        // Contar cuántos usuarios siguen a este estudiante
-        const followersCount = allFollowings.filter(follow => 
-          follow.seguido_usuario_id === studentId
-        ).length;
-        
-        this._followersCount.set(followersCount);
-        console.log('👥 Conteo de seguidores cargado:', followersCount);
-      }),
-      catchError(error => {
-        console.error('❌ Error cargando conteo de seguidores:', error);
-        this._followersCount.set(0);
-        return of([]);
-      })
-    ).subscribe();
+
+    this.apiClient
+      .get<Following[]>('/seguimientos')
+      .pipe(
+        tap(allFollowings => {
+          // Contar cuántos usuarios siguen a este estudiante
+          const followersCount = allFollowings.filter(
+            follow => follow.seguido_usuario_id === studentId,
+          ).length;
+
+          this._followersCount.set(followersCount);
+          console.log('👥 Conteo de seguidores cargado:', followersCount);
+        }),
+        catchError(error => {
+          console.error('❌ Error cargando conteo de seguidores:', error);
+          this._followersCount.set(0);
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -734,18 +771,18 @@ export class ProfileService {
   /**
    * ✅ Obtener estadísticas del perfil
    */
-  getProfileStats(): { 
-    projects: number; 
-    forums: number; 
-    connections: number; 
-    experiences: number 
+  getProfileStats(): {
+    projects: number;
+    forums: number;
+    connections: number;
+    experiences: number;
   } {
     return {
       projects: this._projects().length,
       // forums: this._forumActivity().length, // ❌ COMENTADO TEMPORALMENTE
       forums: 0, // ❌ TEMPORAL - RETORNA 0
       connections: 0, // Implementar cuando esté disponible
-      experiences: this._experiences().length
+      experiences: this._experiences().length,
     };
   }
 }

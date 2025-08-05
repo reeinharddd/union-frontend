@@ -8,7 +8,6 @@ export const PROYECTOS_ROUTES: Routes = [
   },
   {
     path: 'list',
-    loadComponent: () =>
-      import('./admin-proyectos.component').then(m => m.AdminProyectosComponent),
+    loadComponent: () => import('./admin-proyectos.component').then(m => m.AdminProyectosComponent),
   },
 ];

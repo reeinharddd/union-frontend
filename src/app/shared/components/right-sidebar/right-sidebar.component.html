@@ -5,11 +5,11 @@
 
     <div class="space-y-3">
       @if (isLoadingProjects()) {
-        <div class="text-gray-500 py-4 text-center">Cargando proyectos...</div>
+        <div class="py-4 text-center text-gray-500">Cargando proyectos...</div>
       } @else if (errorMessage()) {
-        <div class="text-red-500 py-4 text-center">{{ errorMessage() }}</div>
+        <div class="py-4 text-center text-red-500">{{ errorMessage() }}</div>
       } @else if (userProjects().length === 0) {
-        <div class="text-gray-500 py-4 text-center">No hay proyectos para mostrar</div>
+        <div class="py-4 text-center text-gray-500">No hay proyectos para mostrar</div>
       } @else {
         @for (project of userProjects(); track project.id) {
           <a
@@ -19,7 +19,7 @@
             <span class="block font-medium text-text-base">{{
               project.nombre_proyecto || project.nombre || 'Sin nombre'
             }}</span>
-            <span class="text-gray-500 block text-xs">{{
+            <span class="block text-xs text-gray-500">{{
               project.descripcion_breve || project.descripcion || ''
             }}</span>
           </a>

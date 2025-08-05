@@ -1,18 +1,18 @@
 <div class="mb-6 rounded-lg border-l-4 border-primary-500 bg-white p-6 shadow-soft">
   <div class="flex items-center justify-between">
     <div>
-      <p class="text-green-600 mb-4 text-xl font-semibold">🟢 Crear Respaldo</p>
+      <p class="mb-4 text-xl font-semibold text-green-600">🟢 Crear Respaldo</p>
     </div>
   </div>
   <div class="mt-4 flex flex-col items-center gap-4 md:flex-row">
     <button
-      class="bg-blue-500 hover:bg-blue-600 w-full rounded px-4 py-2 text-black md:w-auto"
+      class="w-full rounded bg-blue-500 px-4 py-2 text-black hover:bg-blue-600 md:w-auto"
       (click)="ejecutarRespaldoCompleto()"
       [disabled]="cargandoRespaldoCompleto"
     >
       {{ cargandoRespaldoCompleto ? 'Ejecutando...' : 'Respaldo completo' }}
     </button>
-    <div *ngIf="resultadoRespaldoCompleto" class="text-green-700 mt-2 text-sm">
+    <div *ngIf="resultadoRespaldoCompleto" class="mt-2 text-sm text-green-700">
       {{ resultadoRespaldoCompleto }}
     </div>
     <div class="flex w-full items-center gap-2 md:w-auto">
@@ -24,12 +24,12 @@
         {{ cargandoRespaldoParcial ? 'Ejecutando...' : 'Respaldo parcial por tablas' }}
       </button>
       <input
-        class="border-gray-300 ml-2 w-full rounded border p-2 md:w-48"
+        class="ml-2 w-full rounded border border-gray-300 p-2 md:w-48"
         [(ngModel)]="tablaRespaldoParcial"
         placeholder="Escribe el nombre de la tabla"
       />
     </div>
-    <div *ngIf="resultadoRespaldoParcial" class="text-green-700 mt-2 text-sm">
+    <div *ngIf="resultadoRespaldoParcial" class="mt-2 text-sm text-green-700">
       {{ resultadoRespaldoParcial }}
     </div>
   </div>
@@ -39,18 +39,18 @@
   <div class="rounded-lg border-l-4 border-primary-500 bg-white p-6 shadow-soft">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-green-600 mb-4 text-xl font-semibold">🔁 Restaurar Base de datos</p>
+        <p class="mb-4 text-xl font-semibold text-green-600">🔁 Restaurar Base de datos</p>
       </div>
     </div>
     <div class="mt-4 flex flex-col items-center gap-4 md:flex-row">
       <button
-        class="bg-blue-500 hover:bg-blue-600 w-full rounded px-4 py-2 text-black md:w-auto"
+        class="w-full rounded bg-blue-500 px-4 py-2 text-black hover:bg-blue-600 md:w-auto"
         (click)="restaurarCompleto()"
         [disabled]="cargandoRestaurarCompleto"
       >
         {{ cargandoRestaurarCompleto ? 'Restaurando...' : 'Restauración completa' }}
       </button>
-      <div *ngIf="resultadoRestaurarCompleto" class="text-green-700 mt-2 text-sm">
+      <div *ngIf="resultadoRestaurarCompleto" class="mt-2 text-sm text-green-700">
         {{ resultadoRestaurarCompleto }}
       </div>
       <div class="flex w-full items-center gap-2 md:w-auto">
@@ -68,12 +68,12 @@
   <div class="rounded-lg border-l-4 border-primary-500 bg-white p-6 shadow-soft">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-green-600 mb-4 text-xl font-semibold">📤 Exportar CSV</p>
+        <p class="mb-4 text-xl font-semibold text-green-600">📤 Exportar CSV</p>
       </div>
     </div>
     <div class="mt-4 flex flex-col items-center gap-4 md:flex-row">
       <button
-        class="bg-blue-500 hover:bg-blue-600 w-full rounded px-4 py-2 text-black md:w-auto"
+        class="w-full rounded bg-blue-500 px-4 py-2 text-black hover:bg-blue-600 md:w-auto"
         (click)="exportarCsv()"
         [disabled]="cargandoExportarCsv || !tablaExportarCsv"
       >
@@ -82,7 +82,7 @@
 
       <!-- 🔽 Dropdown en lugar del input -->
       <select
-        class="border-gray-300 ml-2 w-full rounded border p-2 md:w-48"
+        class="ml-2 w-full rounded border border-gray-300 p-2 md:w-48"
         [(ngModel)]="tablaExportarCsv"
       >
         <option value="" disabled selected>Selecciona una tabla</option>
@@ -91,7 +91,7 @@
         </option>
       </select>
 
-      <div *ngIf="resultadoExportarCsv" class="text-green-700 mt-2 text-sm">
+      <div *ngIf="resultadoExportarCsv" class="mt-2 text-sm text-green-700">
         {{ resultadoExportarCsv }}
       </div>
     </div>

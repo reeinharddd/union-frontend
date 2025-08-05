@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { TokenService } from '@app/core/services/auth/token.service';
 import {
   Opportunity,
@@ -14,12 +13,12 @@ import { WorkModalityService } from '@app/core/services/workModality/workModalit
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-lista-oportunidades',
-  templateUrl: './opportunities.component.html',
+  selector: 'app-postuation-candidate',
+  templateUrl: './postulation-candidate.component.html',
   imports: [CommonModule],
   standalone: true,
 })
-export class OpportunitiesComponent implements OnInit {
+export class PostulationCandidateComponent implements OnInit {
   oportunidades: Opportunity[] = [];
   postulaciones: any[] = [];
   postulacionesPorOportunidad: { [key: number]: any[] } = {};
@@ -39,7 +38,7 @@ export class OpportunitiesComponent implements OnInit {
     private typeOpportunityService: OpportunityTypeService,
     private postulationService: PostulationService,
     private userService: UserService,
-    private router: Router,
+    //private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -71,10 +70,17 @@ export class OpportunitiesComponent implements OnInit {
 
   cargarPostulaciones(): void {
     this.postulationService.getAll().subscribe(postulaciones => {
-      this.postulaciones = postulaciones;
+      // Filtra las postulaciones para excluir las rechazadas
+      const postulacionesFiltradas = postulaciones.filter(
+        p => p.estado !== 'rechazada' && p.estado !== 'aceptada',
+      );
+
+      this.postulaciones = postulacionesFiltradas;
       this.postulacionesPorOportunidad = {};
 
-      const peticionesUsuarios = postulaciones.map(p => this.userService.getById(p.usuario_id));
+      const peticionesUsuarios = postulacionesFiltradas.map(p =>
+        this.userService.getById(p.usuario_id),
+      );
 
       // Trae todos los usuarios en paralelo
       forkJoin(peticionesUsuarios).subscribe(usuarios => {
@@ -122,17 +128,24 @@ export class OpportunitiesComponent implements OnInit {
     });
   }
 
-  editarOportunidad(oportunidad: Opportunity): void {
-    this.router.navigate(['/promoter/opportunity/edit', oportunidad.id]);
+  aceptarPostulacion(id: number) {
+    this.postulationService.update(id, { estado: 'aceptada' }).subscribe({
+      next: () => {
+        alert('Postulación aceptada');
+        this.cargarPostulaciones(); // refrescar datos
+      },
+      error: () => alert('Error al aceptar la postulación'),
+    });
   }
 
-  eliminarOportunidad(id: number): void {
-    if (confirm('¿Estás seguro de eliminar esta oportunidad?')) {
-      this.opportunityService.delete(id).subscribe({
-        next: () => {
-          this.oportunidades = this.oportunidades.filter(o => o.id !== id);
-        },
-      });
-    }
+  rechazarPostulacion(id: number) {
+    console.error('Actualizando postulación con id:', id);
+    this.postulationService.update(id, { estado: 'rechazada' }).subscribe({
+      next: () => {
+        alert('Postulación rechazada');
+        this.cargarPostulaciones(); // refrescar datos
+      },
+      error: () => alert('Error al rechazar la postulación'),
+    });
   }
 }

@@ -106,25 +106,27 @@ export class OpportunityService {
 
   update(id: number, opportunity: Partial<CreateOpportunityRequest>): Observable<Opportunity> {
     console.log('🔄 OpportunityService - Updating opportunity:', id, opportunity);
-    return this.apiClient.put<Opportunity>(API_ENDPOINTS.OPPORTUNITIES.BY_ID(id), opportunity).pipe(
-      tap(updatedOpportunity => {
-        this._opportunities.update(opportunities =>
-          opportunities.map(o => (o.id === id ? updatedOpportunity : o)),
-        );
-        console.log('✅ Opportunity updated via API:', updatedOpportunity);
-        this.toastService.showSuccess('Oportunidad actualizada exitosamente');
-      }),
-      catchError(error => {
-        console.error('❌ Failed to update opportunity:', error);
-        this.toastService.showError('Error al actualizar la oportunidad');
-        return throwError(() => error);
-      }),
-    );
+    return this.apiClient
+      .put<Opportunity>(API_ENDPOINTS.OPPORTUNITIES.UPDATE(id), opportunity)
+      .pipe(
+        tap(updatedOpportunity => {
+          this._opportunities.update(opportunities =>
+            opportunities.map(o => (o.id === id ? updatedOpportunity : o)),
+          );
+          console.log('✅ Opportunity updated via API:', updatedOpportunity);
+          this.toastService.showSuccess('Oportunidad actualizada exitosamente');
+        }),
+        catchError(error => {
+          console.error('❌ Failed to update opportunity:', error);
+          this.toastService.showError('Error al actualizar la oportunidad');
+          return throwError(() => error);
+        }),
+      );
   }
 
   delete(id: number): Observable<{ message: string }> {
     console.log('🔄 OpportunityService - Deleting opportunity:', id);
-    return this.apiClient.delete<{ message: string }>(API_ENDPOINTS.OPPORTUNITIES.BY_ID(id)).pipe(
+    return this.apiClient.delete<{ message: string }>(API_ENDPOINTS.OPPORTUNITIES.DELETE(id)).pipe(
       tap(() => {
         this._opportunities.update(opportunities => opportunities.filter(o => o.id !== id));
         console.log('✅ Opportunity deleted via API:', id);

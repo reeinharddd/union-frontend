@@ -31,7 +31,7 @@ import { OpportunityService } from '@app/core/services/opportunity/opportunity.s
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="border-blue-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-blue-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Mis Cursos</p>
@@ -41,7 +41,7 @@ import { OpportunityService } from '@app/core/services/opportunity/opportunity.s
           </div>
         </div>
 
-        <div class="border-green-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-green-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Eventos Próximos</p>
@@ -51,7 +51,7 @@ import { OpportunityService } from '@app/core/services/opportunity/opportunity.s
           </div>
         </div>
 
-        <div class="border-purple-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-purple-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Oportunidades</p>

@@ -13,7 +13,9 @@ import {
   imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `
     <aside class="flex h-full w-full flex-col border-r border-border bg-white p-4">
-      <div class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4">
+      <div
+        class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4"
+      >
         <div class="flex items-center space-x-3">
           <div class="relative">
             <div
@@ -22,12 +24,12 @@ import {
               {{ getUserInitials() }}
             </div>
             <div
-              class="bg-green-500 absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white"
+              class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-green-500"
             ></div>
           </div>
           <div class="min-w-0 flex-1">
-            <p class="text-gray-900 truncate text-sm font-semibold">{{ getUserName() }}</p>
-            <p class="text-gray-500 truncate text-xs">{{ getUserEmail() }}</p>
+            <p class="truncate text-sm font-semibold text-gray-900">{{ getUserName() }}</p>
+            <p class="truncate text-xs text-gray-500">{{ getUserEmail() }}</p>
             <span
               class="mt-1 inline-block rounded-md bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700"
             >
@@ -41,44 +43,56 @@ import {
         <a
           routerLink="/promoter/dashboard"
           routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
+          class="group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
         >
-          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-blue-500">dashboard</i>
+          <i
+            class="material-icons text-base text-blue-500 transition-transform duration-200 group-hover:scale-105"
+            >dashboard</i
+          >
           <span class="font-medium">Dashboard</span>
         </a>
         <a
           routerLink="/promoter/opportunities"
           routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
+          class="group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
         >
-          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-green-500">work</i>
+          <i
+            class="material-icons text-base text-green-500 transition-transform duration-200 group-hover:scale-105"
+            >work</i
+          >
           <span class="font-medium">Oportunidades</span>
         </a>
         <a
           routerLink="/promoter/clients"
           routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
+          class="group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
         >
-          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-purple-500">people</i>
+          <i
+            class="material-icons text-base text-purple-500 transition-transform duration-200 group-hover:scale-105"
+            >people</i
+          >
           <span class="font-medium">Clientes</span>
         </a>
         <a
           routerLink="/promoter/settings"
           routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-          class="hover:bg-gray-50 text-gray-700 group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
+          class="group flex w-full items-center space-x-3 rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
         >
-          <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 text-gray-500">settings</i>
+          <i
+            class="material-icons text-base text-gray-500 transition-transform duration-200 group-hover:scale-105"
+            >settings</i
+          >
           <span class="font-medium">Configuración</span>
         </a>
       </nav>
 
       <!-- Footer del sidebar -->
-      <div class="border-gray-50 bg-gray-50/30 border-t p-3">
+      <div class="border-t border-gray-50 bg-gray-50/30 p-3">
         <div class="space-y-1">
           <!-- Acceso rápido a perfil -->
           <a
             routerLink="/promoter/profile"
-            class="text-gray-600 group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+            class="group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -99,7 +113,7 @@ import {
           <!-- Cerrar sesión -->
           <button
             (click)="logout()"
-            class="hover:bg-red-50 hover:text-red-600 text-gray-600 group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200"
+            class="group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
