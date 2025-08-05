@@ -1,52 +1,193 @@
-<div *ngIf="proyectos$ | async as proyectos; else loading">
-  <div class="mb-4 flex items-center justify-between">
-    <h2 class="text-lg font-semibold">Proyectos</h2>
+<!-- Hero Section -->
+<div class="admin-hero-section">
+  <div class="admin-floating-elements">
+    <div class="admin-float-element admin-float-1"></div>
+    <div class="admin-float-element admin-float-2"></div>
+    <div class="admin-float-element admin-float-3"></div>
   </div>
-  <ul *ngIf="proyectos.length > 0; else empty" class="space-y-4">
-    <li *ngFor="let proyecto of proyectos" class="rounded-lg border bg-white p-4">
-      <div class="flex flex-col gap-1">
-        <span class="text-base font-bold text-primary-700">{{
-          proyecto.nombre || proyecto.titulo
-        }}</span>
-        <span *ngIf="proyecto.descripcion" class="text-gray-600">{{ proyecto.descripcion }}</span>
-        <span *ngIf="proyecto.tecnologias" class="text-gray-500 text-xs"
-          >Tecnologías: {{ proyecto.tecnologias }}</span
-        >
-        <span *ngIf="proyecto.estado_verificacion" class="text-gray-500 text-xs"
-          >Estado: {{ proyecto.estado_verificacion }}</span
-        >
-        <span *ngIf="proyecto.creado_en" class="text-gray-500 text-xs"
-          >Creado en: {{ proyecto.creado_en | date: 'mediumDate' }}</span
-        >
-        <span *ngIf="proyecto.repositorio_url" class="text-gray-500 text-xs"
-          >Repositorio: {{ proyecto.repositorio_url }}</span
-        >
-        <span *ngIf="proyecto.responsable" class="text-gray-500 text-xs"
-          >Responsable: {{ proyecto.responsable }}</span
-        >
+
+  <div class="relative z-10">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center">
+          <i class="material-icons text-white text-2xl">work</i>
+        </div>
+        <div>
+          <h1 class="admin-page-title">Gestión de Proyectos</h1>
+          <p class="text-white text-lg">Administra los proyectos de estudiantes</p>
+        </div>
       </div>
-      <div class="mt-2 flex gap-2">
-        <button
-          type="button"
-          class="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 text-black transition"
-          (click)="editarProyecto(proyecto)"
-        >
-          Editar
-        </button>
-        <button
-          type="button"
-          class="bg-red-600 hover:bg-red-700 rounded px-3 py-1 text-black transition"
-          (click)="eliminarProyecto(proyecto)"
-        >
-          Eliminar
-        </button>
-      </div>
-    </li>
-  </ul>
+      <button (click)="crearProyecto()" class="admin-action-btn text-white">
+        <i class="material-icons text-sm">add</i>
+        <span>Crear Proyecto</span>
+      </button>
+    </div>
+  </div>
 </div>
+
+<div class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+  <!-- Stats Grid -->
+  <div *ngIf="proyectos$ | async as proyectos" class="admin-stats-grid">
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-600 text-sm font-medium">Total Proyectos</p>
+          <p class="text-3xl font-bold text-gray-900">{{ proyectos.length }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-blue-600 text-xl">folder</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-600 text-sm font-medium">Verificados</p>
+          <p class="text-3xl font-bold text-gray-900">{{ getVerifiedProjects(proyectos) }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-green-600 text-xl">verified</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-600 text-sm font-medium">En Revisión</p>
+          <p class="text-3xl font-bold text-gray-900">{{ getPendingProjects(proyectos) }}</p>
+        </div>
+        <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-yellow-600 text-xl">pending</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-600 text-sm font-medium">Proyectos Activos</p>
+          <p class="text-3xl font-bold text-gray-900">{{ getActiveProjects(proyectos) }}</p>
+        </div>
+        <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-purple-600 text-xl">trending_up</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects Table -->
+  <div class="admin-table-container">
+    <div class="flex items-center justify-between p-6 border-b border-gray-100">
+      <h2 class="text-xl font-semibold text-gray-900">Lista de Proyectos</h2>
+      <div class="flex items-center space-x-3">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar proyectos..."
+            class="w-80 px-4 py-2 pl-10 pr-4 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</i>
+        </div>
+        <button class="admin-action-btn bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200">
+          <i class="material-icons text-sm">filter_list</i>
+          <span>Filtros</span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="proyectos$ | async as proyectos; else loading" class="p-6">
+      <div *ngIf="proyectos.length > 0; else empty" class="space-y-4">
+        <div *ngFor="let proyecto of proyectos; trackBy: trackByProject"
+             class="bg-white border border-gray-100 rounded-xl p-6 hover:shadow-md transition-all duration-200 group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start space-x-4 flex-1">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl flex items-center justify-center border border-gray-100">
+                <i class="material-icons text-blue-600 text-xl">code</i>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center space-x-3 mb-2">
+                  <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {{ proyecto.nombre || proyecto.titulo }}
+                  </h3>
+                  <span class="px-2 py-1 text-xs font-medium rounded-full"
+                        [class]="getStatusClasses(proyecto.estado_verificacion)">
+                    {{ proyecto.estado_verificacion || 'Sin estado' }}
+                  </span>
+                </div>
+
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2" *ngIf="proyecto.descripcion">
+                  {{ proyecto.descripcion }}
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                  <span class="flex items-center space-x-1" *ngIf="proyecto.tecnologias">
+                    <i class="material-icons text-xs">build</i>
+                    <span>{{ proyecto.tecnologias }}</span>
+                  </span>
+                  <span class="flex items-center space-x-1" *ngIf="proyecto.responsable">
+                    <i class="material-icons text-xs">person</i>
+                    <span>{{ proyecto.responsable }}</span>
+                  </span>
+                  <span class="flex items-center space-x-1" *ngIf="proyecto.creado_en">
+                    <i class="material-icons text-xs">schedule</i>
+                    <span>{{ proyecto.creado_en | date:'mediumDate' }}</span>
+                  </span>
+                  <span class="flex items-center space-x-1" *ngIf="proyecto.repositorio_url">
+                    <i class="material-icons text-xs">link</i>
+                    <span>Repositorio</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
+              <button
+                (click)="editarProyecto(proyecto)"
+                class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                <i class="material-icons text-sm">edit</i>
+              </button>
+              <button
+                (click)="eliminarProyecto(proyecto)"
+                class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <i class="material-icons text-sm">delete</i>
+              </button>
+              <button
+                *ngIf="proyecto.repositorio_url"
+                (click)="openRepository(proyecto.repositorio_url)"
+                class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                <i class="material-icons text-sm">open_in_new</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
 <ng-template #loading>
-  <p>Cargando proyectos...</p>
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="text-center space-y-4">
+      <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+      <p class="text-gray-600">Cargando proyectos...</p>
+    </div>
+  </div>
 </ng-template>
+
+<!-- Empty State -->
 <ng-template #empty>
-  <p>No hay proyectos registrados.</p>
+  <div class="text-center py-16">
+    <div class="w-24 h-24 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <i class="material-icons text-4xl text-gray-400">work_outline</i>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">No hay proyectos disponibles</h3>
+    <p class="text-gray-600 mb-6">Los estudiantes aún no han registrado proyectos</p>
+    <button (click)="crearProyecto()" class="btn-primary">
+      <i class="material-icons text-sm">add</i>
+      <span>Crear Primer Proyecto</span>
+    </button>
+  </div>
 </ng-template>

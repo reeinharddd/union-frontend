@@ -1,39 +1,161 @@
-<div class="mb-4 flex items-center justify-between">
-  <h2 class="text-lg font-semibold">Foros</h2>
-  <button
-    (click)="crearForo()"
-    class="bg-green-600 hover:bg-green-700 rounded px-4 py-2 text-black transition"
-  >
-    Crear foro
-  </button>
-</div>
-<div *ngIf="forums$ | async as forums; else loading">
-  <ul *ngIf="forums.length > 0; else empty" class="space-y-4">
-    <li *ngFor="let foro of forums" class="rounded-lg border bg-white p-4">
-      <div class="flex flex-col gap-1">
-        <span class="text-base font-bold text-primary-700">{{ foro.nombre }}</span>
-        <span *ngIf="foro.descripcion" class="text-gray-600">{{ foro.descripcion }}</span>
-        <div class="mt-2 flex gap-2">
-          <button
-            (click)="editarForo(foro.id)"
-            class="bg-yellow-500 hover:bg-yellow-600 rounded px-3 py-1 text-black transition"
-          >
-            Actualizar
-          </button>
-          <button
-            (click)="eliminarForo(foro.id)"
-            class="bg-red-600 hover:bg-red-700 rounded px-3 py-1 text-black transition"
-          >
-            Borrar
-          </button>
+<div class="page-container space-y-6 animate-fade-in">
+  <!-- Header elegante -->
+  <div class="admin-header">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-gradient-warm rounded-xl flex items-center justify-center shadow-glow">
+          <i class="material-icons text-white text-xl">forum</i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-white">Gestión de Foros</h1>
+          <p class="text-white/90 text-lg">Administra los foros de discusión</p>
         </div>
       </div>
-    </li>
-  </ul>
+      <button
+        (click)="crearForo()"
+        class="btn-primary flex items-center space-x-2">
+        <i class="material-icons text-sm">add</i>
+        <span>Crear Foro</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="stat-card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-secondary/70 text-sm font-medium">Total Foros</p>
+          <p class="text-3xl font-bold text-secondary">{{ (forums$ | async)?.length || 0 }}</p>
+        </div>
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-primary text-xl">forum</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-secondary/70 text-sm font-medium">Foros Activos</p>
+          <p class="text-3xl font-bold text-secondary">{{ getActiveForums() }}</p>
+        </div>
+        <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-success text-xl">trending_up</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-secondary/70 text-sm font-medium">Discusiones</p>
+          <p class="text-3xl font-bold text-secondary">{{ getTotalDiscussions() }}</p>
+        </div>
+        <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+          <i class="material-icons text-accent text-xl">chat_bubble_outline</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Foros -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-xl font-semibold text-secondary">Lista de Foros</h2>
+      <div class="flex items-center space-x-3">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar foros..."
+            class="form-input pl-10 w-80">
+          <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50">search</i>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <div *ngIf="forums$ | async as forums; else loading">
+        <div *ngIf="forums.length > 0; else empty" class="divide-y divide-gray-100">
+          <div *ngFor="let foro of forums; trackBy: trackByForum"
+               class="p-6 hover:bg-gray-50/50 transition-colors group">
+            <div class="flex items-center justify-between">
+              <div class="flex items-start space-x-4 flex-1">
+                <div class="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center">
+                  <i class="material-icons text-primary">topic</i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-secondary mb-1 group-hover:text-primary transition-colors">
+                    {{ foro.nombre }}
+                  </h3>
+                  <p class="text-secondary/70 text-sm mb-3 line-clamp-2">{{ foro.descripcion }}</p>
+                  <div class="flex items-center space-x-6 text-sm text-secondary/60">
+                    <span class="flex items-center space-x-1">
+                      <i class="material-icons text-xs">calendar_today</i>
+                      <span>{{ foro.fecha_creacion | date:'short' }}</span>
+                    </span>
+                    <span class="flex items-center space-x-1">
+                      <i class="material-icons text-xs">person</i>
+                      <span>{{ foro.creador }}</span>
+                    </span>
+                    <span class="flex items-center space-x-1">
+                      <i class="material-icons text-xs">chat_bubble_outline</i>
+                      <span>{{ foro.total_hilos || 0 }} hilos</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  (click)="editarForo(foro.id)"
+                  class="btn-ghost-sm text-primary hover:bg-primary/10">
+                  <i class="material-icons text-sm">edit</i>
+                </button>
+                <button
+                  (click)="verForo(foro.id)"
+                  class="btn-ghost-sm text-secondary hover:bg-secondary/10">
+                  <i class="material-icons text-sm">visibility</i>
+                </button>
+                <button
+                  (click)="eliminarForo(foro.id)"
+                  class="btn-ghost-sm text-danger hover:bg-danger/10">
+                  <i class="material-icons text-sm">delete</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Loading State -->
 <ng-template #loading>
-  <p>Cargando foros...</p>
+  <div class="page-container">
+    <div class="flex items-center justify-center py-16">
+      <div class="text-center space-y-4">
+        <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+        <p class="text-secondary/70">Cargando foros...</p>
+      </div>
+    </div>
+  </div>
 </ng-template>
+
+<!-- Empty State -->
 <ng-template #empty>
-  <p>No hay foros disponibles.</p>
+  <div class="text-center py-16">
+    <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <i class="material-icons text-4xl text-gray-400">forum</i>
+    </div>
+    <h3 class="text-xl font-semibold text-secondary mb-2">No hay foros disponibles</h3>
+    <p class="text-secondary/70 mb-6">Comienza creando tu primer foro de discusión</p>
+    <button
+      (click)="crearForo()"
+      class="btn-primary">
+      <i class="material-icons text-sm mr-2">add</i>
+      Crear Primer Foro
+    </button>
+  </div>
 </ng-template>

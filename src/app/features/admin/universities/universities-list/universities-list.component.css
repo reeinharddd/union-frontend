@@ -1,0 +1,342 @@
+.universities-list-container {
+  min-height: 100vh;
+  background-color: rgb(249 250 251);
+}
+
+.admin-hero-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to right, rgb(234 88 12), rgb(220 38 38));
+  padding: 3rem 1.5rem;
+  color: white;
+}
+
+.admin-hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: black;
+  opacity: 0.1;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Table hover effects */
+.table-row-hover {
+  transition: background-color 0.2s;
+}
+
+/* Button styles */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  background-color: rgb(234 88 12);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: rgb(194 65 12);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(55 65 81);
+  background-color: white;
+  border: 1px solid rgb(209 213 219);
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: rgb(249 250 251);
+}
+
+/* Loading animation */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 3rem;
+  width: 3rem;
+  border-bottom: 2px solid rgb(234 88 12);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Action button styles */
+.action-btn {
+  transition: color 0.2s;
+}
+
+.action-btn:hover {
+  text-decoration: underline;
+}
+
+.action-btn-view {
+  color: rgb(234 88 12);
+}
+
+.action-btn-view:hover {
+  color: rgb(154 52 18);
+}
+
+.action-btn-edit {
+  color: rgb(79 70 229);
+}
+
+.action-btn-edit:hover {
+  color: rgb(55 48 163);
+}
+
+.action-btn-delete {
+  color: rgb(220 38 38);
+}
+
+.action-btn-delete:hover {
+  color: rgb(153 27 27);
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border-radius: 0.5rem;
+}
+
+.card-header {
+  padding: 1.25rem 1rem;
+}
+
+/* Error message styles */
+.error-container {
+  background-color: rgb(254 242 242);
+  border: 1px solid rgb(254 202 202);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-icon {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: rgb(248 113 113);
+}
+
+.error-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(153 27 27);
+}
+
+.error-message {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: rgb(185 28 28);
+}
+
+.error-retry-btn {
+  background-color: rgb(254 226 226);
+  color: rgb(153 27 27);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.error-retry-btn:hover {
+  background-color: rgb(254 202 202);
+}
+
+/* Empty state styles */
+.empty-state {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.empty-state-icon {
+  margin: 0 auto;
+  height: 3rem;
+  width: 3rem;
+  color: rgb(156 163 175);
+}
+
+.empty-state-title {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(17 24 39);
+}
+
+.empty-state-description {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: rgb(107 114 128);
+}
+
+/* University avatar styles */
+.university-avatar {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 50%;
+  background-color: rgb(209 213 219);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.university-avatar-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(55 65 81);
+}
+
+/* Footer styles */
+.action-footer {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 1rem;
+  background: linear-gradient(to right, rgb(249 250 251), rgb(243 244 246));
+  padding: 1.5rem;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgb(107 114 128);
+}
+
+.footer-info-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .admin-hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .universities-list-container .card-header {
+    padding: 1rem;
+  }
+
+  .action-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .footer-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Table specific styles */
+.university-table {
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.university-table th {
+  padding: 0.875rem 0.75rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(17 24 39);
+}
+
+.university-table td {
+  white-space: nowrap;
+  padding: 1rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.university-table tbody tr {
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgb(229 231 235);
+}
+
+.university-table tbody tr:hover {
+  background-color: rgb(249 250 251);
+}
+
+/* Animation classes */
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .universities-list-container {
+    background-color: rgb(17 24 39);
+  }
+
+  .card {
+    background-color: rgb(31 41 55);
+  }
+
+  .empty-state-title {
+    color: white;
+  }
+
+  .university-avatar {
+    background-color: rgb(75 85 99);
+  }
+
+  .university-avatar-text {
+    color: rgb(209 213 219);
+  }
+
+  .action-footer {
+    background: linear-gradient(to right, rgb(31 41 55), rgb(17 24 39));
+  }
+
+  .footer-info {
+    color: rgb(156 163 175);
+  }
+}

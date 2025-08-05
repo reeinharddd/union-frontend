@@ -36,4 +36,10 @@ export class TagListComponent {
       },
     });
   }
+
+  getCategoriesCount(tags: any[]): number {
+    if (!tags || tags.length === 0) return 0;
+    const uniqueCategories = new Set(tags.map(tag => tag.categoria).filter(cat => cat));
+    return uniqueCategories.size;
+  }
 }

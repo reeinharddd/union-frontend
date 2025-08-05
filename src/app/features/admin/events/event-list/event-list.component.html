@@ -1,49 +1,108 @@
-<div *ngIf="events$ | async as events; else loading">
-  <div class="mb-4 flex items-center justify-between">
-    <h2 class="text-lg font-semibold">Eventos</h2>
-    <button
-      (click)="crearEvento()"
-      class="bg-green-600 hover:bg-green-700 rounded px-4 py-2 text-black transition"
-    >
-      Crear evento
-    </button>
-  </div>
-  <ul *ngIf="events.length > 0; else empty" class="space-y-4">
-    <li *ngFor="let event of events" class="rounded-lg border bg-white p-4">
-      <div class="flex flex-col gap-1">
-        <span class="text-base font-bold text-primary-700">{{ event.titulo || event.nombre }}</span>
-        <span *ngIf="event.descripcion" class="text-gray-600">{{ event.descripcion }}</span>
-        <span *ngIf="event.tipo" class="text-gray-500 text-xs">Tipo: {{ event.tipo }}</span>
-        <span *ngIf="event.enlace_acceso" class="text-gray-500 text-xs"
-          >Enlace: {{ event.enlace_acceso }}</span
-        >
-        <span *ngIf="event.fecha_inicio" class="text-gray-500 text-xs"
-          >Fecha inicio: {{ event.fecha_inicio | date: 'mediumDate' }}</span
-        >
-        <span *ngIf="event.fecha_fin" class="text-gray-500 text-xs"
-          >Fecha fin: {{ event.fecha_fin | date: 'mediumDate' }}</span
-        >
-        <div class="mt-2 flex gap-2">
-          <button
-            (click)="editarEvento(event.id)"
-            class="bg-yellow-500 hover:bg-yellow-600 rounded px-3 py-1 text-black transition"
-          >
-            Editar
-          </button>
-          <button
-            (click)="eliminarEvento(event.id)"
-            class="bg-red-600 hover:bg-red-700 rounded px-3 py-1 text-black transition"
-          >
-            Eliminar
-          </button>
+<div class="page-container space-y-6 animate-fade-in">
+  <!-- Header elegante -->
+  <div class="admin-header">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-gradient-warm rounded-xl flex items-center justify-center shadow-glow">
+          <i class="material-icons text-white text-xl">event</i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-white">Gestión de Eventos</h1>
+          <p class="text-white/90 text-lg">Administra eventos y webinars</p>
         </div>
       </div>
-    </li>
-  </ul>
+      <button
+        (click)="crearEvento()"
+        class="btn-primary flex items-center space-x-2">
+        <i class="material-icons text-sm">add</i>
+        <span>Crear Evento</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de Eventos -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-xl font-semibold text-secondary">Lista de Eventos</h2>
+    </div>
+
+    <div class="card-body p-0">
+      <div *ngIf="events$ | async as events; else loading">
+        <div *ngIf="events.length > 0; else empty" class="divide-y divide-gray-100">
+          <div *ngFor="let event of events"
+               class="p-6 hover:bg-gray-50/50 transition-colors group">
+            <div class="flex items-center justify-between">
+              <div class="flex items-start space-x-4 flex-1">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center">
+                  <i class="material-icons text-primary text-xl">event</i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-secondary mb-1 group-hover:text-primary transition-colors">
+                    {{ event.titulo || event.nombre }}
+                  </h3>
+                  <p class="text-secondary/70 text-sm mb-3" *ngIf="event.descripcion">{{ event.descripcion }}</p>
+                  <div class="flex items-center space-x-6 text-sm text-secondary/60">
+                    <span class="flex items-center space-x-1" *ngIf="event.fecha_inicio">
+                      <i class="material-icons text-xs">schedule</i>
+                      <span>{{ event.fecha_inicio | date:'mediumDate' }}</span>
+                    </span>
+                    <span class="flex items-center space-x-1" *ngIf="event.tipo">
+                      <i class="material-icons text-xs">category</i>
+                      <span>{{ event.tipo }}</span>
+                    </span>
+                    <span class="flex items-center space-x-1" *ngIf="event.enlace_acceso">
+                      <i class="material-icons text-xs">link</i>
+                      <span>Enlace disponible</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  (click)="editarEvento(event.id)"
+                  class="btn-ghost-sm text-primary hover:bg-primary/10">
+                  <i class="material-icons text-sm">edit</i>
+                </button>
+                <button
+                  (click)="eliminarEvento(event.id)"
+                  class="btn-ghost-sm text-danger hover:bg-danger/10">
+                  <i class="material-icons text-sm">delete</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Loading State -->
 <ng-template #loading>
-  <p>Cargando eventos...</p>
+  <div class="page-container">
+    <div class="flex items-center justify-center py-16">
+      <div class="text-center space-y-4">
+        <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+        <p class="text-secondary/70">Cargando eventos...</p>
+      </div>
+    </div>
+  </div>
 </ng-template>
+
+<!-- Empty State -->
 <ng-template #empty>
-  <p>No hay eventos disponibles.</p>
+  <div class="text-center py-16">
+    <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <i class="material-icons text-4xl text-gray-400">event</i>
+    </div>
+    <h3 class="text-xl font-semibold text-secondary mb-2">No hay eventos disponibles</h3>
+    <p class="text-secondary/70 mb-6">Comienza creando tu primer evento o webinar</p>
+    <button
+      (click)="crearEvento()"
+      class="btn-primary">
+      <i class="material-icons text-sm mr-2">add</i>
+      Crear Primer Evento
+    </button>
+  </div>
 </ng-template>

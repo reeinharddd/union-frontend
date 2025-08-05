@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Test simple component */
+@layer components {
+  .test-btn {
+    @apply px-4 py-2 bg-primary text-white rounded;
+  }
+}

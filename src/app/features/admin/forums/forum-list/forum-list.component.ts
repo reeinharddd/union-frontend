@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Forum } from '../../../../core/models/forum/forum.interface';
 import { ForumService } from '../forum.service';
 
 @Component({
@@ -26,14 +27,34 @@ export class ForumListComponent {
   }
 
   eliminarForo(id: number) {
-    this.forumService.delete(id).subscribe({
-      next: () => {
-        this.forums$ = this.forumService.getAll();
-        this.cdr.markForCheck();
-      },
-      error: err => {
-        console.error('Error eliminando foro:', err);
-      },
-    });
+    if (confirm('¿Estás seguro de que deseas eliminar este foro?')) {
+      this.forumService.delete(id).subscribe({
+        next: () => {
+          this.forums$ = this.forumService.getAll();
+          this.cdr.markForCheck();
+        },
+        error: err => {
+          console.error('Error eliminando foro:', err);
+        },
+      });
+    }
+  }
+
+  verForo(id: number) {
+    this.router.navigate(['admin', 'foros', id]);
+  }
+
+  getActiveForums(): number {
+    // Lógica para contar foros activos
+    return 0; // Placeholder
+  }
+
+  getTotalDiscussions(): number {
+    // Lógica para contar total de discusiones
+    return 0; // Placeholder
+  }
+
+  trackByForum(_index: number, forum: Forum): number {
+    return forum.id;
   }
 }

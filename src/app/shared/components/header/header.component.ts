@@ -29,35 +29,39 @@ interface StudentSearchResult {
     .search-result-item {
       transition: all 0.2s ease;
     }
-    
+
     .search-result-item:hover {
       background-color: #fed7aa !important; /* orange-200 */
     }
-    
+
     .dark .search-result-item:hover {
       background-color: #9a3412 !important; /* orange-800 */
     }
-    
+
     .search-result-item:hover .avatar {
-      background: linear-gradient(135deg, #fb923c, #ea580c) !important; /* orange-400 to orange-600 */
+      background: linear-gradient(
+        135deg,
+        #fb923c,
+        #ea580c
+      ) !important; /* orange-400 to orange-600 */
     }
-    
+
     .search-result-item:hover .student-name {
       color: #c2410c !important; /* orange-700 */
     }
-    
+
     .dark .search-result-item:hover .student-name {
       color: #fdba74 !important; /* orange-300 */
     }
-    
+
     .search-result-item:hover .student-info {
       color: #ea580c !important; /* orange-600 */
     }
-    
+
     .dark .search-result-item:hover .student-info {
       color: #fed7aa !important; /* orange-200 */
     }
-    
+
     .search-result-item:hover .arrow-icon {
       color: #ea580c !important; /* orange-600 */
     }
@@ -68,25 +72,27 @@ export class HeaderComponent {
   private readonly apiClient = inject(ApiClientService);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
-  
+
   // ✅ Señales para manejo de estado de búsqueda
   searchTerm = signal('');
   searchResults = signal<StudentSearchResult[]>([]);
   isSearching = signal(false);
   showResults = signal(false);
-  
+
   // ✅ Subject para debounce de búsqueda
   private searchSubject = new Subject<string>();
-  
+
   constructor() {
     // ✅ Configurar búsqueda con debounce según REQ-4.6.1
-    this.searchSubject.pipe(
-      debounceTime(250), // Reducir debounce para mayor responsividad
-      distinctUntilChanged(), // Solo buscar si el término cambió
-      switchMap(term => this.searchStudents(term))
-    ).subscribe();
+    this.searchSubject
+      .pipe(
+        debounceTime(250), // Reducir debounce para mayor responsividad
+        distinctUntilChanged(), // Solo buscar si el término cambió
+        switchMap(term => this.searchStudents(term)),
+      )
+      .subscribe();
   }
-  
+
   /**
    * ✅ Buscar estudiantes según REQ-4.6.1
    */
@@ -97,88 +103,94 @@ export class HeaderComponent {
       this.isSearching.set(false);
       return of([]);
     }
-    
+
     this.isSearching.set(true);
     console.log('🔍 Iniciando búsqueda con término:', term);
-    
+
     // Obtener usuarios con rol_id = 2 (estudiantes) y filtrar en frontend
-    return this.apiClient.get<StudentSearchResult[]>('/usuarios', {
-      rol_id: 2, // Solo estudiantes según requerimiento
-      limit: 50 // Aumentar límite para filtrar mejor en frontend
-    }).pipe(
-      tap((response: StudentSearchResult[]) => {
-        console.log('🔍 Respuesta completa del servidor:', response);
-        console.log('🔍 Tipo de respuesta:', typeof response);
-        console.log('🔍 Es array:', Array.isArray(response));
-        
-        const currentUser = this.authService.currentUser();
-        const currentUserId = currentUser?.id;
-        
-        // Verificar si la respuesta tiene una estructura diferente
-        let users: StudentSearchResult[] = [];
-        if (Array.isArray(response)) {
-          // Filtrar solo estudiantes (rol_id = 2) y excluir usuario actual
-          users = response.filter(user => 
-            user.rol_id === 2 && user.id !== currentUserId
-          );
-        } else if (response && (response as any).data && Array.isArray((response as any).data)) {
-          users = (response as any).data.filter((user: StudentSearchResult) => 
-            user.rol_id === 2 && user.id !== currentUserId
-          );
-          console.log('🔍 Usando response.data:', users);
-        } else if (response && (response as any).usuarios && Array.isArray((response as any).usuarios)) {
-          users = (response as any).usuarios.filter((user: StudentSearchResult) => 
-            user.rol_id === 2 && user.id !== currentUserId
-          );
-          console.log('🔍 Usando response.usuarios:', users);
-        } else {
-          console.log('🔍 Estructura de respuesta no reconocida');
-        }
+    return this.apiClient
+      .get<StudentSearchResult[]>('/usuarios', {
+        rol_id: 2, // Solo estudiantes según requerimiento
+        limit: 50, // Aumentar límite para filtrar mejor en frontend
+      })
+      .pipe(
+        tap((response: StudentSearchResult[]) => {
+          console.log('🔍 Respuesta completa del servidor:', response);
+          console.log('🔍 Tipo de respuesta:', typeof response);
+          console.log('🔍 Es array:', Array.isArray(response));
 
-        // ✅ Filtro adicional en frontend por nombre/apellido si el backend no filtra
-        const searchTermLower = term.toLowerCase().trim();
-        users = users.filter(user => {
-          const fullName = `${user.nombre} ${user.apellido || ''}`.toLowerCase();
-          const email = user.correo.toLowerCase();
-          return fullName.includes(searchTermLower) || 
-                 email.includes(searchTermLower) ||
-                 user.nombre.toLowerCase().includes(searchTermLower) ||
-                 (user.apellido && user.apellido.toLowerCase().includes(searchTermLower));
-        });
+          const currentUser = this.authService.currentUser();
+          const currentUserId = currentUser?.id;
 
-        // Limitar resultados a 8 para la UI
-        users = users.slice(0, 8);
-        
-        console.log('🔍 Usuario actual ID:', currentUserId);
-        console.log('🔍 Usuarios filtrados (sin usuario actual):', users.length);
-        console.log('🔍 Término de búsqueda:', searchTermLower);
-        
-        this.searchResults.set(users);
-        this.showResults.set(users.length > 0 && this.searchTerm().trim().length > 0);
-        this.isSearching.set(false);
-        console.log('🔍 Usuarios encontrados:', users.length);
-      }),
-      catchError(error => {
-        console.error('❌ Error completo en búsqueda de estudiantes:', error);
-        console.error('❌ Status del error:', error.status);
-        console.error('❌ Mensaje del error:', error.message);
-        console.error('❌ URL solicitada:', error.url);
-        this.isSearching.set(false);
-        this.searchResults.set([]);
-        this.showResults.set(false);
-        return of([]);
-      }),
-      switchMap(() => of(this.searchResults()))
-    );
+          // Verificar si la respuesta tiene una estructura diferente
+          let users: StudentSearchResult[] = [];
+          if (Array.isArray(response)) {
+            // Filtrar solo estudiantes (rol_id = 2) y excluir usuario actual
+            users = response.filter(user => user.rol_id === 2 && user.id !== currentUserId);
+          } else if (response && (response as any).data && Array.isArray((response as any).data)) {
+            users = (response as any).data.filter(
+              (user: StudentSearchResult) => user.rol_id === 2 && user.id !== currentUserId,
+            );
+            console.log('🔍 Usando response.data:', users);
+          } else if (
+            response &&
+            (response as any).usuarios &&
+            Array.isArray((response as any).usuarios)
+          ) {
+            users = (response as any).usuarios.filter(
+              (user: StudentSearchResult) => user.rol_id === 2 && user.id !== currentUserId,
+            );
+            console.log('🔍 Usando response.usuarios:', users);
+          } else {
+            console.log('🔍 Estructura de respuesta no reconocida');
+          }
+
+          // ✅ Filtro adicional en frontend por nombre/apellido si el backend no filtra
+          const searchTermLower = term.toLowerCase().trim();
+          users = users.filter(user => {
+            const fullName = `${user.nombre} ${user.apellido || ''}`.toLowerCase();
+            const email = user.correo.toLowerCase();
+            return (
+              fullName.includes(searchTermLower) ||
+              email.includes(searchTermLower) ||
+              user.nombre.toLowerCase().includes(searchTermLower) ||
+              (user.apellido && user.apellido.toLowerCase().includes(searchTermLower))
+            );
+          });
+
+          // Limitar resultados a 8 para la UI
+          users = users.slice(0, 8);
+
+          console.log('🔍 Usuario actual ID:', currentUserId);
+          console.log('🔍 Usuarios filtrados (sin usuario actual):', users.length);
+          console.log('🔍 Término de búsqueda:', searchTermLower);
+
+          this.searchResults.set(users);
+          this.showResults.set(users.length > 0 && this.searchTerm().trim().length > 0);
+          this.isSearching.set(false);
+          console.log('🔍 Usuarios encontrados:', users.length);
+        }),
+        catchError(error => {
+          console.error('❌ Error completo en búsqueda de estudiantes:', error);
+          console.error('❌ Status del error:', error.status);
+          console.error('❌ Mensaje del error:', error.message);
+          console.error('❌ URL solicitada:', error.url);
+          this.isSearching.set(false);
+          this.searchResults.set([]);
+          this.showResults.set(false);
+          return of([]);
+        }),
+        switchMap(() => of(this.searchResults())),
+      );
   }
-  
+
   /**
    * ✅ Manejar cambio en input de búsqueda
    */
   onSearchChange(term: string): void {
     this.searchTerm.set(term);
     this.searchSubject.next(term);
-    
+
     // Si el campo está vacío, ocultar resultados inmediatamente
     if (!term.trim()) {
       this.showResults.set(false);
@@ -194,7 +206,7 @@ export class HeaderComponent {
       this.clearSearch();
     }
   }
-  
+
   /**
    * ✅ Navegar al perfil del estudiante seleccionado
    */
@@ -203,7 +215,50 @@ export class HeaderComponent {
     this.clearSearch();
     console.log('👤 Navegando al perfil del estudiante:', studentId);
   }
-  
+
+  /**
+   * ✅ Métodos de navegación del header
+   */
+  navigateToFeed(): void {
+    this.router.navigate(['/student/dashboard']);
+    console.log('🏠 Navegando al feed principal');
+  }
+
+  navigateToProjects(): void {
+    this.router.navigate(['/student/projects']);
+    console.log('📁 Navegando a proyectos');
+  }
+
+  navigateToForums(): void {
+    this.router.navigate(['/student/forums']);
+    console.log('💬 Navegando a foros');
+  }
+
+  navigateToEvents(): void {
+    this.router.navigate(['/student/events']);
+    console.log('📅 Navegando a eventos');
+  }
+
+  navigateToOpportunities(): void {
+    this.router.navigate(['/student/opportunities']);
+    console.log('🎯 Navegando a oportunidades');
+  }
+
+  navigateToCourses(): void {
+    // Implementar cuando esté disponible la ruta
+    console.log('📚 Navegando a cursos - En desarrollo');
+  }
+
+  navigateToNotifications(): void {
+    // Por ahora navegamos al dashboard hasta que estén las notificaciones
+    console.log('🔔 Navegando a notificaciones - En desarrollo');
+  }
+
+  navigateToMessages(): void {
+    this.router.navigate(['/student/conversations']);
+    console.log('💬 Navegando a conversaciones');
+  }
+
   /**
    * ✅ Limpiar búsqueda
    */
@@ -213,7 +268,7 @@ export class HeaderComponent {
     this.showResults.set(false);
     this.isSearching.set(false);
   }
-  
+
   /**
    * ✅ Manejar clic fuera del componente de búsqueda
    */
@@ -223,7 +278,7 @@ export class HeaderComponent {
       this.showResults.set(false);
     }, 300);
   }
-  
+
   /**
    * ✅ Mostrar resultados al hacer focus
    */

@@ -83,10 +83,10 @@ export class UserListComponent implements OnInit {
 
   userColumns: TableColumn[] = [
     { key: 'id', label: 'ID' },
-    { key: 'name', label: 'Nombre' },
-    { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Rol' },
-    { key: 'creado_en', label: 'Fecha Registro' },
+    { key: 'nombre', label: 'Nombre' },
+    { key: 'correo', label: 'Email' },
+    { key: 'rol_id', label: 'Rol' },
+    { key: 'created_at', label: 'Fecha Registro' },
   ];
 
   userActions: TableAction[] = [

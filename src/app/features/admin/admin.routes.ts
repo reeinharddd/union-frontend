@@ -58,6 +58,16 @@ export const ADMIN_ROUTES: Routes = [
         path: 'reports',
         loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./profile/admin-profile.component').then(m => m.AdminProfileComponent),
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./settings/admin-settings.component').then(m => m.AdminSettingsComponent),
+      },
       //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
       // },
       // {
