@@ -220,33 +220,70 @@ export class HeaderComponent {
    * ✅ Métodos de navegación del header
    */
   navigateToFeed(): void {
-    this.router.navigate(['/student/dashboard']);
+    const user = this.authService.currentUser();
+    const rolePrefix = this.getRolePrefix(user?.rol_id);
+    this.router.navigate([`/${rolePrefix}/dashboard`]);
     console.log('🏠 Navegando al feed principal');
   }
 
   navigateToProjects(): void {
-    this.router.navigate(['/student/projects']);
+    const user = this.authService.currentUser();
+    const rolePrefix = this.getRolePrefix(user?.rol_id);
+
+    // Debug logs
+    console.log('🔍 User:', user);
+    console.log('🔍 Role ID:', user?.rol_id);
+    console.log('🔍 Role Prefix:', rolePrefix);
+
+    // Mapeo específico para proyectos según el rol
+    const projectRoutes = {
+      'admin': '/admin/proyectos',
+      'student': '/student/projects',
+      'promoter': '/promoter/opportunities', // Los promotores ven oportunidades como su "proyectos"
+      'admin-uni': '/admin-uni/projects'
+    };
+
+    const route = projectRoutes[rolePrefix as keyof typeof projectRoutes] || '/student/projects';
+    console.log('🔍 Selected route:', route);
+    this.router.navigate([route]);
     console.log('📁 Navegando a proyectos');
   }
 
   navigateToForums(): void {
-    this.router.navigate(['/student/forums']);
+    const user = this.authService.currentUser();
+    const rolePrefix = this.getRolePrefix(user?.rol_id);
+    this.router.navigate([`/${rolePrefix}/forums`]);
     console.log('💬 Navegando a foros');
   }
 
   navigateToEvents(): void {
-    this.router.navigate(['/student/events']);
+    const user = this.authService.currentUser();
+    const rolePrefix = this.getRolePrefix(user?.rol_id);
+    this.router.navigate([`/${rolePrefix}/events`]);
     console.log('📅 Navegando a eventos');
   }
 
   navigateToOpportunities(): void {
-    this.router.navigate(['/student/opportunities']);
+    const user = this.authService.currentUser();
+    const rolePrefix = this.getRolePrefix(user?.rol_id);
+    this.router.navigate([`/${rolePrefix}/opportunities`]);
     console.log('🎯 Navegando a oportunidades');
   }
 
   navigateToCourses(): void {
     // Implementar cuando esté disponible la ruta
     console.log('📚 Navegando a cursos - En desarrollo');
+  }
+
+  // Método auxiliar para obtener el prefijo de ruta según el rol
+  private getRolePrefix(roleId: number | undefined): string {
+    switch (roleId) {
+      case 1: return 'admin';
+      case 2: return 'student';
+      case 3: return 'promoter';
+      case 9: return 'admin-uni';
+      default: return 'student';
+    }
   }
 
   navigateToNotifications(): void {

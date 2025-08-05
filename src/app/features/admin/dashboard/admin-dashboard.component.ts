@@ -347,29 +347,35 @@ export class AdminDashboardComponent implements OnInit {
       events: this.eventService.getAll(),
     }).subscribe({
       next: ({ users, universities, events }) => {
+        // Asegurar que tenemos arrays válidos
+        const usersArray = Array.isArray(users) ? users : [];
+        const universitiesArray = Array.isArray(universities) ? universities : [];
+        const eventsArray = Array.isArray(events) ? events : [];
+
         // Procesar usuarios por rol
-        const usersByRole = this.groupUsersByRole(users || []);
+        const usersByRole = this.groupUsersByRole(usersArray);
 
         // Calcular eventos activos (próximos 30 días)
-        const eventsArray = Array.isArray(events) ? events : (events?.data || []);
         const activeEvents = this.getActiveEvents(eventsArray);
 
         // Usuarios recientes (última semana)
-        const recentUsers = this.getRecentUsers(users || []);
+        const recentUsers = this.getRecentUsers(usersArray);
 
-        this.stats.set({
-          totalUsers: users?.length || 0,
-          totalUniversities: universities?.length || 0,
+        const newStats = {
+          totalUsers: usersArray.length,
+          totalUniversities: universitiesArray.length,
           totalEvents: eventsArray.length,
           activeEvents: activeEvents.length,
           recentUsers: recentUsers.length,
           studentsCount: usersByRole.students,
           graduatesCount: usersByRole.graduates,
           adminsCount: usersByRole.admins,
-        });
+        };
+
+        this.stats.set(newStats);
 
         // Generar actividad reciente
-        this.generateRecentActivity(users || [], universities || [], eventsArray);
+        this.generateRecentActivity(usersArray, universitiesArray, eventsArray);
 
         this.isLoading.set(false);
       },

@@ -6,7 +6,7 @@ import {
   EventsFilters,
   EventsResponse,
 } from '@app/core/models/event/event.interface';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { BaseService } from '../base/base.service';
 
@@ -43,16 +43,25 @@ export class EventService extends BaseService {
     return this._events().filter(event => eventIds.includes(event.id));
   });
 
-  getAll(filters: EventsFilters = {}): Observable<EventsResponse> {
+  getAll(filters: EventsFilters = {}): Observable<Event[]> {
     return this.handleRequest(
-      this.apiClient.get<EventsResponse>(API_ENDPOINTS.EVENTS.BASE, filters),
+      this.apiClient.get<EventsResponse | Event[]>(API_ENDPOINTS.EVENTS.BASE, filters),
       'events.getAll',
       { logRequest: true },
     ).pipe(
-      tap(response => {
-        this._events.set(response.data);
-        this._totalEvents.set(response.pagination.total);
-        console.log(`🎉 Loaded ${response.data.length} events`);
+      map(response => {
+        // Handle both array response and object response with data
+        if (Array.isArray(response)) {
+          // Direct array response
+          this._events.set(response);
+          this._totalEvents.set(response.length);
+          return response;
+        } else {
+          // Object response with data and pagination
+          this._events.set(response.data);
+          this._totalEvents.set(response.pagination.total);
+          return response.data;
+        }
       }),
     );
   }
@@ -126,7 +135,6 @@ export class EventService extends BaseService {
     ).pipe(
       tap(attendances => {
         this._attendances.set(attendances);
-        console.log(`📋 Loaded ${attendances.length} attendances`);
       }),
     );
   }

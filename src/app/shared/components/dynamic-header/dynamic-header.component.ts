@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layout-config.service';
@@ -22,6 +22,18 @@ export class DynamicHeaderComponent {
 
   // Rol actual del usuario
   currentRole = signal(this.layoutConfigService.getCurrentUserRole());
+
+  constructor() {
+    // Efecto para actualizar el rol cuando cambie el estado de autenticación
+    effect(() => {
+      const user = this.authService.currentUser();
+      if (user) {
+        const newRole = this.layoutConfigService.getCurrentUserRole();
+        this.currentRole.set(newRole);
+        console.log('🔄 DynamicHeader - Role updated:', newRole);
+      }
+    });
+  }
 
   // Navegación contextual por rol
   getContextualNavigation() {
@@ -89,6 +101,7 @@ export class DynamicHeaderComponent {
   // Filtros por rol
   getFilters(): string[] {
     const role = this.currentRole();
+    console.log('🔍 DynamicHeader - Current role:', role);
 
     const filters = {
       admin: ['Usuarios', 'Universidades', 'Proyectos', 'Reportes'],
@@ -98,7 +111,45 @@ export class DynamicHeaderComponent {
       public: [],
     };
 
-    return filters[role as keyof typeof filters] || [];
+    const result = filters[role as keyof typeof filters] || [];
+    console.log('🔍 DynamicHeader - Filters for role:', role, '=', result);
+    return result;
+  }
+
+  // Navegar al hacer click en filtros
+  onFilterClick(filter: string): void {
+    const role = this.currentRole();
+
+    // Mapeo de filtros a rutas por rol
+    const routeMap: { [key: string]: { [key: string]: string } } = {
+      admin: {
+        Usuarios: '/admin/users',
+        Universidades: '/admin/universities',
+        Proyectos: '/admin/proyectos',
+        Reportes: '/admin/reports',
+      },
+      student: {
+        Proyectos: '/student/projects',
+        Foros: '/student/forums',
+        Eventos: '/student/events',
+        Oportunidades: '/student/opportunities',
+        Cursos: '/student/courses',
+      },
+      university_admin: {
+        Estudiantes: '/admin-uni/students',
+        Proyectos: '/admin-uni/projects',
+        Eventos: '/admin-uni/events',
+      },
+      promoter: {
+        Oportunidades: '/promoter/opportunities',
+        Candidatos: '/promoter/candidates',
+      },
+    };
+
+    const route = routeMap[role]?.[filter];
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
 
   // Menú items del usuario

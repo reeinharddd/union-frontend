@@ -34,11 +34,12 @@
                 class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent text-sm transition-all duration-200"
               >
             </div>
-            
+
             <!-- Filtros compactos -->
             <div class="flex items-center space-x-1">
               @for (filter of getFilters(); track $index) {
-                <button 
+                <button
+                  (click)="onFilterClick(filter)"
                   class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-primary-200"
                 >
                   {{ filter }}
@@ -52,7 +53,7 @@
       <!-- Acciones de la derecha -->
       @if (currentRole() !== 'public') {
         <div class="flex items-center space-x-2">
-          
+
           <!-- Crear contenido -->
           <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200" title="Crear">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,7 +64,7 @@
           <!-- Notificaciones -->
           <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Notificaciones">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 17h5l-5 5v-3.09c0-.26.06-.52.17-.757L12 9.757l-3.17 3.486c.11.237.17.497.17.757V17H4l5-5V7a3 3 0 116 0v5z" />
             </svg>
             @if (getNotificationCount() > 0) {
@@ -76,7 +77,7 @@
           <!-- Mensajes -->
           <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Mensajes">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             @if (getMessageCount() > 0) {
@@ -119,7 +120,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Menu items -->
                 <div class="py-2">
                   @for (menuItem of getUserMenuItems(); track menuItem.label) {
