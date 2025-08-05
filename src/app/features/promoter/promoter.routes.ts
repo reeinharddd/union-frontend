@@ -1,16 +1,19 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
 import { roleGuard } from '@app/core/guards/user/role.guard';
+import { DynamicLayoutComponent } from '@app/layouts/dynamic-layout/dynamic-layout.component';
 
 export const PROMOTER_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('../../layouts/promoter-layout/promoter-layout.component').then(
-        m => m.PromoterLayoutComponent, // Ensure this matches the component name in the layout file
-      ),
-    canActivate: [authGuard, roleGuard([3])], // ✅ Estudiante = 2
+    component: DynamicLayoutComponent,
+    canActivate: [authGuard, roleGuard([3])], // ✅ Promoter = 3
     children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
       {
         path: 'dashboard',
         loadComponent: () =>

@@ -1,47 +1,45 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { LayoutConfigService } from '@app/core/services/layout/layout-config.service';
 import { DynamicHeaderComponent } from '@app/shared/components/dynamic-header/dynamic-header.component';
 import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/dynamic-sidebar.component';
+import { RightSidebarComponent } from '@app/shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-dynamic-layout',
   standalone: true,
-  imports: [CommonModule, DynamicSidebarComponent, DynamicHeaderComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    DynamicSidebarComponent,
+    DynamicHeaderComponent,
+    RightSidebarComponent,
+  ],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
       <!-- Left Sidebar -->
       @if (showLeftSidebar()) {
-        <app-dynamic-sidebar
-          position="left"
-          [navigationItems]="getLeftSidebarItems()"
-          class="w-64 flex-shrink-0">
-        </app-dynamic-sidebar>
+        <app-dynamic-sidebar class="w-64 flex-shrink-0"> </app-dynamic-sidebar>
       }
 
       <!-- Main Content Area -->
       <div class="flex flex-1 flex-col overflow-hidden">
         <!-- Dynamic Header -->
-            <!-- Header -->
-    <app-dynamic-header
-      class="bg-background border-b border-border">
-    </app-dynamic-header>
+        <!-- Header -->
+        <app-dynamic-header class="border-b border-border bg-background"> </app-dynamic-header>
 
         <!-- Main Content -->
         <main class="flex-1 overflow-auto bg-neutral-50 p-6">
           <div class="mx-auto max-w-7xl">
-            <ng-content></ng-content>
+            <router-outlet></router-outlet>
           </div>
         </main>
       </div>
 
       <!-- Right Sidebar -->
       @if (showRightSidebar()) {
-        <app-dynamic-sidebar
-          position="right"
-          [navigationItems]="getRightSidebarItems()"
-          class="w-64 flex-shrink-0 border-l border-border">
-        </app-dynamic-sidebar>
+        <app-right-sidebar class="w-80 flex-shrink-0 border-l border-border"> </app-right-sidebar>
       }
     </div>
   `,
@@ -50,27 +48,19 @@ import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/
 export class DynamicLayoutComponent {
   private readonly layoutConfigService = inject(LayoutConfigService);
 
-  private readonly layoutConfig = computed(() =>
-    this.layoutConfigService.getCurrentLayoutConfig()
-  );
-
-  getHeaderType(): 'admin' | 'student' | 'university' | 'public' {
-    return this.layoutConfig().headerType;
-  }
-
   showLeftSidebar(): boolean {
-    return this.layoutConfig().showLeftSidebar;
+    // Admin y Promoter: solo sidebar izquierdo
+    // Student y University Admin: ambos sidebars
+    const role = this.layoutConfigService.getCurrentUserRole();
+    return (
+      role === 'admin' || role === 'student' || role === 'promoter' || role === 'university_admin'
+    );
   }
 
   showRightSidebar(): boolean {
-    return this.layoutConfig().showRightSidebar;
-  }
-
-  getLeftSidebarItems() {
-    return this.layoutConfig().leftSidebarItems;
-  }
-
-  getRightSidebarItems() {
-    return this.layoutConfig().rightSidebarItems || [];
+    // Solo Student y University Admin tienen sidebar derecho
+    // Admin y Promoter: solo sidebar izquierdo
+    const role = this.layoutConfigService.getCurrentUserRole();
+    return role === 'student' || role === 'university_admin';
   }
 }

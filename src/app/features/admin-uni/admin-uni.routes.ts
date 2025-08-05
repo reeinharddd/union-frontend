@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
 import { roleGuard } from '@app/core/guards/user/role.guard';
+import { DynamicLayoutComponent } from '@app/layouts/dynamic-layout/dynamic-layout.component';
 
 export const ADMIN_UNI_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./layout/admin-uni-layout.component').then(m => m.AdminUniLayoutComponent),
+    component: DynamicLayoutComponent,
     canActivate: [authGuard, roleGuard([9])], // ✅ Admin Universitario = 9
     children: [
       {
