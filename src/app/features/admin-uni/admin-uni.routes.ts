@@ -21,11 +21,11 @@ export const ADMIN_UNI_ROUTES: Routes = [
             m => m.AdminUniDashboardComponent,
           ),
       },
-      // {
-      //   path: 'students',
-      //   loadComponent: () =>
-      //     import('./students/admin-uni-students.component').then(m => m.AdminUniStudentsComponent),
-      // },
+      {
+        path: 'students',
+        loadComponent: () =>
+          import('./students/admin-uni-students.component').then(m => m.AdminUniStudentsComponent),
+      },
       // {
       //   path: 'projects',
       //   loadComponent: () =>

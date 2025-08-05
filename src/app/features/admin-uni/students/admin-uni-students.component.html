@@ -1,0 +1,234 @@
+<div class="p-6 space-y-6">
+  <!-- Header con título y acciones -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Gestión de Estudiantes</h1>
+      <p class="text-gray-600">Administra los estudiantes de tu universidad</p>
+    </div>
+    <button 
+      (click)="toggleCreateForm()"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+      {{ showCreateForm() ? 'Cancelar' : 'Nuevo Estudiante' }}
+    </button>
+  </div>
+
+  <!-- Formulario de creación (mostrar/ocultar) -->
+  @if (showCreateForm()) {
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Registrar Nuevo Estudiante</h2>
+      
+      <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Campo Nombre -->
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">
+              Nombre Completo *
+            </label>
+            <input
+              id="nombre"
+              type="text"
+              formControlName="nombre"
+              placeholder="Ej: Juan Carlos Pérez"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              [class.border-red-500]="hasFieldError('nombre')"
+              [class.focus:ring-red-500]="hasFieldError('nombre')"
+            />
+            @if (hasFieldError('nombre')) {
+              <p class="mt-1 text-sm text-red-600">{{ getFieldError('nombre') }}</p>
+            }
+          </div>
+
+          <!-- Campo Correo -->
+          <div>
+            <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">
+              Correo Electrónico *
+            </label>
+            <input
+              id="correo"
+              type="email"
+              formControlName="correo"
+              placeholder="Ej: juan.perez@universidad.edu"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              [class.border-red-500]="hasFieldError('correo')"
+              [class.focus:ring-red-500]="hasFieldError('correo')"
+            />
+            @if (hasFieldError('correo')) {
+              <p class="mt-1 text-sm text-red-600">{{ getFieldError('correo') }}</p>
+            }
+          </div>
+        </div>
+
+        <!-- Campo Teléfono (ancho completo) -->
+        <div>
+          <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">
+            Teléfono (Opcional)
+          </label>
+          <input
+            id="telefono"
+            type="tel"
+            formControlName="telefono"
+            placeholder="Ej: 5551234567"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            [class.border-red-500]="hasFieldError('telefono')"
+            [class.focus:ring-red-500]="hasFieldError('telefono')"
+          />
+          @if (hasFieldError('telefono')) {
+            <p class="mt-1 text-sm text-red-600">{{ getFieldError('telefono') }}</p>
+          }
+        </div>
+
+        <!-- Botones del formulario -->
+        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          <button
+            type="button"
+            (click)="toggleCreateForm()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="isCreating() || createStudentForm.invalid"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            @if (isCreating()) {
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Registrando...
+            } @else {
+              Registrar Estudiante
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Barra de búsqueda y estadísticas -->
+  <div class="bg-white rounded-xl shadow-sm border p-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <!-- Estadísticas -->
+      <div class="flex items-center space-x-6">
+        <div>
+          <p class="text-sm text-gray-600">Total</p>
+          <p class="text-2xl font-bold text-gray-900">{{ studentsCount() }}</p>
+        </div>
+        <div class="h-8 w-px bg-gray-300"></div>
+        <div>
+          <p class="text-sm text-gray-600">Estado</p>
+          <p class="text-sm font-medium text-green-600">Conectado</p>
+        </div>
+      </div>
+
+      <!-- Búsqueda -->
+      <div class="relative">
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          (keyup.enter)="searchStudents()"
+          placeholder="Buscar estudiantes..."
+          class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+        />
+        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        @if (searchQuery()) {
+          <button
+            (click)="clearSearch()"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de estudiantes -->
+  <div class="bg-white rounded-xl shadow-sm border">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">Lista de Estudiantes</h2>
+    </div>
+
+    @if (loading()) {
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-gray-600">Cargando estudiantes...</span>
+        </div>
+      </div>
+    } @else if (students().length === 0) {
+      <div class="p-8 text-center">
+        <div class="text-4xl mb-4">👥</div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay estudiantes registrados</h3>
+        <p class="text-gray-600 mb-6">Comienza registrando tu primer estudiante</p>
+        <button
+          (click)="toggleCreateForm()"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Registrar Estudiante
+        </button>
+      </div>
+    } @else {
+      <div class="divide-y divide-gray-200">
+        @for (student of students(); track student.id) {
+          <div class="p-6 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <!-- Avatar con iniciales -->
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span class="text-blue-600 font-semibold text-sm">{{ getInitials(student.nombre || '') }}</span>
+                </div>
+                
+                <!-- Información del estudiante -->
+                <div>
+                  <h3 class="text-sm font-medium text-gray-900">{{ student.nombre }}</h3>
+                  <p class="text-sm text-gray-600">{{ student.correo }}</p>
+                  @if (student.telefono) {
+                    <p class="text-xs text-gray-500">📞 {{ student.telefono }}</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Estados y acciones -->
+              <div class="flex items-center space-x-3">
+                <!-- Estado de verificación -->
+                <span 
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [class]="student.is_verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                  {{ student.is_verified ? '✅ Verificado' : '⏳ Pendiente' }}
+                </span>
+
+                <!-- Estado activo -->
+                <span 
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [class]="student.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                  {{ student.is_active ? '🟢 Activo' : '🔴 Inactivo' }}
+                </span>
+
+                <!-- Menú de acciones -->
+                <div class="relative">
+                  <button class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
