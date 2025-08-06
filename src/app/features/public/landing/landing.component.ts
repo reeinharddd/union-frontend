@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="hero-gradient min-h-screen">
       <!-- Header -->
@@ -305,7 +307,71 @@ import { Router } from '@angular/router';
           </div>
         </div>
       </section>
+<section class="bg-surface py-16 border-t border-border">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 class="text-2xl font-bold text-text-base text-center mb-6">¿Representas una universidad o deseas ser promotor?</h2>
 
+          <form class="space-y-6" (ngSubmit)="submitForm()">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
+                placeholder="Nombre completo"
+                [(ngModel)]="formData.nombre"
+                name="nombre"
+                required
+              />
+              <input
+                class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
+                placeholder="Correo electrónico"
+                type="email"
+                [(ngModel)]="formData.correo"
+                name="correo"
+                required
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <select
+                class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
+                [(ngModel)]="formData.rol"
+                name="rol"
+                required
+              >
+                <option value="admin_uni">Administrador Universitario</option>
+                <option value="promotor">Promotor</option>
+              </select>
+
+              <input
+                *ngIf="formData.rol === 'admin_uni'"
+                class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
+                placeholder="Nombre de la Institución"
+                [(ngModel)]="formData.universidad"
+                name="universidad"
+              />
+
+              <input
+                *ngIf="formData.rol === 'promotor'"
+                class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
+                placeholder="Región donde opera"
+                [(ngModel)]="formData.region"
+                name="region"
+              />
+            </div>
+
+            <div class="text-center">
+              <button
+                type="submit"
+                class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-semibold text-white transition-all duration-300 hover:bg-primary-700"
+                [disabled]="loading"
+              >
+                {{ loading ? 'Enviando...' : 'Enviar solicitud' }}
+              </button>
+
+              <p *ngIf="success" class="mt-4 text-sm text-green-600">Tu solicitud ha sido enviada correctamente.</p>
+            </div>
+          </form>
+        </div>
+      </section>
       <!-- Footer -->
       <footer class="border-t border-neutral-800 bg-neutral-900">
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -365,6 +431,17 @@ import { Router } from '@angular/router';
 })
 export class LandingComponent {
   private readonly router = inject(Router);
+  private readonly http = inject(HttpClient);
+
+  loading = false;
+  success = false;
+  formData = {
+    nombre: '',
+    correo: '',
+    rol: 'admin_uni',
+    universidad: '',
+    region: '',
+  };
 
   navigateToLogin(): void {
     this.router.navigate(['/login']);
@@ -377,6 +454,20 @@ export class LandingComponent {
   scrollToFeatures(): void {
     document.getElementById('features')?.scrollIntoView({
       behavior: 'smooth',
+    });
+  }
+
+  submitForm() {
+    this.loading = true;
+    this.http.post('/api/contact', this.formData).subscribe({
+      next: () => {
+        this.success = true;
+        this.loading = false;
+      },
+      error: () => {
+        alert('Error al enviar');
+        this.loading = false;
+      }
     });
   }
 }
