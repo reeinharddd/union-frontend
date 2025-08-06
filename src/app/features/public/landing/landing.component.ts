@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LandingService, type ContactFormData } from '../../../core/services/landing/landing.service';
 
 @Component({
   selector: 'app-landing',
@@ -431,11 +431,11 @@ import { Router } from '@angular/router';
 })
 export class LandingComponent {
   private readonly router = inject(Router);
-  private readonly http = inject(HttpClient);
+  private readonly landingService = inject(LandingService);
 
   loading = false;
   success = false;
-  formData = {
+  formData: ContactFormData = {
     nombre: '',
     correo: '',
     rol: 'admin_uni',
@@ -457,15 +457,31 @@ export class LandingComponent {
     });
   }
 
-  submitForm() {
+  submitForm(): void {
+    if (!this.formData.nombre || !this.formData.correo || !this.formData.rol) {
+      alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
+
     this.loading = true;
-    this.http.post('/api/contact', this.formData).subscribe({
+    this.success = false;
+
+    this.landingService.sendContactForm(this.formData).subscribe({
       next: () => {
         this.success = true;
         this.loading = false;
+        // Reset form after successful submission
+        this.formData = {
+          nombre: '',
+          correo: '',
+          rol: 'admin_uni',
+          universidad: '',
+          region: '',
+        };
       },
-      error: () => {
-        alert('Error al enviar');
+      error: (error: any) => {
+        console.error('Error al enviar el formulario:', error);
+        alert('Error al enviar la solicitud. Por favor intenta nuevamente.');
         this.loading = false;
       }
     });
