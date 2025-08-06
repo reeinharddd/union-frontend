@@ -134,4 +134,8 @@ export const API_ENDPOINTS = {
     BASE: '/reportes',
     BY_ID: (id: number) => `/reportes/${id}`,
   },
+  PARTICIPACIONES: {
+    BASE: '/participaciones-proyecto',
+    BY_ID: (id: number) => `/participaciones-proyecto/${id}`,
+  },
 } as const;

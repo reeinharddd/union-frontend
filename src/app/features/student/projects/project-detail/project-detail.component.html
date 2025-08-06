@@ -32,7 +32,6 @@
         <span class="text-gray-700 mt-1 text-[10px]">Nombre Univ</span>
       </div>
     </div>
-
     <!-- Línea negra debajo del encabezado -->
     <div class="mt-4 border-t border-black"></div>
   </div>
@@ -45,13 +44,12 @@
     </p>
   </div>
 
-  <!-- Sección de colaboradore-->
+  <!-- Sección de colaboradores -->
   <div class="border-gray-200 rounded-lg border bg-white p-4 shadow-sm">
     <div class="mb-3 flex items-center justify-between">
       <h3 class="text-gray-700 font-medium">Colaboradores</h3>
       <span class="text-gray-500 text-sm">{{ project.colaboradores?.length || 0 }} miembros</span>
     </div>
-
     <div *ngIf="project.colaboradores?.length > 0" class="grid grid-cols-2 gap-4 sm:grid-cols-3">
       <div
         *ngFor="let colab of project.colaboradores"
@@ -68,24 +66,21 @@
         </div>
       </div>
     </div>
-
     <div
       *ngIf="!project.colaboradores || project.colaboradores.length === 0"
       class="text-gray-500 py-4 text-center"
     >
       No hay colaboradores aún
     </div>
-  </div>
-
-  <!-- Botones de acción (sin cambios) -->
+  <!-- Botones de acción -->
   <div *ngIf="isProjectOwner" class="flex flex-col gap-4 sm:flex-row">
+    <!-- Botón para abrir el modal -->
     <button
-      (click)="openCollaborationModal()"
+      (click)="openInviteModal()"
       class="flex-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-md transition hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       Invitar Colaboradores
     </button>
-
     <a
       [routerLink]="'/student/projects/' + project.id + '/colab'"
       class="border-blue-600 text-blue-600 hover:bg-blue-50 flex-1 rounded-lg border px-4 py-3 text-center font-medium shadow-sm transition"
@@ -94,8 +89,41 @@
     </a>
   </div>
 </div>
+  </div>
+    <div *ngIf="inviteGlobalError" class="text-red-600 font-bold text-center mb-2">
+      {{inviteGlobalError}}
+    </div>
+    <div *ngIf="inviteGlobalSuccess" class="text-green-600 font-bold text-center mb-2">
+      {{inviteGlobalSuccess}}
+    </div>
+<!-- MODAL de invitación (fuera del layout principal, mejor UX) -->
+<div *ngIf="showInviteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg w-full max-w-sm shadow-lg">
+    <h3 class="text-lg font-bold mb-3">Invitar por correo</h3>
+    <form (ngSubmit)="sendInvitation()" class="space-y-4">
+      <input
+        type="email"
+        [(ngModel)]="inviteEmail"
+        name="inviteEmail"
+        required
+        placeholder="Correo electrónico"
+        class="w-full border p-2 rounded"
+      />
+      <div class="flex gap-2">
+        <button type="submit" [disabled]="inviteLoading" class="flex-1 bg-blue-600 text-white py-2 rounded">
+          {{inviteLoading ? 'Enviando...' : 'Enviar invitación'}}
+        </button>
+        <button type="button" (click)="closeInviteModal()" class="flex-1 bg-gray-200 py-2 rounded">
+          Cancelar
+        </button>
+      </div>
+    </form>
+    <div *ngIf="inviteError" class="text-red-500 mt-2">{{inviteError}}</div>
+    <div *ngIf="inviteSuccess" class="text-green-600 mt-2">{{inviteSuccess}}</div>
+  </div>
+</div>
 
-<!-- Mensaje para proyectos privados (sin cambios) -->
+<!-- Mensaje para proyectos privados -->
 <div
   *ngIf="project && !project.vista_publica && !isProjectOwner && !loading"
   class="flex min-h-[50vh] items-center justify-center"

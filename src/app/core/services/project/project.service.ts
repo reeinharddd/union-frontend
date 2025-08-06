@@ -1,5 +1,6 @@
 // Fabian Mendoza
 import { computed, Injectable, signal } from '@angular/core';
+import { Participation } from '@app/core/models/project/participation.interface';
 import {
   CreateProjectRequest,
   Project,
@@ -274,4 +275,46 @@ export class ProjectService extends BaseService {
       `projects.updateBlock.${id}`,
     );
   }
+
+  //Participaciones
+  getParticipations(): Observable<Participation[]> {
+  return this.handleRequest(
+    this.apiClient.get<Participation[]>(API_ENDPOINTS.PARTICIPACIONES.BASE),
+    'projects.getParticipations',
+    { logRequest: true }
+  );
+  }
+  getParticipationById(id: number): Observable<Participation> {
+    return this.handleRequest(
+      this.apiClient.get<Participation>(API_ENDPOINTS.PARTICIPACIONES.BY_ID(id)),
+      `projects.getParticipationById.${id}`,
+      { logRequest: true }
+    );
+  } 
+  createParticipation(participation: Participation): Observable<Participation> {
+    return this.handleRequest(
+      this.apiClient.post<Participation>(API_ENDPOINTS.PARTICIPACIONES.BASE, participation),
+      'projects.createParticipation',
+      { logRequest: true }
+    );
+  }
+
+  /**
+   * Envía una invitación al proyecto por email
+   */
+  inviteUserToProject(email: string, projectId: number, rolId: number, invitadoPor: number) {
+  return this.handleRequest(
+    this.apiClient.post<any>(
+      '/participaciones-proyecto',
+      {
+        email,
+        proyecto_id: projectId,
+        rol_id: rolId,
+        invitado_por: invitadoPor
+      }
+    ),
+    'projects.inviteUserToProject'
+  );
+}
+
 }
