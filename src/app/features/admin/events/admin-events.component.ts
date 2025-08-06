@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Event } from '@app/core/models/event/event.interface';
 import { EventService } from '@app/core/services/event/event.service';
 
 interface AdminEvent {
@@ -661,24 +662,24 @@ export class AdminEventsComponent implements OnInit {
 
   private loadEvents(): void {
     this.loading.set(true);
-    this.eventService.getEvents().subscribe({
-      next: events => {
-        const processedEvents: AdminEvent[] = events.map((event: any) => ({
+    this.eventService.getAll().subscribe({
+      next: (events: Event[]) => {
+        const processedEvents: AdminEvent[] = events.map((event: Event) => ({
           id: event.id,
           titulo: event.titulo,
           descripcion: event.descripcion,
-          fechaInicio: event.fechaInicio,
-          fechaFin: event.fechaFin,
-          modalidad: event.modalidad || 'virtual',
+          fechaInicio: event.fecha_inicio,
+          fechaFin: event.fecha_fin,
+          modalidad: event.es_virtual ? 'virtual' : 'presencial',
           ubicacion: event.ubicacion,
-          enlace: event.enlace,
-          capacidad: event.capacidad,
-          asistentesRegistrados: event.asistentesRegistrados || 0,
-          universidad: event.universidad || { id: 0, nombre: 'N/A' },
-          organizador: event.organizador || { id: 0, nombre: 'N/A' },
-          estado: event.estado || 'programado',
-          fechaCreacion: event.fechaCreacion || new Date().toISOString(),
-          imagen: event.imagen,
+          enlace: event.enlace_acceso,
+          capacidad: event.capacidad_maxima,
+          asistentesRegistrados: event.asistentes_registrados || 0,
+          universidad: { id: event.universidad_id, nombre: event.universidad_nombre },
+          organizador: { id: event.creador_id, nombre: event.creador_nombre },
+          estado: 'programado',
+          fechaCreacion: event.creado_en,
+          imagen: undefined,
         }));
 
         this.events.set(processedEvents);

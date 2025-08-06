@@ -51,17 +51,17 @@ export class AdminOpportunitiesComponent implements OnInit {
   readonly loading = signal(false);
   readonly opportunities = signal<AdminOpportunity[]>([]);
   readonly filteredOpportunities = signal<AdminOpportunity[]>([]);
-  
+
   // Filters
-  readonly searchTerm = signal('');
-  readonly selectedType = signal('');
-  readonly selectedStatus = signal('');
-  readonly selectedInternational = signal('');
+  searchTerm = signal('');
+  selectedType = signal('');
+  selectedStatus = signal('');
+  selectedInternational = signal('');
 
   // Pagination
-  readonly currentPage = signal(1);
+  currentPage = signal(1);
   readonly itemsPerPage = signal(10);
-  readonly totalPages = computed(() => 
+  readonly totalPages = computed(() =>
     Math.ceil(this.filteredOpportunities().length / this.itemsPerPage())
   );
 
@@ -80,13 +80,13 @@ export class AdminOpportunitiesComponent implements OnInit {
     const averageApplications = totalOpportunities > 0 ? totalApplications / totalOpportunities : 0;
     const internationalOpportunities = opps.filter(o => o.isInternational).length;
     const totalBudget = opps.reduce((sum, o) => sum + (o.budget || 0), 0);
-    
+
     // Find most popular type
     const typeCounts = opps.reduce((acc, o) => {
       acc[o.type] = (acc[o.type] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    const mostPopularType = Object.keys(typeCounts).reduce((a, b) => 
+    const mostPopularType = Object.keys(typeCounts).reduce((a, b) =>
       typeCounts[a] > typeCounts[b] ? a : b, '');
 
     return {
@@ -107,7 +107,7 @@ export class AdminOpportunitiesComponent implements OnInit {
 
   private loadOpportunities(): void {
     this.loading.set(true);
-    
+
     // Mock data - replace with actual service call
     setTimeout(() => {
       const mockOpportunities: AdminOpportunity[] = [
@@ -163,7 +163,7 @@ export class AdminOpportunitiesComponent implements OnInit {
     // Filter by search term
     if (this.searchTerm()) {
       const term = this.searchTerm().toLowerCase();
-      filtered = filtered.filter(opp => 
+      filtered = filtered.filter(opp =>
         opp.title.toLowerCase().includes(term) ||
         opp.description.toLowerCase().includes(term)
       );

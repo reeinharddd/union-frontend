@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { University as UniversityModel } from '@app/core/models/university/university.interface';
 import { UniversityService } from '@app/core/services/university/university.service';
 
 interface University {
@@ -571,20 +572,20 @@ export class AdminUniversitiesComponent implements OnInit {
 
   private loadUniversities(): void {
     this.loading.set(true);
-    this.universityService.getUniversities().subscribe({
-      next: universities => {
-        const processedUniversities: University[] = universities.map((uni: any) => ({
+    this.universityService.getAll().subscribe({
+      next: (universities: UniversityModel[]) => {
+        const processedUniversities: University[] = universities.map((uni: UniversityModel) => ({
           id: uni.id,
           nombre: uni.nombre,
-          dominio: uni.dominio,
-          pais: uni.pais || 'México',
-          ciudad: uni.ciudad,
-          descripcion: uni.descripcion,
-          logo: uni.logo,
-          activa: uni.activa ?? true,
-          fechaCreacion: uni.fechaCreacion || new Date().toISOString(),
-          totalUsuarios: uni.totalUsuarios || 0,
-          totalEventos: uni.totalEventos || 0,
+          dominio: uni.dominio_correo,
+          pais: 'México',
+          ciudad: undefined,
+          descripcion: undefined,
+          logo: uni.logo_url,
+          activa: true,
+          fechaCreacion: uni.creado_en,
+          totalUsuarios: uni.estudiantes_count || 0,
+          totalEventos: uni.proyectos_count || 0,
         }));
 
         this.universities.set(processedUniversities);

@@ -391,8 +391,8 @@ export class AdminUsersComponent implements OnInit {
 
   private loadUsers(): void {
     this.loading.set(true);
-    this.userService.getUsers().subscribe({
-      next: (users) => {
+    this.userService.getAll().subscribe({
+      next: (users: any) => {
         const processedUsers: AdminUser[] = users.map((user: any) => ({
           id: user.id,
           nombre: user.nombre,
@@ -401,7 +401,7 @@ export class AdminUsersComponent implements OnInit {
           universidad: user.universidad,
           fechaCreacion: user.fechaCreacion || new Date().toISOString(),
           ultimoAcceso: user.ultimoAcceso,
-          activo: user.activo ?? true
+          activo: user.activo ?? true,
         }));
 
         this.users.set(processedUsers);
@@ -409,10 +409,10 @@ export class AdminUsersComponent implements OnInit {
         this.filterUsers();
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading users:', error);
         this.loading.set(false);
-      }
+      },
     });
   }
 

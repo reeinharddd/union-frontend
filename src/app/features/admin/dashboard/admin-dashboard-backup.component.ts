@@ -63,45 +63,41 @@ interface DashboardEvent {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="min-h-screen bg-neutral-50 p-4">
+    <div class="min-h-screen bg-gray-50 p-4">
       <div class="mx-auto max-w-7xl space-y-6">
         <!-- Page Header -->
-        <div
-          class="rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 p-8 text-white shadow-hover"
-        >
+        <div class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
           <div class="flex items-center justify-between">
             <div>
               <h1 class="mb-2 text-3xl font-bold">Panel de Administración</h1>
-              <p class="text-primary-100">Bienvenido al centro de control de UniON</p>
+              <p class="text-blue-100">Bienvenido al centro de control de UniON</p>
             </div>
             <div class="text-right">
               <div class="text-2xl font-bold">{{ getCurrentTime() }}</div>
-              <div class="text-primary-100">{{ getCurrentDate() }}</div>
+              <div class="text-blue-100">{{ getCurrentDate() }}</div>
             </div>
           </div>
         </div>
 
         @if (isLoading()) {
           <div class="flex items-center justify-center py-12">
-            <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-primary-500"></div>
-            <span class="ml-3 text-neutral-600">Cargando estadísticas...</span>
+            <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+            <span class="ml-3 text-gray-600">Cargando estadísticas...</span>
           </div>
         } @else {
           <!-- Main Stats Grid -->
           <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             <!-- Total Users -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-primary-100 p-3">
-                  <i class="material-icons text-2xl text-primary-600">people</i>
+                <div class="rounded-lg bg-blue-100 p-3">
+                  <i class="material-icons text-2xl text-blue-600">people</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Total Usuarios</p>
-                  <p class="text-2xl font-bold text-text-base">{{ stats().totalUsers | number }}</p>
+                  <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalUsers | number }}</p>
                   <div class="mt-2">
-                    <span
-                      class="flex items-center rounded-full bg-success-100 px-2 py-1 text-xs text-success-800"
-                    >
+                    <span class="flex items-center rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
                       <i class="material-icons mr-1 text-xs">trending_up</i>
                       +{{ stats().recentUsers }} nuevos
                     </span>
@@ -111,18 +107,16 @@ interface DashboardEvent {
             </div>
 
             <!-- Universities -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-secondary-100 p-3">
-                  <i class="material-icons text-2xl text-secondary-600">school</i>
+                <div class="rounded-lg bg-green-100 p-3">
+                  <i class="material-icons text-2xl text-green-600">school</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Universidades</p>
-                  <p class="text-2xl font-bold text-text-base">
-                    {{ stats().totalUniversities | number }}
-                  </p>
+                  <p class="text-sm font-medium text-gray-600">Universidades</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalUniversities | number }}</p>
                   <div class="mt-2">
-                    <span class="rounded-full bg-success-100 px-2 py-1 text-xs text-success-800">
+                    <span class="rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
                       Instituciones activas
                     </span>
                   </div>
@@ -131,21 +125,19 @@ interface DashboardEvent {
             </div>
 
             <!-- Projects -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-accent-100 p-3">
-                  <i class="material-icons text-2xl text-accent-600">work</i>
+                <div class="rounded-lg bg-indigo-100 p-3">
+                  <i class="material-icons text-2xl text-indigo-600">work</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Proyectos</p>
-                  <p class="text-2xl font-bold text-text-base">
-                    {{ stats().totalProjects | number }}
-                  </p>
+                  <p class="text-sm font-medium text-gray-600">Proyectos</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalProjects | number }}</p>
                   <div class="mt-2 flex space-x-2">
-                    <span class="rounded-full bg-warning-100 px-2 py-1 text-xs text-warning-800">
+                    <span class="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
                       {{ stats().pendingProjects }} pendientes
                     </span>
-                    <span class="rounded-full bg-success-100 px-2 py-1 text-xs text-success-800">
+                    <span class="rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
                       {{ stats().verifiedProjects }} verificados
                     </span>
                   </div>
@@ -154,14 +146,14 @@ interface DashboardEvent {
             </div>
 
             <!-- Events -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
                 <div class="rounded-lg bg-purple-100 p-3">
                   <i class="material-icons text-2xl text-purple-600">event</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Eventos</p>
-                  <p class="text-2xl font-bold text-text-base">{{ stats().totalEvents | number }}</p>
+                  <p class="text-sm font-medium text-gray-600">Eventos</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalEvents | number }}</p>
                   <div class="mt-2 flex space-x-2">
                     <span class="rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-800">
                       {{ stats().activeEvents }} activos
@@ -175,59 +167,53 @@ interface DashboardEvent {
           <!-- Secondary Stats Grid -->
           <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             <!-- Opportunities -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-info-100 p-3">
-                  <i class="material-icons text-2xl text-info-600">business_center</i>
+                <div class="rounded-lg bg-teal-100 p-3">
+                  <i class="material-icons text-2xl text-teal-600">business_center</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Oportunidades</p>
-                  <p class="text-2xl font-bold text-text-base">
-                    {{ stats().totalOpportunities | number }}
-                  </p>
+                  <p class="text-sm font-medium text-gray-600">Oportunidades</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalOpportunities | number }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Forums -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-accent-100 p-3">
-                  <i class="material-icons text-2xl text-accent-600">forum</i>
+                <div class="rounded-lg bg-pink-100 p-3">
+                  <i class="material-icons text-2xl text-pink-600">forum</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Foros</p>
-                  <p class="text-2xl font-bold text-text-base">{{ stats().totalForums | number }}</p>
+                  <p class="text-sm font-medium text-gray-600">Foros</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalForums | number }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Virtual Events -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-primary-100 p-3">
-                  <i class="material-icons text-2xl text-primary-600">videocam</i>
+                <div class="rounded-lg bg-blue-100 p-3">
+                  <i class="material-icons text-2xl text-blue-600">videocam</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Eventos Virtuales</p>
-                  <p class="text-2xl font-bold text-text-base">
-                    {{ stats().virtualEvents | number }}
-                  </p>
+                  <p class="text-sm font-medium text-gray-600">Eventos Virtuales</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().virtualEvents | number }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Presential Events -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft transition-all hover:shadow-hover">
+            <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-secondary-100 p-3">
-                  <i class="material-icons text-2xl text-secondary-600">place</i>
+                <div class="rounded-lg bg-amber-100 p-3">
+                  <i class="material-icons text-2xl text-amber-600">place</i>
                 </div>
                 <div class="ml-4 flex-1">
-                  <p class="text-sm font-medium text-neutral-600">Eventos Presenciales</p>
-                  <p class="text-2xl font-bold text-text-base">
-                    {{ stats().presentialEvents | number }}
-                  </p>
+                  <p class="text-sm font-medium text-gray-600">Eventos Presenciales</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ stats().presentialEvents | number }}</p>
                 </div>
               </div>
             </div>
@@ -236,46 +222,44 @@ interface DashboardEvent {
           <!-- Charts and Activity Section -->
           <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <!-- User Distribution -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft">
-              <h3 class="mb-6 flex items-center text-lg font-semibold text-text-base">
-                <i class="material-icons mr-2 text-primary-600">pie_chart</i>
+            <div class="rounded-xl bg-white p-6 shadow-lg">
+              <h3 class="mb-6 flex items-center text-lg font-semibold text-gray-900">
+                <i class="material-icons mr-2 text-blue-600">pie_chart</i>
                 Distribución de Usuarios
               </h3>
               <div class="space-y-4">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <div class="mr-3 h-4 w-4 rounded-full bg-primary-500"></div>
-                    <span class="text-sm font-medium text-neutral-600">Estudiantes</span>
+                    <div class="mr-3 h-4 w-4 rounded-full bg-blue-500"></div>
+                    <span class="text-sm font-medium text-gray-600">Estudiantes</span>
                   </div>
                   <div class="text-right">
-                    <span class="text-lg font-bold text-text-base">{{ stats().studentsCount }}</span>
-                    <div class="text-xs text-neutral-500">
+                    <span class="text-lg font-bold text-gray-900">{{ stats().studentsCount }}</span>
+                    <div class="text-xs text-gray-500">
                       {{ getPercentage(stats().studentsCount, stats().totalUsers) }}%
                     </div>
                   </div>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <div class="mr-3 h-4 w-4 rounded-full bg-secondary-500"></div>
-                    <span class="text-sm font-medium text-neutral-600">Graduados</span>
+                    <div class="mr-3 h-4 w-4 rounded-full bg-green-500"></div>
+                    <span class="text-sm font-medium text-gray-600">Graduados</span>
                   </div>
                   <div class="text-right">
-                    <span class="text-lg font-bold text-text-base">{{
-                      stats().graduatesCount
-                    }}</span>
-                    <div class="text-xs text-neutral-500">
+                    <span class="text-lg font-bold text-gray-900">{{ stats().graduatesCount }}</span>
+                    <div class="text-xs text-gray-500">
                       {{ getPercentage(stats().graduatesCount, stats().totalUsers) }}%
                     </div>
                   </div>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <div class="mr-3 h-4 w-4 rounded-full bg-accent-500"></div>
-                    <span class="text-sm font-medium text-neutral-600">Administradores</span>
+                    <div class="mr-3 h-4 w-4 rounded-full bg-purple-500"></div>
+                    <span class="text-sm font-medium text-gray-600">Administradores</span>
                   </div>
                   <div class="text-right">
-                    <span class="text-lg font-bold text-text-base">{{ stats().adminsCount }}</span>
-                    <div class="text-xs text-neutral-500">
+                    <span class="text-lg font-bold text-gray-900">{{ stats().adminsCount }}</span>
+                    <div class="text-xs text-gray-500">
                       {{ getPercentage(stats().adminsCount, stats().totalUsers) }}%
                     </div>
                   </div>
@@ -284,52 +268,49 @@ interface DashboardEvent {
             </div>
 
             <!-- Recent Activity -->
-            <div class="rounded-xl bg-surface p-6 shadow-soft lg:col-span-2">
-              <h3 class="mb-6 flex items-center text-lg font-semibold text-text-base">
-                <i class="material-icons mr-2 text-success-600">timeline</i>
+            <div class="rounded-xl bg-white p-6 shadow-lg lg:col-span-2">
+              <h3 class="mb-6 flex items-center text-lg font-semibold text-gray-900">
+                <i class="material-icons mr-2 text-green-600">timeline</i>
                 Actividad Reciente
               </h3>
               <div class="space-y-3">
                 @if (recentActivity().length === 0) {
-                  <div class="flex items-center justify-center py-8 text-neutral-500">
+                  <div class="flex items-center justify-center py-8 text-gray-500">
                     <i class="material-icons mr-2">info</i>
                     No hay actividad reciente disponible
                   </div>
                 } @else {
                   @for (activity of recentActivity(); track activity.id) {
-                    <div
-                      class="flex items-start space-x-3 rounded-lg p-3 transition-colors hover:bg-neutral-50"
-                    >
+                    <div class="flex items-start space-x-3 rounded-lg p-3 transition-colors hover:bg-gray-50">
                       <div
                         class="rounded-lg p-2"
                         [ngClass]="{
-                          'bg-primary-100': activity.type === 'user',
-                          'bg-secondary-100': activity.type === 'university',
+                          'bg-blue-100': activity.type === 'user',
+                          'bg-green-100': activity.type === 'university',
                           'bg-purple-100': activity.type === 'event',
-                          'bg-accent-100': activity.type === 'project',
-                          'bg-info-100': activity.type === 'forum',
-                          'bg-success-100': activity.type === 'opportunity',
-                          'bg-warning-100': activity.type === 'system',
+                          'bg-indigo-100': activity.type === 'project',
+                          'bg-pink-100': activity.type === 'forum',
+                          'bg-teal-100': activity.type === 'opportunity',
+                          'bg-orange-100': activity.type === 'system'
                         }"
                       >
                         <i
                           class="material-icons text-sm"
                           [ngClass]="{
-                            'text-primary-600': activity.type === 'user',
-                            'text-secondary-600': activity.type === 'university',
+                            'text-blue-600': activity.type === 'user',
+                            'text-green-600': activity.type === 'university',
                             'text-purple-600': activity.type === 'event',
-                            'text-accent-600': activity.type === 'project',
-                            'text-info-600': activity.type === 'forum',
-                            'text-success-600': activity.type === 'opportunity',
-                            'text-warning-600': activity.type === 'system',
+                            'text-indigo-600': activity.type === 'project',
+                            'text-pink-600': activity.type === 'forum',
+                            'text-teal-600': activity.type === 'opportunity',
+                            'text-orange-600': activity.type === 'system'
                           }"
-                          >{{ activity.icon }}</i
-                        >
+                        >{{ activity.icon }}</i>
                       </div>
                       <div class="min-w-0 flex-1">
-                        <p class="text-sm font-medium text-text-base">{{ activity.title }}</p>
-                        <p class="text-sm text-neutral-600">{{ activity.description }}</p>
-                        <p class="mt-1 text-xs text-neutral-500">{{ activity.time }}</p>
+                        <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
+                        <p class="text-sm text-gray-600">{{ activity.description }}</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ activity.time }}</p>
                       </div>
                     </div>
                   }
@@ -339,82 +320,70 @@ interface DashboardEvent {
           </div>
 
           <!-- Quick Actions -->
-          <div class="rounded-xl bg-surface p-6 shadow-soft">
-            <h3 class="mb-6 flex items-center text-lg font-semibold text-text-base">
-              <i class="material-icons mr-2 text-accent-600">flash_on</i>
+          <div class="rounded-xl bg-white p-6 shadow-lg">
+            <h3 class="mb-6 flex items-center text-lg font-semibold text-gray-900">
+              <i class="material-icons mr-2 text-orange-600">flash_on</i>
               Acciones Rápidas
             </h3>
             <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               <button
                 (click)="quickAction('users')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-primary-300 hover:bg-primary-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-primary-100 p-3 transition-colors group-hover:bg-primary-200"
-                >
-                  <i class="material-icons text-primary-600">people</i>
+                <div class="mb-3 rounded-lg bg-blue-100 p-3 transition-colors group-hover:bg-blue-200">
+                  <i class="material-icons text-blue-600">people</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Usuarios</span>
+                <span class="text-center text-sm font-medium text-gray-900">Usuarios</span>
               </button>
 
               <button
                 (click)="quickAction('universities')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-secondary-300 hover:bg-secondary-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-green-300 hover:bg-green-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-secondary-100 p-3 transition-colors group-hover:bg-secondary-200"
-                >
-                  <i class="material-icons text-secondary-600">school</i>
+                <div class="mb-3 rounded-lg bg-green-100 p-3 transition-colors group-hover:bg-green-200">
+                  <i class="material-icons text-green-600">school</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Universidades</span>
+                <span class="text-center text-sm font-medium text-gray-900">Universidades</span>
               </button>
 
               <button
                 (click)="quickAction('events')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-purple-300 hover:bg-purple-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-purple-300 hover:bg-purple-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-purple-100 p-3 transition-colors group-hover:bg-purple-200"
-                >
+                <div class="mb-3 rounded-lg bg-purple-100 p-3 transition-colors group-hover:bg-purple-200">
                   <i class="material-icons text-purple-600">event</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Eventos</span>
+                <span class="text-center text-sm font-medium text-gray-900">Eventos</span>
               </button>
 
               <button
                 (click)="quickAction('create-project')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-accent-300 hover:bg-accent-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-indigo-300 hover:bg-indigo-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-accent-100 p-3 transition-colors group-hover:bg-accent-200"
-                >
-                  <i class="material-icons text-accent-600">work</i>
+                <div class="mb-3 rounded-lg bg-indigo-100 p-3 transition-colors group-hover:bg-indigo-200">
+                  <i class="material-icons text-indigo-600">work</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Proyectos</span>
+                <span class="text-center text-sm font-medium text-gray-900">Proyectos</span>
               </button>
 
               <button
                 (click)="quickAction('create-forum')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-info-300 hover:bg-info-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-pink-300 hover:bg-pink-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-info-100 p-3 transition-colors group-hover:bg-info-200"
-                >
-                  <i class="material-icons text-info-600">forum</i>
+                <div class="mb-3 rounded-lg bg-pink-100 p-3 transition-colors group-hover:bg-pink-200">
+                  <i class="material-icons text-pink-600">forum</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Foros</span>
+                <span class="text-center text-sm font-medium text-gray-900">Foros</span>
               </button>
 
               <button
                 (click)="quickAction('manage-opportunities')"
-                class="group flex flex-col items-center rounded-lg border border-border p-4 transition-all hover:border-success-300 hover:bg-success-50"
+                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-teal-300 hover:bg-teal-50"
               >
-                <div
-                  class="mb-3 rounded-lg bg-success-100 p-3 transition-colors group-hover:bg-success-200"
-                >
-                  <i class="material-icons text-success-600">business_center</i>
+                <div class="mb-3 rounded-lg bg-teal-100 p-3 transition-colors group-hover:bg-teal-200">
+                  <i class="material-icons text-teal-600">business_center</i>
                 </div>
-                <span class="text-center text-sm font-medium text-text-base">Oportunidades</span>
+                <span class="text-center text-sm font-medium text-gray-900">Oportunidades</span>
               </button>
             </div>
           </div>
@@ -528,7 +497,7 @@ export class AdminDashboardComponent implements OnInit {
         this.stats.set(newStats);
 
         // Generar actividad reciente
-        this.generateRecentActivity(usersArray, universitiesArray, eventsArray, projectsArray);
+        this.generateRecentActivity(usersArray, universitiesArray, eventsArray, projectsArray, forumsArray, opportunitiesArray);
 
         this.isLoading.set(false);
       },
@@ -562,10 +531,10 @@ export class AdminDashboardComponent implements OnInit {
     graduates: number;
     admins: number;
   } {
-    return (users as any[]).reduce(
+    return (users as DashboardUser[]).reduce(
       (acc, user) => {
-        if (user && user.rol_id !== undefined && user.rol_id !== null) {
-          switch (user.rol_id) {
+        if (user && user.role && user.role.id !== undefined && user.role.id !== null) {
+          switch (user.role.id) {
             case 2:
               acc.students++;
               break;
@@ -579,7 +548,7 @@ export class AdminDashboardComponent implements OnInit {
         }
         return acc;
       },
-      { students: 0, graduates: 0, admins: 0 },
+      { students: 0, graduates: 0, admins: 0 }
     );
   }
 
@@ -596,7 +565,7 @@ export class AdminDashboardComponent implements OnInit {
 
   private getRecentUsers(users: unknown[]): unknown[] {
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-
+    
     return (users as DashboardUser[]).filter((user: DashboardUser) => {
       if (!user.fechaCreacion) return false;
       const creationDate = new Date(user.fechaCreacion);
@@ -605,15 +574,14 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private getVirtualEvents(events: unknown[]): unknown[] {
-    return (events as DashboardEvent[]).filter(
-      (event: DashboardEvent) => event.modalidad === 'virtual' || event.modalidad === 'Virtual',
+    return (events as DashboardEvent[]).filter((event: DashboardEvent) => 
+      event.modalidad === 'virtual' || event.modalidad === 'Virtual'
     );
   }
 
   private getPresentialEvents(events: unknown[]): unknown[] {
-    return (events as DashboardEvent[]).filter(
-      (event: DashboardEvent) =>
-        event.modalidad === 'presencial' || event.modalidad === 'Presencial',
+    return (events as DashboardEvent[]).filter((event: DashboardEvent) => 
+      event.modalidad === 'presencial' || event.modalidad === 'Presencial'
     );
   }
 
@@ -621,7 +589,6 @@ export class AdminDashboardComponent implements OnInit {
     users: unknown[],
     _universities: unknown[],
     events: unknown[],
-    projects: unknown[],
   ): void {
     const activities: RecentActivity[] = [];
 
@@ -655,12 +622,7 @@ export class AdminDashboardComponent implements OnInit {
       .slice(0, 2);
 
     recentProjects.forEach((project: unknown) => {
-      const proj = project as {
-        nombre?: string;
-        titulo?: string;
-        created_at?: string;
-        fechaCreacion?: string;
-      };
+      const proj = project as { nombre?: string; titulo?: string; created_at?: string; fechaCreacion?: string };
       activities.push({
         id: activities.length + 1,
         type: 'project',
@@ -796,18 +758,17 @@ export class AdminDashboardComponent implements OnInit {
   private getPendingProjects(projects: unknown[]): unknown[] {
     return projects.filter((project: unknown) => {
       const proj = project as { estado_verificacion?: string };
-      return (
-        proj.estado_verificacion === 'pendiente' ||
-        proj.estado_verificacion === 'revision' ||
-        !proj.estado_verificacion
-      );
+      return proj.estado_verificacion === 'pendiente' || 
+             proj.estado_verificacion === 'revision' ||
+             !proj.estado_verificacion;
     });
   }
 
   private getVerifiedProjects(projects: unknown[]): unknown[] {
     return projects.filter((project: unknown) => {
       const proj = project as { estado_verificacion?: string };
-      return proj.estado_verificacion === 'aprobado' || proj.estado_verificacion === 'verificado';
+      return proj.estado_verificacion === 'aprobado' || 
+             proj.estado_verificacion === 'verificado';
     });
   }
 }

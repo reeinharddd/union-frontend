@@ -53,13 +53,13 @@ export class ProjectService extends BaseService {
       { logRequest: true },
     ).pipe(
       tap(response => {
-        this._projects.set(response.data);
-        this._totalProjects.set(response.pagination.total);
-        this._currentPage.set(response.pagination.page);
-        this._limit.set(response.pagination.limit);
+        this._projects.set(response.data || []);
+        this._totalProjects.set(response.pagination?.total || 0);
+        this._currentPage.set(response.pagination?.page || 1);
+        this._limit.set(response.pagination?.limit || 10);
 
         console.log(
-          ` Loaded ${response.data.length} projects (${response.pagination.total} total)`,
+          ` Loaded ${(response.data || []).length} projects (${response.pagination?.total || 0} total)`,
         );
       }),
     );
@@ -210,8 +210,8 @@ export class ProjectService extends BaseService {
     projectId: number,
     dto: CreateColabPageRequest & {
       proyecto_id: number;
-      permisos_lectura: String[];
-      permisos_escritura: String[];
+      permisos_lectura: string[];
+      permisos_escritura: string[];
       orden: number;
     },
   ): Observable<ColabPage> {

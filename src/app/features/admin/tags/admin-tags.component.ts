@@ -7,7 +7,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 
 interface Tag {
   id: number;
@@ -415,7 +414,6 @@ interface TagCategory {
 })
 export class AdminTagsComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
 
   // Datos mock de etiquetas
   tags = signal<Tag[]>([
@@ -647,7 +645,7 @@ export class AdminTagsComponent implements OnInit {
 
   toggleTagStatus(tag: Tag) {
     tag.activo = !tag.activo;
-    console.log('Cambiar estado de etiqueta:', tag);
+    // Cambiar estado de etiqueta
     // Aquí harías una llamada a la API para actualizar el estado
   }
 
@@ -656,12 +654,12 @@ export class AdminTagsComponent implements OnInit {
       const updatedTags = this.tags().filter(tag => tag.id !== tagId);
       this.tags.set(updatedTags);
       this.filterTags();
-      console.log('Etiqueta eliminada:', tagId);
+      // Etiqueta eliminada
     }
   }
 
   exportTags() {
-    console.log('Exportar etiquetas');
+    // Exportar etiquetas
     // Aquí implementarías la lógica de exportación
   }
 }
