@@ -52,6 +52,7 @@ export class LayoutConfigService {
         {
           label: 'Gestión de Usuarios',
           icon: 'people',
+          route: '/admin/users',
           color: 'text-green-500',
           children: [
             {
@@ -63,7 +64,7 @@ export class LayoutConfigService {
             {
               label: 'Usuarios Pendientes',
               icon: 'pending',
-              route: '/admin/users/pending',
+              route: '/admin/users',
               color: 'text-yellow-600',
               badge: { text: 'Verificar', color: 'bg-yellow-100 text-yellow-800' },
             },
@@ -85,6 +86,7 @@ export class LayoutConfigService {
         {
           label: 'Contenido',
           icon: 'library_books',
+          route: '/admin/proyectos',
           color: 'text-indigo-500',
           children: [
             {
@@ -116,6 +118,7 @@ export class LayoutConfigService {
         {
           label: 'Comunicaciones',
           icon: 'chat',
+          route: '/admin/conversations',
           color: 'text-blue-500',
           children: [
             {
@@ -127,7 +130,7 @@ export class LayoutConfigService {
             {
               label: 'Mensajería General',
               icon: 'mail',
-              route: '/admin/messages',
+              route: '/admin/conversations',
               color: 'text-green-600',
             },
           ],
@@ -135,6 +138,7 @@ export class LayoutConfigService {
         {
           label: 'Sistema',
           icon: 'settings',
+          route: '/admin/settings',
           color: 'text-gray-500',
           children: [
             {
@@ -160,6 +164,7 @@ export class LayoutConfigService {
         {
           label: 'Reportes y Analytics',
           icon: 'analytics',
+          route: '/admin/reports',
           color: 'text-red-500',
           children: [
             {
