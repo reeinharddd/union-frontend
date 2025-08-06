@@ -34,7 +34,7 @@ interface RecentActivity {
   template: `
     <div class="space-y-8">
       <!-- Page Header -->
-      <div class="from-blue-600 to-purple-600 rounded-xl bg-gradient-to-r p-8 text-white shadow-lg">
+      <div class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
         <div class="flex items-center justify-between">
           <div>
             <h1 class="mb-2 text-3xl font-bold">Panel de Administración</h1>
@@ -49,32 +49,32 @@ interface RecentActivity {
 
       @if (isLoading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="border-blue-600 h-12 w-12 animate-spin rounded-full border-b-2"></div>
-          <span class="text-gray-600 ml-3">Cargando estadísticas...</span>
+          <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+          <span class="ml-3 text-gray-600">Cargando estadísticas...</span>
         </div>
       } @else {
         <!-- Main Stats Grid -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           <!-- Total Users -->
           <div
-            class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <div class="flex items-center">
-                  <div class="bg-blue-100 rounded-lg p-3">
+                  <div class="rounded-lg bg-blue-100 p-3">
                     <i class="material-icons text-blue-600">people</i>
                   </div>
                   <div class="ml-4">
-                    <p class="text-gray-600 text-sm font-medium">Total Usuarios</p>
-                    <p class="text-gray-900 text-2xl font-bold">
+                    <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
+                    <p class="text-2xl font-bold text-gray-900">
                       {{ stats().totalUsers | number }}
                     </p>
                   </div>
                 </div>
                 <div class="mt-4 flex items-center">
                   <span
-                    class="bg-green-100 text-green-800 flex items-center rounded-full px-2 py-1 text-xs"
+                    class="flex items-center rounded-full bg-green-100 px-2 py-1 text-xs text-green-800"
                   >
                     <i class="material-icons mr-1 text-xs">trending_up</i>
                     +{{ stats().recentUsers }} nuevos esta semana
@@ -86,23 +86,23 @@ interface RecentActivity {
 
           <!-- Universities -->
           <div
-            class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <div class="flex items-center">
-                  <div class="bg-green-100 rounded-lg p-3">
+                  <div class="rounded-lg bg-green-100 p-3">
                     <i class="material-icons text-green-600">school</i>
                   </div>
                   <div class="ml-4">
-                    <p class="text-gray-600 text-sm font-medium">Universidades</p>
-                    <p class="text-gray-900 text-2xl font-bold">
+                    <p class="text-sm font-medium text-gray-600">Universidades</p>
+                    <p class="text-2xl font-bold text-gray-900">
                       {{ stats().totalUniversities | number }}
                     </p>
                   </div>
                 </div>
                 <div class="mt-4">
-                  <span class="bg-blue-100 text-blue-800 rounded-full px-2 py-1 text-xs">
+                  <span class="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800">
                     Instituciones activas
                   </span>
                 </div>
@@ -112,23 +112,23 @@ interface RecentActivity {
 
           <!-- Events -->
           <div
-            class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <div class="flex items-center">
-                  <div class="bg-purple-100 rounded-lg p-3">
+                  <div class="rounded-lg bg-purple-100 p-3">
                     <i class="material-icons text-purple-600">event</i>
                   </div>
                   <div class="ml-4">
-                    <p class="text-gray-600 text-sm font-medium">Eventos</p>
-                    <p class="text-gray-900 text-2xl font-bold">
+                    <p class="text-sm font-medium text-gray-600">Eventos</p>
+                    <p class="text-2xl font-bold text-gray-900">
                       {{ stats().totalEvents | number }}
                     </p>
                   </div>
                 </div>
                 <div class="mt-4">
-                  <span class="bg-purple-100 text-purple-800 rounded-full px-2 py-1 text-xs">
+                  <span class="rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-800">
                     {{ stats().activeEvents }} activos
                   </span>
                 </div>
@@ -138,7 +138,7 @@ interface RecentActivity {
 
           <!-- System Health -->
           <div
-            class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <div class="flex items-center justify-between">
               <div class="flex-1">
@@ -147,12 +147,12 @@ interface RecentActivity {
                     <i class="material-icons text-orange-600">monitoring</i>
                   </div>
                   <div class="ml-4">
-                    <p class="text-gray-600 text-sm font-medium">Estado del Sistema</p>
-                    <p class="text-green-600 text-2xl font-bold">Óptimo</p>
+                    <p class="text-sm font-medium text-gray-600">Estado del Sistema</p>
+                    <p class="text-2xl font-bold text-green-600">Óptimo</p>
                   </div>
                 </div>
                 <div class="mt-4">
-                  <span class="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">
+                  <span class="rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
                     99.9% uptime
                   </span>
                 </div>
@@ -163,44 +163,44 @@ interface RecentActivity {
 
         <!-- User Distribution -->
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm">
-            <h3 class="text-gray-900 mb-4 flex items-center text-lg font-semibold">
-              <i class="material-icons text-blue-600 mr-2">pie_chart</i>
+          <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="mb-4 flex items-center text-lg font-semibold text-gray-900">
+              <i class="material-icons mr-2 text-blue-600">pie_chart</i>
               Distribución de Usuarios
             </h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <div class="bg-blue-500 mr-3 h-3 w-3 rounded-full"></div>
-                  <span class="text-gray-600 text-sm">Estudiantes</span>
+                  <div class="mr-3 h-3 w-3 rounded-full bg-blue-500"></div>
+                  <span class="text-sm text-gray-600">Estudiantes</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-gray-900 font-semibold">{{ stats().studentsCount }}</span>
-                  <div class="text-gray-500 text-xs">
+                  <span class="font-semibold text-gray-900">{{ stats().studentsCount }}</span>
+                  <div class="text-xs text-gray-500">
                     {{ getPercentage(stats().studentsCount, stats().totalUsers) }}%
                   </div>
                 </div>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <div class="bg-green-500 mr-3 h-3 w-3 rounded-full"></div>
-                  <span class="text-gray-600 text-sm">Graduados</span>
+                  <div class="mr-3 h-3 w-3 rounded-full bg-green-500"></div>
+                  <span class="text-sm text-gray-600">Graduados</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-gray-900 font-semibold">{{ stats().graduatesCount }}</span>
-                  <div class="text-gray-500 text-xs">
+                  <span class="font-semibold text-gray-900">{{ stats().graduatesCount }}</span>
+                  <div class="text-xs text-gray-500">
                     {{ getPercentage(stats().graduatesCount, stats().totalUsers) }}%
                   </div>
                 </div>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <div class="bg-purple-500 mr-3 h-3 w-3 rounded-full"></div>
-                  <span class="text-gray-600 text-sm">Administradores</span>
+                  <div class="mr-3 h-3 w-3 rounded-full bg-purple-500"></div>
+                  <span class="text-sm text-gray-600">Administradores</span>
                 </div>
                 <div class="text-right">
-                  <span class="text-gray-900 font-semibold">{{ stats().adminsCount }}</span>
-                  <div class="text-gray-500 text-xs">
+                  <span class="font-semibold text-gray-900">{{ stats().adminsCount }}</span>
+                  <div class="text-xs text-gray-500">
                     {{ getPercentage(stats().adminsCount, stats().totalUsers) }}%
                   </div>
                 </div>
@@ -209,15 +209,15 @@ interface RecentActivity {
           </div>
 
           <!-- Recent Activity -->
-          <div class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm lg:col-span-2">
-            <h3 class="text-gray-900 mb-4 flex items-center text-lg font-semibold">
-              <i class="material-icons text-green-600 mr-2">timeline</i>
+          <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
+            <h3 class="mb-4 flex items-center text-lg font-semibold text-gray-900">
+              <i class="material-icons mr-2 text-green-600">timeline</i>
               Actividad Reciente
             </h3>
             <div class="space-y-4">
               @for (activity of recentActivity(); track activity.id) {
                 <div
-                  class="hover:bg-gray-50 flex items-start space-x-4 rounded-lg p-3 transition-colors"
+                  class="flex items-start space-x-4 rounded-lg p-3 transition-colors hover:bg-gray-50"
                 >
                   <div
                     class="rounded-lg p-2"
@@ -240,9 +240,9 @@ interface RecentActivity {
                     >
                   </div>
                   <div class="min-w-0 flex-1">
-                    <p class="text-gray-900 text-sm font-medium">{{ activity.title }}</p>
-                    <p class="text-gray-600 text-sm">{{ activity.description }}</p>
-                    <p class="text-gray-500 mt-1 text-xs">{{ activity.time }}</p>
+                    <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
+                    <p class="text-sm text-gray-600">{{ activity.description }}</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ activity.time }}</p>
                   </div>
                 </div>
               }
@@ -251,53 +251,53 @@ interface RecentActivity {
         </div>
 
         <!-- Quick Actions -->
-        <div class="border-gray-200 rounded-xl border bg-white p-6 shadow-sm">
-          <h3 class="text-gray-900 mb-6 flex items-center text-lg font-semibold">
+        <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h3 class="mb-6 flex items-center text-lg font-semibold text-gray-900">
             <i class="material-icons text-orange-600 mr-2">flash_on</i>
             Acciones Rápidas
           </h3>
           <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
             <button
               (click)="quickAction('users')"
-              class="border-gray-200 hover:border-blue-300 hover:bg-blue-50 group rounded-lg border p-4 transition-all duration-200"
+              class="group rounded-lg border border-gray-200 p-4 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50"
             >
               <div class="flex flex-col items-center space-y-2">
-                <div class="bg-blue-100 group-hover:bg-blue-200 rounded-lg p-3 transition-colors">
+                <div class="rounded-lg bg-blue-100 p-3 transition-colors group-hover:bg-blue-200">
                   <i class="material-icons text-blue-600">people</i>
                 </div>
-                <span class="text-gray-900 text-sm font-medium">Gestionar Usuarios</span>
+                <span class="text-sm font-medium text-gray-900">Gestionar Usuarios</span>
               </div>
             </button>
 
             <button
               (click)="quickAction('universities')"
-              class="border-gray-200 hover:border-green-300 hover:bg-green-50 group rounded-lg border p-4 transition-all duration-200"
+              class="group rounded-lg border border-gray-200 p-4 transition-all duration-200 hover:border-green-300 hover:bg-green-50"
             >
               <div class="flex flex-col items-center space-y-2">
-                <div class="bg-green-100 group-hover:bg-green-200 rounded-lg p-3 transition-colors">
+                <div class="rounded-lg bg-green-100 p-3 transition-colors group-hover:bg-green-200">
                   <i class="material-icons text-green-600">school</i>
                 </div>
-                <span class="text-gray-900 text-sm font-medium">Universidades</span>
+                <span class="text-sm font-medium text-gray-900">Universidades</span>
               </div>
             </button>
 
             <button
               (click)="quickAction('events')"
-              class="border-gray-200 hover:border-purple-300 hover:bg-purple-50 group rounded-lg border p-4 transition-all duration-200"
+              class="group rounded-lg border border-gray-200 p-4 transition-all duration-200 hover:border-purple-300 hover:bg-purple-50"
             >
               <div class="flex flex-col items-center space-y-2">
                 <div
-                  class="bg-purple-100 group-hover:bg-purple-200 rounded-lg p-3 transition-colors"
+                  class="rounded-lg bg-purple-100 p-3 transition-colors group-hover:bg-purple-200"
                 >
                   <i class="material-icons text-purple-600">event</i>
                 </div>
-                <span class="text-gray-900 text-sm font-medium">Eventos</span>
+                <span class="text-sm font-medium text-gray-900">Eventos</span>
               </div>
             </button>
 
             <button
               (click)="quickAction('reports')"
-              class="border-gray-200 hover:border-orange-300 hover:bg-orange-50 group rounded-lg border p-4 transition-all duration-200"
+              class="hover:border-orange-300 hover:bg-orange-50 group rounded-lg border border-gray-200 p-4 transition-all duration-200"
             >
               <div class="flex flex-col items-center space-y-2">
                 <div
@@ -305,7 +305,7 @@ interface RecentActivity {
                 >
                   <i class="material-icons text-orange-600">assessment</i>
                 </div>
-                <span class="text-gray-900 text-sm font-medium">Reportes</span>
+                <span class="text-sm font-medium text-gray-900">Reportes</span>
               </div>
             </button>
           </div>

@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 
 import { ChangeDetectorRef, inject } from '@angular/core';
 
-
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
@@ -23,8 +22,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
   private routeSub!: Subscription;
-  
-  private readonly cdr = inject(ChangeDetectorRef);      
+
+  private readonly cdr = inject(ChangeDetectorRef);
 
   constructor(
     private route: ActivatedRoute,
@@ -101,22 +100,21 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   inviteSuccess = '';
   inviteLoading = false;
 
-openInviteModal() {
-  this.inviteEmail = '';
-  this.inviteError = '';
-  this.inviteSuccess = '';
-  this.inviteLoading = false;
-  this.showInviteModal = true;
-}
+  openInviteModal() {
+    this.inviteEmail = '';
+    this.inviteError = '';
+    this.inviteSuccess = '';
+    this.inviteLoading = false;
+    this.showInviteModal = true;
+  }
 
-closeInviteModal() {
-  this.showInviteModal = false;
-  this.inviteError = '';
-  this.inviteSuccess = '';
-  this.inviteEmail = '';
-  this.inviteLoading = false;
-}
-
+  closeInviteModal() {
+    this.showInviteModal = false;
+    this.inviteError = '';
+    this.inviteSuccess = '';
+    this.inviteEmail = '';
+    this.inviteLoading = false;
+  }
 
   // Invitar por email
   sendInvitation() {
@@ -129,43 +127,37 @@ closeInviteModal() {
     this.inviteError = '';
     this.inviteSuccess = '';
 
-    this.projectsService.inviteUserToProject(
-    this.inviteEmail,
-    this.project.id,
-    2,                
-    this.currentUserId  
-  ).subscribe({
-      error: (err) => {
-        // Accede explícitamente al mensaje de error correcto
-        if (err.error && typeof err.error === 'object' && err.error.error) {
-          this.inviteError = err.error.error; // <-- el mensaje exacto del backend
-        } else if (err.error && err.error.message) {
-          this.inviteError = err.error.message;
-        } else {
-          this.inviteError = 'Error enviando invitación';
-        }
-        this.inviteLoading = false;
+    this.projectsService
+      .inviteUserToProject(this.inviteEmail, this.project.id, 2, this.currentUserId)
+      .subscribe({
+        error: err => {
+          // Accede explícitamente al mensaje de error correcto
+          if (err.error && typeof err.error === 'object' && err.error.error) {
+            this.inviteError = err.error.error; // <-- el mensaje exacto del backend
+          } else if (err.error && err.error.message) {
+            this.inviteError = err.error.message;
+          } else {
+            this.inviteError = 'Error enviando invitación';
+          }
+          this.inviteLoading = false;
 
-        // Muestra globalmente después de cerrar el modal
-        setTimeout(() => {
-          this.closeInviteModal();
-          this.inviteGlobalError = this.inviteError;
-          setTimeout(() => this.inviteGlobalError = '', 4000);
-        }, 900);
-      },
-      next: () => {
-        this.inviteSuccess = '¡Invitación enviada!';
-        this.inviteLoading = false;
+          // Muestra globalmente después de cerrar el modal
+          setTimeout(() => {
+            this.closeInviteModal();
+            this.inviteGlobalError = this.inviteError;
+            setTimeout(() => (this.inviteGlobalError = ''), 4000);
+          }, 900);
+        },
+        next: () => {
+          this.inviteSuccess = '¡Invitación enviada!';
+          this.inviteLoading = false;
 
-        setTimeout(() => {
-          this.closeInviteModal();
-          this.inviteGlobalSuccess = this.inviteSuccess;
-          setTimeout(() => this.inviteGlobalSuccess = '', 4000);
-        }, 800); // Deja ver el éxito dentro del modal un instante
-      },
-
-
-
-    });
+          setTimeout(() => {
+            this.closeInviteModal();
+            this.inviteGlobalSuccess = this.inviteSuccess;
+            setTimeout(() => (this.inviteGlobalSuccess = ''), 4000);
+          }, 800); // Deja ver el éxito dentro del modal un instante
+        },
+      });
   }
 }

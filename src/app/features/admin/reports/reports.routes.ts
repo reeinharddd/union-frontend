@@ -8,7 +8,6 @@ export const REPORTS_ROUTES: Routes = [
   },
   {
     path: 'list',
-    loadComponent: () =>
-      import('./admin-reports.component').then(m => m.AdminReportsComponent),
+    loadComponent: () => import('./admin-reports.component').then(m => m.AdminReportsComponent),
   },
 ];

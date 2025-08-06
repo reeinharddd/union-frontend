@@ -31,7 +31,7 @@ import { UserService } from '@app/core/services/user/user.service';
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="border-blue-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-blue-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Oportunidades Activas</p>
@@ -43,7 +43,7 @@ import { UserService } from '@app/core/services/user/user.service';
           </div>
         </div>
 
-        <div class="border-green-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-green-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Postulaciones Totales</p>
@@ -55,7 +55,7 @@ import { UserService } from '@app/core/services/user/user.service';
           </div>
         </div>
 
-        <div class="border-purple-500 rounded-lg border-l-4 bg-white p-6 shadow-soft">
+        <div class="rounded-lg border-l-4 border-purple-500 bg-white p-6 shadow-soft">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-neutral-600">Postulaciones Nuevas</p>
@@ -142,7 +142,7 @@ import { UserService } from '@app/core/services/user/user.service';
               </div>
             </a>
 
-          <a
+            <a
               href="promoter/postulation"
               class="group block w-full rounded-lg border border-border p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50"
             >
@@ -198,7 +198,7 @@ import { UserService } from '@app/core/services/user/user.service';
   `,
 })
 export class PromoterDashboardComponent implements OnInit {
-    private readonly authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
   private readonly tokenService = inject(TokenService);
   private readonly userService = inject(UserService);
   private readonly opportunityService = inject(OpportunityService);

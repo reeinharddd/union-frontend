@@ -80,8 +80,10 @@ export class BackupsAdminComponent {
     'work_modalities',
   ];
 
-
-  constructor(private backupApi: BackupApiClientService, private authService: AuthService) { }
+  constructor(
+    private backupApi: BackupApiClientService,
+    private authService: AuthService,
+  ) {}
 
   ejecutarRespaldoCompleto() {
     this.cargandoRespaldoCompleto = true;
@@ -102,10 +104,9 @@ export class BackupsAdminComponent {
       error: err => {
         this.resultadoRespaldoCompleto = `❌ Error: ${err?.error?.error || 'No se pudo ejecutar el respaldo.'}`;
         this.cargandoRespaldoCompleto = false;
-      }
+      },
     });
   }
-
 
   ejecutarRespaldoParcial() {
     if (!this.tablasSeleccionadas || this.tablasSeleccionadas.length === 0) {
@@ -131,13 +132,12 @@ export class BackupsAdminComponent {
         this.cargandoRespaldoParcial = false;
       },
       error: err => {
-        this.resultadoRespaldoParcial = err?.error?.error || '❌ Error al ejecutar respaldo parcial.';
+        this.resultadoRespaldoParcial =
+          err?.error?.error || '❌ Error al ejecutar respaldo parcial.';
         this.cargandoRespaldoParcial = false;
       },
     });
   }
-
-
 
   restaurarCompleto() {
     this.cargandoRestaurarCompleto = true;

@@ -16,7 +16,7 @@ import { Event } from '../../../../core/models/event/event.interface';
   imports: [CommonModule],
   templateUrl: './event-detaill.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetaillComponent implements OnInit {
   // Signals
@@ -45,7 +45,7 @@ export class EventDetaillComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly eventService: EventService,
-    private readonly asistenciaService: AsistenciaEventosService
+    private readonly asistenciaService: AsistenciaEventosService,
   ) {}
 
   ngOnInit(): void {
@@ -67,20 +67,23 @@ export class EventDetaillComponent implements OnInit {
     this._isLoading.set(true);
     this._error.set(null);
 
-    this.eventService.getById(this.eventoId).pipe(
-      tap((evento) => {
-        console.log('✅ Evento cargado:', evento);
-        this._evento.set(evento);
-      }),
-      catchError((error) => {
-        console.error('❌ Error al cargar evento:', error);
-        this._error.set('Error al cargar los detalles del evento');
-        return of(null);
-      }),
-      finalize(() => {
-        this._isLoading.set(false);
-      })
-    ).subscribe();
+    this.eventService
+      .getById(this.eventoId)
+      .pipe(
+        tap(evento => {
+          console.log('✅ Evento cargado:', evento);
+          this._evento.set(evento);
+        }),
+        catchError(error => {
+          console.error('❌ Error al cargar evento:', error);
+          this._error.set('Error al cargar los detalles del evento');
+          return of(null);
+        }),
+        finalize(() => {
+          this._isLoading.set(false);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -102,21 +105,24 @@ export class EventDetaillComponent implements OnInit {
     this._isRegistering.set(true);
     this._error.set(null);
 
-    this.asistenciaService.registrarseEvento(evento.id).pipe(
-      tap(() => {
-        console.log('✅ Registro exitoso');
-        // Recargar información de registro
-        this.loadRegistroInfo();
-      }),
-      catchError((error) => {
-        console.error('❌ Error al registrarse:', error);
-        this._error.set('Error al registrarse al evento');
-        return of(null);
-      }),
-      finalize(() => {
-        this._isRegistering.set(false);
-      })
-    ).subscribe();
+    this.asistenciaService
+      .registrarseEvento(evento.id)
+      .pipe(
+        tap(() => {
+          console.log('✅ Registro exitoso');
+          // Recargar información de registro
+          this.loadRegistroInfo();
+        }),
+        catchError(error => {
+          console.error('❌ Error al registrarse:', error);
+          this._error.set('Error al registrarse al evento');
+          return of(null);
+        }),
+        finalize(() => {
+          this._isRegistering.set(false);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -130,21 +136,24 @@ export class EventDetaillComponent implements OnInit {
     this._isRegistering.set(true);
     this._error.set(null);
 
-    this.asistenciaService.cancelarRegistroPorEvento(evento.id).pipe(
-      tap(() => {
-        console.log('✅ Registro cancelado');
-        // Recargar información de registro
-        this.loadRegistroInfo();
-      }),
-      catchError((error) => {
-        console.error('❌ Error al cancelar registro:', error);
-        this._error.set('Error al cancelar el registro');
-        return of(null);
-      }),
-      finalize(() => {
-        this._isRegistering.set(false);
-      })
-    ).subscribe();
+    this.asistenciaService
+      .cancelarRegistroPorEvento(evento.id)
+      .pipe(
+        tap(() => {
+          console.log('✅ Registro cancelado');
+          // Recargar información de registro
+          this.loadRegistroInfo();
+        }),
+        catchError(error => {
+          console.error('❌ Error al cancelar registro:', error);
+          this._error.set('Error al cancelar el registro');
+          return of(null);
+        }),
+        finalize(() => {
+          this._isRegistering.set(false);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -170,7 +179,7 @@ export class EventDetaillComponent implements OnInit {
         weekday: 'long',
         day: '2-digit',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
       });
     } catch {
       return 'Fecha no disponible';
@@ -185,7 +194,7 @@ export class EventDetaillComponent implements OnInit {
       return new Date(fecha).toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       });
     } catch {
       return 'Hora no disponible';
@@ -198,7 +207,7 @@ export class EventDetaillComponent implements OnInit {
   eventoExpirado(): boolean {
     const evento = this.evento();
     if (!evento) return false;
-    
+
     try {
       const fechaEvento = new Date(evento.fecha_inicio);
       const ahora = new Date();
@@ -214,7 +223,7 @@ export class EventDetaillComponent implements OnInit {
   puedeRegistrarse(): boolean {
     const evento = this.evento();
     if (!evento) return false;
-    
+
     return !this.eventoExpirado() && !this.isRegistered();
   }
 
@@ -224,12 +233,12 @@ export class EventDetaillComponent implements OnInit {
   getEstadoEvento(): 'proximo' | 'en_curso' | 'finalizado' {
     const evento = this.evento();
     if (!evento) return 'finalizado';
-    
+
     try {
       const fechaInicio = new Date(evento.fecha_inicio);
       const fechaFin = evento.fecha_fin ? new Date(evento.fecha_fin) : fechaInicio;
       const ahora = new Date();
-      
+
       if (ahora < fechaInicio) return 'proximo';
       if (ahora >= fechaInicio && ahora <= fechaFin) return 'en_curso';
       return 'finalizado';
@@ -243,10 +252,14 @@ export class EventDetaillComponent implements OnInit {
    */
   getTextoEstado(): string {
     switch (this.getEstadoEvento()) {
-      case 'proximo': return 'Próximo';
-      case 'en_curso': return 'En curso';
-      case 'finalizado': return 'Finalizado';
-      default: return 'Sin determinar';
+      case 'proximo':
+        return 'Próximo';
+      case 'en_curso':
+        return 'En curso';
+      case 'finalizado':
+        return 'Finalizado';
+      default:
+        return 'Sin determinar';
     }
   }
 
@@ -255,10 +268,14 @@ export class EventDetaillComponent implements OnInit {
    */
   getClaseEstado(): string {
     switch (this.getEstadoEvento()) {
-      case 'proximo': return 'bg-blue-100 text-blue-800';
-      case 'en_curso': return 'bg-green-100 text-green-800';
-      case 'finalizado': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-100 text-gray-600';
+      case 'proximo':
+        return 'bg-blue-100 text-blue-800';
+      case 'en_curso':
+        return 'bg-green-100 text-green-800';
+      case 'finalizado':
+        return 'bg-gray-100 text-gray-600';
+      default:
+        return 'bg-gray-100 text-gray-600';
     }
   }
 }

@@ -74,4 +74,3 @@ export const PROMOTER_ROUTES: Routes = [
     ],
   },
 ];
-

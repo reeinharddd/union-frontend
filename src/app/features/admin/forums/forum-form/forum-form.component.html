@@ -18,7 +18,7 @@
     />
     <div
       *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
-      class="text-red-500 mt-1 text-xs"
+      class="mt-1 text-xs text-red-500"
     >
       El nombre es obligatorio.
     </div>
@@ -36,7 +36,7 @@
     ></textarea>
     <div
       *ngIf="form.get('descripcion')?.invalid && form.get('descripcion')?.touched"
-      class="text-red-500 mt-1 text-xs"
+      class="mt-1 text-xs text-red-500"
     >
       La descripción es obligatoria.
     </div>
@@ -46,14 +46,14 @@
     <button
       type="submit"
       [disabled]="form.invalid"
-      class="bg-green-600 hover:bg-green-700 rounded px-4 py-2 text-black transition"
+      class="rounded bg-green-600 px-4 py-2 text-black transition hover:bg-green-700"
     >
       Guardar
     </button>
     <button
       type="button"
       (click)="volver()"
-      class="bg-gray-400 hover:bg-gray-500 rounded px-4 py-2 text-black transition"
+      class="rounded bg-gray-400 px-4 py-2 text-black transition hover:bg-gray-500"
     >
       Regresar
     </button>

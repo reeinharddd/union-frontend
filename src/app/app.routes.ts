@@ -66,7 +66,7 @@ export const routes: Routes = [
             m => m.PromotorRegister2Component,
           ),
       },
-       {
+      {
         path: 'register/institucion',
         loadComponent: () =>
           import('./features/admin-uni/register/register-token.component').then(

@@ -174,51 +174,51 @@ export class StudentProfileComponent implements OnInit {
   private loadUserProjects(userId: number): void {
     this.isLoadingProjects.set(true);
     console.log('🚀 Cargando proyectos donde colaboro para usuario ID:', userId);
-    
+
     // Trae todas las participaciones y luego filtra por usuario
     this.apiClient.get<any[]>(`/participaciones-proyecto`).subscribe({
       next: allParticipations => {
         console.log('📋 Todas las participaciones:', allParticipations);
-        
+
         // Solo participaciones donde el usuario participa (no es creador)
         const myParticipations = allParticipations.filter(p => p.usuario_id === userId);
         console.log('👤 Mis participaciones:', myParticipations);
-        
+
         const projectIds = myParticipations.map(p => p.proyecto_id);
         console.log('🆔 IDs de proyectos donde participo:', projectIds);
-        
+
         if (projectIds.length === 0) {
           console.log('📭 No hay proyectos donde colabore');
           this.userProjects.set([]);
           this.isLoadingProjects.set(false);
           return;
         }
-        
+
         // Cargar todos los proyectos para filtrar
         this.apiClient.get<any[]>(`/proyectos`).subscribe({
           next: allProjects => {
             console.log('📁 Todos los proyectos disponibles:', allProjects);
-            
+
             // Filtrar proyectos donde participo pero NO soy el creador
             const collaborationProjects = allProjects.filter(project => {
               const isParticipant = projectIds.includes(project.id);
               const isNotCreator = project.creador_id !== userId;
               return isParticipant && isNotCreator;
             });
-            
+
             console.log('✅ Proyectos donde colaboro (no soy creador):', collaborationProjects);
             console.log('📊 Total de proyectos de colaboración:', collaborationProjects.length);
-            
+
             // Enriquecer con información de participación
             const projectsWithParticipation = collaborationProjects.map(project => {
               const participation = myParticipations.find(p => p.proyecto_id === project.id);
               return {
                 ...project,
                 participation_role: participation?.rol || 'Colaborador',
-                joined_date: participation?.creado_en || null
+                joined_date: participation?.creado_en || null,
               };
             });
-            
+
             this.userProjects.set(projectsWithParticipation);
             this.isLoadingProjects.set(false);
           },
@@ -420,11 +420,11 @@ export class StudentProfileComponent implements OnInit {
   // Método para obtener el estado del proyecto en español
   getProjectStatusInSpanish(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'activo': 'Activo',
-      'en_progreso': 'En Progreso',
-      'completado': 'Completado',
-      'pausado': 'Pausado',
-      'cancelado': 'Cancelado'
+      activo: 'Activo',
+      en_progreso: 'En Progreso',
+      completado: 'Completado',
+      pausado: 'Pausado',
+      cancelado: 'Cancelado',
     };
     return statusMap[status] || status;
   }

@@ -22,6 +22,9 @@ export class LandingService {
   constructor(private http: HttpClient) {}
 
   sendContactForm(formData: ContactFormData): Observable<ContactFormResponse> {
-    return this.http.post<ContactFormResponse>(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.LANDING.CONTACT}`, formData);
+    return this.http.post<ContactFormResponse>(
+      `${API_CONFIG.BASE_URL}${API_ENDPOINTS.LANDING.CONTACT}`,
+      formData,
+    );
   }
 }

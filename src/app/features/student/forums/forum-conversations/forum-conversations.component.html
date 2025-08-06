@@ -1,46 +1,48 @@
 <!-- Modal de reporte premium -->
 <div
   *ngIf="mostrarModalReporte"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md"
 >
-  <div class="w-full max-w-lg bg-white/95 backdrop-blur-xl rounded-3xl shadow-3xl overflow-hidden transform transition-all">
+  <div
+    class="shadow-3xl w-full max-w-lg transform overflow-hidden rounded-3xl bg-white/95 backdrop-blur-xl transition-all"
+  >
     <!-- Header del modal -->
     <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-            <span class="text-white text-lg">⚠️</span>
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
+            <span class="text-lg text-white">⚠️</span>
           </div>
           <h2 class="text-xl font-bold">Reportar Comentario</h2>
         </div>
       </div>
-      <p class="text-white/80 text-sm mt-2">Ayúdanos a mantener un ambiente seguro y respetuoso</p>
+      <p class="mt-2 text-sm text-white/80">Ayúdanos a mantener un ambiente seguro y respetuoso</p>
     </div>
 
     <!-- Formulario -->
-    <div class="p-6 space-y-5">
+    <div class="space-y-5 p-6">
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-3">
+        <label class="mb-3 block text-sm font-semibold text-gray-700">
           📝 Motivo del reporte *
         </label>
         <textarea
           [(ngModel)]="motivoReporte"
           rows="4"
-          class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-red-500 focus:outline-none transition-colors text-gray-800 bg-gray-50/50 resize-none"
+          class="w-full resize-none rounded-2xl border-2 border-gray-200 bg-gray-50/50 px-4 py-3 text-gray-800 transition-colors focus:border-red-500 focus:outline-none"
           placeholder="Describe específicamente por qué consideras que este comentario es inapropiado..."
         ></textarea>
       </div>
 
       <div class="flex space-x-3 pt-4">
-        <button 
-          (click)="cerrarModalReporte()" 
-          class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
+        <button
+          (click)="cerrarModalReporte()"
+          class="flex-1 rounded-xl bg-gray-100 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </button>
-        <button 
-          (click)="enviarReporteComentario()" 
-          class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+        <button
+          (click)="enviarReporteComentario()"
+          class="flex-1 rounded-xl bg-red-500 px-4 py-3 font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-red-600"
         >
           Enviar Reporte
         </button>
@@ -49,25 +51,29 @@
   </div>
 </div>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-6">
+<div class="from-slate-50 to-indigo-50 min-h-screen bg-gradient-to-br via-blue-50 px-6">
   <div class="max-w-4x2 mx-auto space-y-8">
     <!-- Header elegante del hilo -->
-    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
+    <div
+      class="overflow-hidden rounded-3xl border border-white/30 bg-white/80 shadow-2xl backdrop-blur-xl"
+    >
       <!-- Gradiente decorativo superior -->
       <div class="h-1 bg-gradient-to-r from-blue-500 via-[#c64d1f] to-purple-500"></div>
-      
+
       <!-- Contenido del header -->
       <div class="p-8">
         <!-- Navegación -->
-        <div class="flex items-center space-x-4 mb-6">
-          <button 
+        <div class="mb-6 flex items-center space-x-4">
+          <button
             (click)="goBack()"
-            class="group flex items-center space-x-2 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-[#c64d1f] hover:to-[#e25e2a] px-4 py-2 rounded-2xl font-medium transition-all duration-300 shadow-md"
+            class="group flex items-center space-x-2 rounded-2xl bg-gradient-to-r from-gray-100 to-gray-200 px-4 py-2 font-medium shadow-md transition-all duration-300 hover:from-[#c64d1f] hover:to-[#e25e2a]"
           >
-            <span class="text-gray-600 group-hover:text-white transition-colors">←</span>
-            <span class="text-gray-700 group-hover:text-white transition-colors text-sm">Volver</span>
+            <span class="text-gray-600 transition-colors group-hover:text-white">←</span>
+            <span class="text-sm text-gray-700 transition-colors group-hover:text-white"
+              >Volver</span
+            >
           </button>
-          
+
           <div class="flex items-center space-x-2 text-sm text-gray-600">
             <span class="text-[#c64d1f]">🎯</span>
             <span class="font-semibold">{{ foroNombre || 'Comunidad/Foro' }}</span>
@@ -78,20 +84,22 @@
         <!-- Título y contenido del hilo -->
         <ng-container *ngIf="hiloTitulo || hiloContenido; else cargandoHilo">
           <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">{{ hiloTitulo }}</h1>
-            <div class="bg-gradient-to-r from-orange-50/80 to-orange-100/80 rounded-2xl p-6 border border-orange-200/60">
-              <p class="text-gray-700 leading-relaxed text-lg">{{ hiloContenido }}</p>
+            <h1 class="mb-4 text-3xl font-bold leading-tight text-gray-900">{{ hiloTitulo }}</h1>
+            <div
+              class="from-orange-50/80 to-orange-100/80 border-orange-200/60 rounded-2xl border bg-gradient-to-r p-6"
+            >
+              <p class="text-lg leading-relaxed text-gray-700">{{ hiloContenido }}</p>
             </div>
           </div>
         </ng-container>
         <ng-template #cargandoHilo>
           <div class="animate-pulse space-y-4">
-            <div class="h-8 bg-gray-200 rounded-xl w-3/4"></div>
-            <div class="bg-gray-100 rounded-2xl p-6">
+            <div class="h-8 w-3/4 rounded-xl bg-gray-200"></div>
+            <div class="rounded-2xl bg-gray-100 p-6">
               <div class="space-y-3">
-                <div class="h-4 bg-gray-200 rounded w-full"></div>
-                <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-                <div class="h-4 bg-gray-200 rounded w-4/6"></div>
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-5/6 rounded bg-gray-200"></div>
+                <div class="h-4 w-4/6 rounded bg-gray-200"></div>
               </div>
             </div>
           </div>
@@ -100,25 +108,27 @@
     </div>
 
     <!-- Caja para responder premium -->
-    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8">
-      <div class="flex items-center space-x-3 mb-4">
-        <div class="w-10 h-10 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-full flex items-center justify-center">
-          <span class="text-white text-lg">💭</span>
+    <div class="rounded-3xl border border-white/50 bg-white/90 p-8 shadow-xl backdrop-blur-xl">
+      <div class="mb-4 flex items-center space-x-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#c64d1f] to-[#e25e2a]"
+        >
+          <span class="text-lg text-white">💭</span>
         </div>
         <h3 class="text-lg font-bold text-gray-900">Únete a la conversación</h3>
       </div>
-      
+
       <textarea
-        class="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:border-[#c64d1f] focus:outline-none transition-all duration-300 text-gray-800 bg-gray-50/50 hover:bg-white focus:bg-white resize-none"
+        class="w-full resize-none rounded-2xl border-2 border-gray-200 bg-gray-50/50 px-5 py-4 text-gray-800 transition-all duration-300 hover:bg-white focus:border-[#c64d1f] focus:bg-white focus:outline-none"
         rows="4"
         placeholder="Comparte tu opinión, experiencia o conocimiento sobre este tema..."
         [(ngModel)]="nuevaRespuesta"
         [disabled]="enviando"
       ></textarea>
-      
-      <div class="flex justify-end mt-4">
+
+      <div class="mt-4 flex justify-end">
         <button
-          class="bg-gradient-to-r from-[#c64d1f] to-[#e25e2a] hover:from-[#e25e2a] hover:to-purple-600 text-white px-8 py-3 rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          class="rounded-2xl bg-gradient-to-r from-[#c64d1f] to-[#e25e2a] px-8 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#e25e2a] hover:to-purple-600 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           (click)="enviarRespuesta()"
           [disabled]="enviando || !nuevaRespuesta.trim()"
         >
@@ -132,33 +142,38 @@
 
     <!-- Respuestas premium -->
     <div class="space-y-6">
-      <div class="flex items-center space-x-3 mb-6">
-        <div class="w-8 h-8 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-lg flex items-center justify-center">
-          <span class="text-white text-sm">💬</span>
+      <div class="mb-6 flex items-center space-x-3">
+        <div
+          class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#c64d1f] to-[#e25e2a]"
+        >
+          <span class="text-sm text-white">💬</span>
         </div>
         <h3 class="text-xl font-bold text-gray-900">Respuestas de la comunidad</h3>
       </div>
 
       <div
         *ngFor="let respuesta of respuestas; let i = index"
-        class="group bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+        class="group overflow-hidden rounded-3xl border border-white/50 bg-white/90 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-xl"
       >
         <!-- Header decorativo -->
         <div class="h-1 bg-gradient-to-r from-[#c64d1f] via-[#e25e2a] to-purple-500"></div>
-        
+
         <div class="p-6">
           <!-- Información del usuario -->
-          <div class="flex items-center justify-between mb-4">
+          <div class="mb-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-full flex items-center justify-center text-white font-bold text-sm">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] text-sm font-bold text-white"
+              >
                 {{
                   (respuesta.autor_nombre && respuesta.autor_nombre.length < 50
                     ? respuesta.autor_nombre
-                    : respuesta.autor_id || 'Usuario').charAt(0)
+                    : respuesta.autor_id || 'Usuario'
+                  ).charAt(0)
                 }}
               </div>
               <div>
-                <p class="font-semibold text-gray-800 text-sm">
+                <p class="text-sm font-semibold text-gray-800">
                   {{
                     respuesta.autor_nombre && respuesta.autor_nombre.length < 50
                       ? respuesta.autor_nombre
@@ -168,11 +183,11 @@
                 <p class="text-xs text-gray-500">{{ respuesta.creado_en | date: 'mediumDate' }}</p>
               </div>
             </div>
-            
+
             <div class="flex items-center space-x-2">
               <button
                 *ngIf="!esMiComentario(respuesta)"
-                class="text-red-500 hover:bg-red-50 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105"
+                class="rounded-full px-3 py-1 text-xs font-medium text-red-500 transition-all duration-200 hover:scale-105 hover:bg-red-50"
                 title="Reportar comentario"
                 (click)="reportarComentario(respuesta)"
               >
@@ -182,18 +197,22 @@
           </div>
 
           <!-- Contenido de la respuesta -->
-          <div class="bg-gradient-to-r from-gray-50/80 to-gray-100/80 rounded-2xl p-5 border border-gray-200/60">
-            <p class="text-gray-800 leading-relaxed">{{ respuesta.contenido }}</p>
+          <div
+            class="rounded-2xl border border-gray-200/60 bg-gradient-to-r from-gray-50/80 to-gray-100/80 p-5"
+          >
+            <p class="leading-relaxed text-gray-800">{{ respuesta.contenido }}</p>
           </div>
         </div>
       </div>
 
       <!-- Estado vacío -->
-      <div *ngIf="respuestas.length === 0" class="text-center py-12">
-        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div *ngIf="respuestas.length === 0" class="py-12 text-center">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100"
+        >
           <span class="text-2xl">💭</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-600 mb-2">No hay respuestas aún</h3>
+        <h3 class="mb-2 text-lg font-semibold text-gray-600">No hay respuestas aún</h3>
         <p class="text-gray-500">¡Sé el primero en compartir tu opinión!</p>
       </div>
     </div>

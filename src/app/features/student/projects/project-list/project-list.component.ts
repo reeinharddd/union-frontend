@@ -58,7 +58,7 @@ export class ProjectListComponent implements OnInit {
     { value: 'active', label: 'Activos', icon: '🚀' },
     { value: 'verified', label: 'Verificados', icon: '✅' },
     { value: 'my_university', label: 'Mi Universidad', icon: '🏛️' },
-    { value: 'completed', label: 'Completados', icon: '🎯' }
+    { value: 'completed', label: 'Completados', icon: '🎯' },
   ];
 
   ngOnInit(): void {
@@ -68,34 +68,37 @@ export class ProjectListComponent implements OnInit {
   private loadProjects(): void {
     this.isLoading.set(true);
     this.error.set(null);
-    
+
     console.log('🚀 Cargando lista de proyectos...');
 
-    this.apiClient.get<Project[]>('/proyectos').pipe(
-      tap((projects: Project[]) => {
-        console.log('✅ Proyectos cargados:', projects);
-        console.log('📊 Total de proyectos:', projects.length);
-        
-        // Enriquecer con información adicional si está disponible
-        const enrichedProjects = projects.map(project => ({
-          ...project,
-          participantes_count: 0 // Se puede cargar después
-        }));
-        
-        this.projects.set(enrichedProjects);
-        this.applyFilter(this.selectedFilter());
-      }),
-      catchError(error => {
-        console.error('❌ Error al cargar proyectos:', error);
-        console.error('❌ Detalles del error:', error.error);
-        console.error('❌ Status:', error.status);
-        this.error.set('Error al cargar la lista de proyectos');
-        return of([]);
-      }),
-      finalize(() => {
-        this.isLoading.set(false);
-      })
-    ).subscribe();
+    this.apiClient
+      .get<Project[]>('/proyectos')
+      .pipe(
+        tap((projects: Project[]) => {
+          console.log('✅ Proyectos cargados:', projects);
+          console.log('📊 Total de proyectos:', projects.length);
+
+          // Enriquecer con información adicional si está disponible
+          const enrichedProjects = projects.map(project => ({
+            ...project,
+            participantes_count: 0, // Se puede cargar después
+          }));
+
+          this.projects.set(enrichedProjects);
+          this.applyFilter(this.selectedFilter());
+        }),
+        catchError(error => {
+          console.error('❌ Error al cargar proyectos:', error);
+          console.error('❌ Detalles del error:', error.error);
+          console.error('❌ Status:', error.status);
+          this.error.set('Error al cargar la lista de proyectos');
+          return of([]);
+        }),
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe();
   }
 
   // Aplicar filtros
@@ -112,22 +115,18 @@ export class ProjectListComponent implements OnInit {
         filtered = allProjects;
         break;
       case 'active':
-        filtered = allProjects.filter(project => 
-          project.estado === 'activo' || project.estado === 'en_progreso'
+        filtered = allProjects.filter(
+          project => project.estado === 'activo' || project.estado === 'en_progreso',
         );
         break;
       case 'verified':
         filtered = allProjects.filter(project => project.verificado);
         break;
       case 'my_university':
-        filtered = allProjects.filter(project => 
-          project.universidad_id === userUniversityId
-        );
+        filtered = allProjects.filter(project => project.universidad_id === userUniversityId);
         break;
       case 'completed':
-        filtered = allProjects.filter(project => 
-          project.estado === 'completado'
-        );
+        filtered = allProjects.filter(project => project.estado === 'completado');
         break;
       default:
         filtered = allProjects;
@@ -152,28 +151,28 @@ export class ProjectListComponent implements OnInit {
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
   getStatusInSpanish(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'activo': 'Activo',
-      'en_progreso': 'En Progreso',
-      'completado': 'Completado',
-      'pausado': 'Pausado',
-      'cancelado': 'Cancelado'
+      activo: 'Activo',
+      en_progreso: 'En Progreso',
+      completado: 'Completado',
+      pausado: 'Pausado',
+      cancelado: 'Cancelado',
     };
     return statusMap[status] || status;
   }
 
   getStatusColor(status: string): string {
     const colorMap: { [key: string]: string } = {
-      'activo': 'bg-green-100 text-green-800',
-      'en_progreso': 'bg-blue-100 text-blue-800',
-      'completado': 'bg-purple-100 text-purple-800',
-      'pausado': 'bg-yellow-100 text-yellow-800',
-      'cancelado': 'bg-red-100 text-red-800'
+      activo: 'bg-green-100 text-green-800',
+      en_progreso: 'bg-blue-100 text-blue-800',
+      completado: 'bg-purple-100 text-purple-800',
+      pausado: 'bg-yellow-100 text-yellow-800',
+      cancelado: 'bg-red-100 text-red-800',
     };
     return colorMap[status] || 'bg-gray-100 text-gray-800';
   }
@@ -216,8 +215,10 @@ export class ProjectListComponent implements OnInit {
   }
 
   canJoinProject(project: Project): boolean {
-    return !this.isMyProject(project) && 
-           (project.estado === 'activo' || project.estado === 'en_progreso');
+    return (
+      !this.isMyProject(project) &&
+      (project.estado === 'activo' || project.estado === 'en_progreso')
+    );
   }
 
   getFilteredProjectsByStatus(): { [key: string]: number } {
@@ -226,7 +227,7 @@ export class ProjectListComponent implements OnInit {
       total: allProjects.length,
       active: allProjects.filter(p => p.estado === 'activo' || p.estado === 'en_progreso').length,
       verified: allProjects.filter(p => p.verificado).length,
-      completed: allProjects.filter(p => p.estado === 'completado').length
+      completed: allProjects.filter(p => p.estado === 'completado').length,
     };
   }
 

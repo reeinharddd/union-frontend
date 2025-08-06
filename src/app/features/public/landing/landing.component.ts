@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LandingService, type ContactFormData } from '../../../core/services/landing/landing.service';
+import {
+  LandingService,
+  type ContactFormData,
+} from '../../../core/services/landing/landing.service';
 
 @Component({
   selector: 'app-landing',
@@ -307,12 +310,14 @@ import { LandingService, type ContactFormData } from '../../../core/services/lan
           </div>
         </div>
       </section>
-<section class="bg-surface py-16 border-t border-border">
+      <section class="border-t border-border bg-surface py-16">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 class="text-2xl font-bold text-text-base text-center mb-6">¿Representas una universidad o deseas ser promotor?</h2>
+          <h2 class="mb-6 text-center text-2xl font-bold text-text-base">
+            ¿Representas una universidad o deseas ser promotor?
+          </h2>
 
           <form class="space-y-6" (ngSubmit)="submitForm()">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <input
                 class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
                 placeholder="Nombre completo"
@@ -330,7 +335,7 @@ import { LandingService, type ContactFormData } from '../../../core/services/lan
               />
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <select
                 class="w-full rounded-md border border-border px-4 py-2 text-sm text-text-base"
                 [(ngModel)]="formData.rol"
@@ -367,7 +372,9 @@ import { LandingService, type ContactFormData } from '../../../core/services/lan
                 {{ loading ? 'Enviando...' : 'Enviar solicitud' }}
               </button>
 
-              <p *ngIf="success" class="mt-4 text-sm text-green-600">Tu solicitud ha sido enviada correctamente.</p>
+              <p *ngIf="success" class="mt-4 text-sm text-green-600">
+                Tu solicitud ha sido enviada correctamente.
+              </p>
             </div>
           </form>
         </div>
@@ -483,7 +490,7 @@ export class LandingComponent {
         console.error('Error al enviar el formulario:', error);
         alert('Error al enviar la solicitud. Por favor intenta nuevamente.');
         this.loading = false;
-      }
+      },
     });
   }
 }

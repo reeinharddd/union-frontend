@@ -1,7 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminUniService, CreateStudentRequest } from '@app/core/services/admin-uni/admin-uni.service';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  AdminUniService,
+  CreateStudentRequest,
+} from '@app/core/services/admin-uni/admin-uni.service';
 import { AuthService } from '@app/core/services/auth/auth.service';
 
 @Component({
@@ -10,7 +19,7 @@ import { AuthService } from '@app/core/services/auth/auth.service';
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-uni-students.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUniStudentsComponent implements OnInit {
   // Servicios inyectados
@@ -27,13 +36,19 @@ export class AdminUniStudentsComponent implements OnInit {
   createStudentForm: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(2)]],
     correo: ['', [Validators.required, Validators.email]],
-    telefono: ['', [Validators.pattern(/^[0-9]{10}$/)]] // Opcional, pero si se proporciona debe ser válido
+    telefono: ['', [Validators.pattern(/^[0-9]{10}$/)]], // Opcional, pero si se proporciona debe ser válido
   });
 
   // Acceso a los signals del servicio
-  get students() { return this.adminUniService.students; }
-  get loading() { return this.adminUniService.loading; }
-  get studentsCount() { return this.adminUniService.studentsCount; }
+  get students() {
+    return this.adminUniService.students;
+  }
+  get loading() {
+    return this.adminUniService.loading;
+  }
+  get studentsCount() {
+    return this.adminUniService.studentsCount;
+  }
 
   // ✅ Obtener la universidad del administrador actual
   get currentUserUniversity() {
@@ -51,21 +66,21 @@ export class AdminUniStudentsComponent implements OnInit {
    */
   loadStudents(): void {
     const universityId = this.currentUserUniversity;
-    
+
     if (!universityId) {
       console.error('❌ No se pudo determinar la universidad del administrador');
       return;
     }
 
     console.log('📋 Cargando estudiantes de la universidad:', universityId);
-    
+
     this.adminUniService.getStudentsByUniversity(universityId).subscribe({
-      next: (students) => {
+      next: students => {
         console.log('✅ Estudiantes cargados para universidad', universityId, ':', students);
       },
-      error: (error) => {
+      error: error => {
         console.error('❌ Error cargando estudiantes de la universidad:', error);
-      }
+      },
     });
   }
 
@@ -85,11 +100,11 @@ export class AdminUniStudentsComponent implements OnInit {
   createStudent(): void {
     if (this.createStudentForm.valid) {
       this.isCreating.set(true);
-      
+
       const studentData: CreateStudentRequest = this.createStudentForm.value;
-      
+
       this.adminUniService.createStudent(studentData).subscribe({
-        next: (response) => {
+        next: response => {
           console.log('✅ Estudiante creado exitosamente:', response);
           this.resetCreateForm();
           this.showCreateForm.set(false);
@@ -97,10 +112,10 @@ export class AdminUniStudentsComponent implements OnInit {
           // Recargar la lista para mostrar el nuevo estudiante
           this.loadStudents();
         },
-        error: (error) => {
+        error: error => {
           console.error('❌ Error creando estudiante:', error);
           this.isCreating.set(false);
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -114,12 +129,12 @@ export class AdminUniStudentsComponent implements OnInit {
     const query = this.searchQuery();
     if (query.trim()) {
       this.adminUniService.searchStudents(query).subscribe({
-        next: (results) => {
+        next: results => {
           console.log('🔍 Resultados de búsqueda:', results);
         },
-        error: (error) => {
+        error: error => {
           console.error('❌ Error en búsqueda:', error);
-        }
+        },
       });
     } else {
       this.loadStudents(); // Si no hay query, mostrar todos

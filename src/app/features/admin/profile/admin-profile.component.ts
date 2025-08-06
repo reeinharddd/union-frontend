@@ -20,28 +20,34 @@ interface AdminProfile {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="page-container space-y-6 animate-fade-in">
+    <div class="page-container animate-fade-in space-y-6">
       <!-- Header elegante -->
       <div class="admin-header">
         <div class="flex items-center space-x-6">
           <div class="relative">
-            <div class="h-20 w-20 bg-gradient-warm rounded-2xl flex items-center justify-center shadow-glow">
-              <span class="text-white text-2xl font-bold">{{ getInitials() }}</span>
+            <div
+              class="bg-gradient-warm shadow-glow flex h-20 w-20 items-center justify-center rounded-2xl"
+            >
+              <span class="text-2xl font-bold text-white">{{ getInitials() }}</span>
             </div>
-            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full border-2 border-white flex items-center justify-center">
-              <i class="material-icons text-white text-xs">check</i>
+            <div
+              class="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-success"
+            >
+              <i class="material-icons text-xs text-white">check</i>
             </div>
           </div>
           <div class="flex-1">
-            <h1 class="text-3xl font-bold text-white mb-2">{{ profile()?.nombre || 'Cargando...' }}</h1>
-            <p class="text-white/90 text-lg mb-3">{{ profile()?.correo }}</p>
+            <h1 class="mb-2 text-3xl font-bold text-white">
+              {{ profile()?.nombre || 'Cargando...' }}
+            </h1>
+            <p class="mb-3 text-lg text-white/90">{{ profile()?.correo }}</p>
             <div class="flex items-center space-x-3">
               <span class="badge-primary">
-                <i class="material-icons text-sm mr-1">admin_panel_settings</i>
+                <i class="material-icons mr-1 text-sm">admin_panel_settings</i>
                 Administrador del Sistema
               </span>
               <span class="badge bg-white/20 text-white">
-                <i class="material-icons text-sm mr-1">verified</i>
+                <i class="material-icons mr-1 text-sm">verified</i>
                 Verificado
               </span>
             </div>
@@ -50,7 +56,7 @@ interface AdminProfile {
       </div>
 
       <!-- Estadísticas modernas -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="stat-card group">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
@@ -62,7 +68,9 @@ interface AdminProfile {
                 <p class="stat-value text-lg">{{ formatDate(profile()?.last_login) }}</p>
               </div>
             </div>
-            <i class="material-icons text-success group-hover:scale-110 transition-transform">trending_up</i>
+            <i class="material-icons text-success transition-transform group-hover:scale-110"
+              >trending_up</i
+            >
           </div>
         </div>
 
@@ -77,7 +85,9 @@ interface AdminProfile {
                 <p class="stat-value text-lg">{{ formatDate(profile()?.created_at) }}</p>
               </div>
             </div>
-            <i class="material-icons text-info group-hover:scale-110 transition-transform">history</i>
+            <i class="material-icons text-info transition-transform group-hover:scale-110"
+              >history</i
+            >
           </div>
         </div>
 
@@ -92,7 +102,9 @@ interface AdminProfile {
                 <p class="stat-value text-lg">Completo</p>
               </div>
             </div>
-            <i class="material-icons text-primary group-hover:scale-110 transition-transform">shield</i>
+            <i class="material-icons text-primary transition-transform group-hover:scale-110"
+              >shield</i
+            >
           </div>
         </div>
       </div>
@@ -100,19 +112,19 @@ interface AdminProfile {
       <!-- Formulario moderno -->
       <div class="card animate-slide-up">
         <div class="card-header">
-          <h2 class="text-xl font-bold text-gradient flex items-center">
+          <h2 class="text-gradient flex items-center text-xl font-bold">
             <i class="material-icons mr-3 text-primary">edit</i>
             Información Personal
           </h2>
-          <p class="text-neutral-600 mt-1">Mantén tu información actualizada</p>
+          <p class="mt-1 text-neutral-600">Mantén tu información actualizada</p>
         </div>
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="card-body space-y-6">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <!-- Nombre -->
             <div class="space-y-2">
               <label for="nombre" class="form-label flex items-center">
-                <i class="material-icons text-sm mr-2 text-primary">person</i>
+                <i class="material-icons mr-2 text-sm text-primary">person</i>
                 Nombre completo
               </label>
               <input
@@ -122,9 +134,12 @@ interface AdminProfile {
                 class="form-input"
                 placeholder="Ingresa tu nombre completo"
               />
-              @if (profileForm.get('nombre')?.errors?.['required'] && profileForm.get('nombre')?.touched) {
+              @if (
+                profileForm.get('nombre')?.errors?.['required'] &&
+                profileForm.get('nombre')?.touched
+              ) {
                 <p class="form-error">
-                  <i class="material-icons text-xs mr-1">error</i>
+                  <i class="material-icons mr-1 text-xs">error</i>
                   El nombre es requerido
                 </p>
               }
@@ -133,7 +148,7 @@ interface AdminProfile {
             <!-- Email -->
             <div class="space-y-2">
               <label for="correo" class="form-label flex items-center">
-                <i class="material-icons text-sm mr-2 text-primary">email</i>
+                <i class="material-icons mr-2 text-sm text-primary">email</i>
                 Correo electrónico
               </label>
               <input
@@ -143,15 +158,20 @@ interface AdminProfile {
                 class="form-input"
                 placeholder="correo@ejemplo.com"
               />
-              @if (profileForm.get('correo')?.errors?.['required'] && profileForm.get('correo')?.touched) {
+              @if (
+                profileForm.get('correo')?.errors?.['required'] &&
+                profileForm.get('correo')?.touched
+              ) {
                 <p class="form-error">
-                  <i class="material-icons text-xs mr-1">error</i>
+                  <i class="material-icons mr-1 text-xs">error</i>
                   El correo es requerido
                 </p>
               }
-              @if (profileForm.get('correo')?.errors?.['email'] && profileForm.get('correo')?.touched) {
+              @if (
+                profileForm.get('correo')?.errors?.['email'] && profileForm.get('correo')?.touched
+              ) {
                 <p class="form-error">
-                  <i class="material-icons text-xs mr-1">error</i>
+                  <i class="material-icons mr-1 text-xs">error</i>
                   Ingresa un correo válido
                 </p>
               }
@@ -160,7 +180,7 @@ interface AdminProfile {
             <!-- Teléfono -->
             <div class="space-y-2 lg:col-span-2">
               <label for="telefono" class="form-label flex items-center">
-                <i class="material-icons text-sm mr-2 text-primary">phone</i>
+                <i class="material-icons mr-2 text-sm text-primary">phone</i>
                 Teléfono
               </label>
               <input
@@ -175,13 +195,11 @@ interface AdminProfile {
           </div>
 
           <!-- Botones modernos -->
-          <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-neutral-200">
-            <button
-              type="button"
-              (click)="resetForm()"
-              class="btn-outline sm:order-1"
-            >
-              <i class="material-icons text-sm mr-2">refresh</i>
+          <div
+            class="flex flex-col justify-end space-y-3 border-t border-neutral-200 pt-6 sm:flex-row sm:space-x-4 sm:space-y-0"
+          >
+            <button type="button" (click)="resetForm()" class="btn-outline sm:order-1">
+              <i class="material-icons mr-2 text-sm">refresh</i>
               Cancelar
             </button>
             <button
@@ -193,7 +211,7 @@ interface AdminProfile {
                 <div class="loading-spinner mr-2"></div>
                 <span>Guardando...</span>
               } @else {
-                <i class="material-icons text-sm mr-2">save</i>
+                <i class="material-icons mr-2 text-sm">save</i>
                 <span>Guardar cambios</span>
               }
             </button>
@@ -201,58 +219,58 @@ interface AdminProfile {
         </form>
       </div>
 
-            <button
-              type="submit"
-              [disabled]="!profileForm.valid || isLoading()"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-            >
-              @if (isLoading()) {
-                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              }
-              {{ isLoading() ? 'Guardando...' : 'Guardar cambios' }}
-            </button>
-          </div>
+      <button
+        type="submit"
+        [disabled]="!profileForm.valid || isLoading()"
+        class="flex items-center rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        @if (isLoading()) {
+          <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+        }
+        {{ isLoading() ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </div>
 
-      <!-- Actividad reciente -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-            <i class="material-icons mr-2">history</i>
-            Actividad Reciente
-          </h2>
-        </div>
-        <div class="p-6">
-          <div class="space-y-4">
-            <div class="flex items-start space-x-3">
-              <div class="p-2 bg-green-100 rounded-lg">
-                <i class="material-icons text-green-600 text-sm">check_circle</i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900">Sesión iniciada</p>
-                <p class="text-sm text-gray-500">Hace 2 horas</p>
-              </div>
+    <!-- Actividad reciente -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div class="border-b border-gray-200 px-6 py-4">
+        <h2 class="flex items-center text-lg font-semibold text-gray-900">
+          <i class="material-icons mr-2">history</i>
+          Actividad Reciente
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="space-y-4">
+          <div class="flex items-start space-x-3">
+            <div class="rounded-lg bg-green-100 p-2">
+              <i class="material-icons text-sm text-green-600">check_circle</i>
             </div>
-            <div class="flex items-start space-x-3">
-              <div class="p-2 bg-blue-100 rounded-lg">
-                <i class="material-icons text-blue-600 text-sm">people</i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900">Revisión de usuarios</p>
-                <p class="text-sm text-gray-500">Hace 4 horas</p>
-              </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-gray-900">Sesión iniciada</p>
+              <p class="text-sm text-gray-500">Hace 2 horas</p>
             </div>
-            <div class="flex items-start space-x-3">
-              <div class="p-2 bg-purple-100 rounded-lg">
-                <i class="material-icons text-purple-600 text-sm">backup</i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900">Respaldo programado</p>
-                <p class="text-sm text-gray-500">Ayer</p>
-              </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="rounded-lg bg-blue-100 p-2">
+              <i class="material-icons text-sm text-blue-600">people</i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-gray-900">Revisión de usuarios</p>
+              <p class="text-sm text-gray-500">Hace 4 horas</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="rounded-lg bg-purple-100 p-2">
+              <i class="material-icons text-sm text-purple-600">backup</i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-gray-900">Respaldo programado</p>
+              <p class="text-sm text-gray-500">Ayer</p>
             </div>
           </div>
         </div>
       </div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -290,7 +308,7 @@ export class AdminProfileComponent implements OnInit {
 
     this.isLoading.set(true);
     this.userService.getById(currentUser.id).subscribe({
-      next: (user) => {
+      next: user => {
         const adminProfile: AdminProfile = {
           id: user.id,
           nombre: user.nombre,
@@ -310,7 +328,7 @@ export class AdminProfileComponent implements OnInit {
         });
         this.isLoading.set(false);
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading profile:', error);
         this.error.set('Error al cargar el perfil');
         this.isLoading.set(false);
@@ -325,7 +343,7 @@ export class AdminProfileComponent implements OnInit {
     const formData = this.profileForm.value;
 
     this.userService.update(this.profile()!.id, formData).subscribe({
-      next: (updatedUser) => {
+      next: updatedUser => {
         const updatedProfile: AdminProfile = {
           ...this.profile()!,
           ...updatedUser,
@@ -336,7 +354,7 @@ export class AdminProfileComponent implements OnInit {
         // Mostrar mensaje de éxito (puedes agregar un toast service aquí)
         console.log('Perfil actualizado exitosamente');
       },
-      error: (error) => {
+      error: error => {
         console.error('Error updating profile:', error);
         this.error.set('Error al actualizar el perfil');
         this.isLoading.set(false);
@@ -380,7 +398,7 @@ export class AdminProfileComponent implements OnInit {
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 }

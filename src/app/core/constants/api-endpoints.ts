@@ -11,7 +11,7 @@ export const API_ENDPOINTS = {
     REGISTER: '/auth/register',
   },
   // Landing
-  LANDING: {  
+  LANDING: {
     CONTACT: '/contact',
   },
 

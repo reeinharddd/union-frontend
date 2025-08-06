@@ -13,13 +13,13 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    font-feature-settings: "cv11", "ss01";
-    font-variation-settings: "opsz" 32;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
     text-rendering: optimizeLegibility;
   }
 
   body {
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
     color: #171717;
     font-family: 'Inter var', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -28,27 +28,56 @@
   }
 
   /* Mejoras en elementos base */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 600;
     color: #171717;
     line-height: 1.2;
     letter-spacing: -0.025em;
   }
 
-  h1 { font-size: 1.875rem; }
-  h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.25rem; }
-  h4 { font-size: 1.125rem; }
-  h5 { font-size: 1rem; }
-  h6 { font-size: 0.875rem; }
+  h1 {
+    font-size: 1.875rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  h4 {
+    font-size: 1.125rem;
+  }
+  h5 {
+    font-size: 1rem;
+  }
+  h6 {
+    font-size: 0.875rem;
+  }
 
   @media (min-width: 1024px) {
-    h1 { font-size: 2.25rem; }
-    h2 { font-size: 1.875rem; }
-    h3 { font-size: 1.5rem; }
-    h4 { font-size: 1.25rem; }
-    h5 { font-size: 1.125rem; }
-    h6 { font-size: 1rem; }
+    h1 {
+      font-size: 2.25rem;
+    }
+    h2 {
+      font-size: 1.875rem;
+    }
+    h3 {
+      font-size: 1.5rem;
+    }
+    h4 {
+      font-size: 1.25rem;
+    }
+    h5 {
+      font-size: 1.125rem;
+    }
+    h6 {
+      font-size: 1rem;
+    }
   }
 
   p {
@@ -96,7 +125,6 @@
 
 /* --------------------- COMPONENTES GLOBALES --------------------- */
 @layer components {
-
   /* 🎯 SISTEMA DE BOTONES UNIFICADO */
   .btn {
     display: inline-flex;
@@ -126,7 +154,7 @@
   }
 
   .btn-primary {
-    background-color: #EB6228;
+    background-color: #eb6228;
     color: white;
   }
 
@@ -145,7 +173,7 @@
   }
 
   .btn-secondary {
-    background-color: #EB9728;
+    background-color: #eb9728;
     color: white;
   }
 
@@ -161,12 +189,12 @@
 
   .btn-outline {
     background-color: transparent;
-    border: 2px solid #EB6228;
-    color: #EB6228;
+    border: 2px solid #eb6228;
+    color: #eb6228;
   }
 
   .btn-outline:hover {
-    background-color: #EB6228;
+    background-color: #eb6228;
     color: white;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
@@ -183,7 +211,7 @@
 
   .btn-ghost:hover {
     background-color: #f5f5f5;
-    color: #EB6228;
+    color: #eb6228;
   }
 
   .btn-ghost:focus {
@@ -221,7 +249,7 @@
   }
 
   .btn-danger {
-    background-color: #EB2843;
+    background-color: #eb2843;
     color: white;
   }
 
@@ -253,11 +281,11 @@
   /* 📋 SISTEMA DE FORMULARIOS */
   .form-input {
     @apply block w-full px-4 py-3 text-base;
-    @apply bg-white border-2 border-neutral-200 rounded-lg;
+    @apply rounded-lg border-2 border-neutral-200 bg-white;
     @apply transition-all duration-200 ease-in-out;
     @apply focus:border-primary focus:ring-4 focus:ring-primary/20;
     @apply placeholder:text-neutral-400;
-    @apply disabled:bg-neutral-50 disabled:cursor-not-allowed;
+    @apply disabled:cursor-not-allowed disabled:bg-neutral-50;
   }
 
   .form-input:hover:not(:disabled) {
@@ -269,32 +297,32 @@
   }
 
   .form-label {
-    @apply block text-sm font-semibold text-text-base mb-2;
+    @apply mb-2 block text-sm font-semibold text-text-base;
     letter-spacing: -0.01em;
   }
 
   .form-error {
-    @apply text-accent text-sm mt-1 flex items-center;
+    @apply mt-1 flex items-center text-sm text-accent;
   }
 
   .form-help {
-    @apply text-neutral-500 text-sm mt-1;
+    @apply mt-1 text-sm text-neutral-500;
   }
 
   /* 🎴 SISTEMA DE TARJETAS */
   .card {
-    @apply bg-white rounded-xl border border-neutral-200;
+    @apply rounded-xl border border-neutral-200 bg-white;
     @apply shadow-soft;
     @apply transition-all duration-300 ease-out;
   }
 
   .card:hover {
-    @apply shadow-hover border-neutral-300;
-    @apply transform -translate-y-1;
+    @apply border-neutral-300 shadow-hover;
+    @apply -translate-y-1 transform;
   }
 
   .card-header {
-    @apply px-6 py-4 border-b border-neutral-200;
+    @apply border-b border-neutral-200 px-6 py-4;
     @apply bg-gradient-to-r from-neutral-50 to-white;
   }
 
@@ -303,7 +331,7 @@
   }
 
   .card-footer {
-    @apply px-6 py-4 border-t border-neutral-200;
+    @apply border-t border-neutral-200 px-6 py-4;
     @apply bg-neutral-50;
   }
 
@@ -343,13 +371,13 @@
   /* 📊 SISTEMA DE ESTADÍSTICAS */
   .stat-card {
     @apply card p-6;
-    @apply hover:shadow-lg hover:scale-105;
+    @apply hover:scale-105 hover:shadow-lg;
     @apply transition-all duration-300 ease-out;
   }
 
   .stat-icon {
-    @apply w-12 h-12 rounded-lg flex items-center justify-center;
-    @apply text-white text-xl;
+    @apply flex h-12 w-12 items-center justify-center rounded-lg;
+    @apply text-xl text-white;
   }
 
   .stat-value {
@@ -358,11 +386,11 @@
   }
 
   .stat-label {
-    @apply text-neutral-600 text-sm font-medium;
+    @apply text-sm font-medium text-neutral-600;
   }
 
   .stat-change {
-    @apply text-xs font-medium flex items-center;
+    @apply flex items-center text-xs font-medium;
   }
 
   .stat-change.positive {
@@ -375,11 +403,11 @@
 
   /* 🔧 UTILIDADES DE LAYOUT */
   .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   .page-header {
-    @apply mb-8 pb-6 border-b border-neutral-200;
+    @apply mb-8 border-b border-neutral-200 pb-6;
   }
 
   .page-title {
@@ -388,12 +416,12 @@
   }
 
   .page-subtitle {
-    @apply text-neutral-600 mt-2;
+    @apply mt-2 text-neutral-600;
   }
 
   /* 🎭 ESTADOS Y ANIMACIONES */
   .loading-spinner {
-    @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full;
+    @apply inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent;
     animation: spin 1s linear infinite;
   }
 
@@ -428,7 +456,7 @@
 
   /* 🏷️ BADGES Y TAGS */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
 
   .badge-primary {
@@ -457,49 +485,53 @@
 
   /* 🎪 ELEMENTOS ESPECIALES PARA ADMIN - ESTILO LANDING/LOGIN */
   .admin-header {
-    @apply bg-gradient-to-br from-primary-50 via-surface to-secondary-50 border border-border/50;
-    @apply backdrop-blur-sm p-8 rounded-2xl mb-8 shadow-soft;
-    background-image: radial-gradient(circle at 50% 50%, rgba(235, 98, 40, 0.05) 0%, transparent 70%);
+    @apply border border-border/50 bg-gradient-to-br from-primary-50 via-surface to-secondary-50;
+    @apply mb-8 rounded-2xl p-8 shadow-soft backdrop-blur-sm;
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      rgba(235, 98, 40, 0.05) 0%,
+      transparent 70%
+    );
   }
 
   .admin-hero-section {
-    @apply relative overflow-hidden py-16 px-8 rounded-2xl mb-8;
+    @apply relative mb-8 overflow-hidden rounded-2xl px-8 py-16;
     @apply bg-gradient-to-br from-primary-50 via-surface to-secondary-50;
-    @apply border border-border/50 backdrop-blur-sm shadow-soft;
+    @apply border border-border/50 shadow-soft backdrop-blur-sm;
     background-image:
       radial-gradient(circle at 25% 25%, rgba(235, 98, 40, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
   }
 
   .admin-page-title {
-    @apply text-4xl font-bold tracking-tight text-text-base mb-4;
+    @apply mb-4 text-4xl font-bold tracking-tight text-text-base;
     @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
   }
 
   .admin-page-subtitle {
-    @apply text-lg text-text-muted leading-relaxed mb-8;
+    @apply mb-8 text-lg leading-relaxed text-text-muted;
   }
 
   .admin-nav-item {
-    @apply flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300;
-    @apply text-neutral-600 hover:text-primary hover:bg-primary/5 hover:shadow-soft;
-    @apply hover:scale-[1.02] hover:-translate-y-0.5;
+    @apply flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300;
+    @apply text-neutral-600 hover:bg-primary/5 hover:text-primary hover:shadow-soft;
+    @apply hover:-translate-y-0.5 hover:scale-[1.02];
   }
 
   .admin-nav-item.active {
-    @apply text-primary bg-primary/10 shadow-primary border border-primary/20;
+    @apply border border-primary/20 bg-primary/10 text-primary shadow-primary;
   }
 
   .admin-action-btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium text-sm;
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium;
     @apply transition-all duration-200 ease-in-out;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
     @apply relative overflow-hidden;
     @apply bg-primary text-white;
-    @apply hover:bg-primary-600 hover:-translate-y-0.5;
+    @apply hover:-translate-y-0.5 hover:bg-primary-600;
     @apply focus:ring-primary-500;
-    @apply active:transform active:translate-y-0;
+    @apply active:translate-y-0 active:transform;
     box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
   }
@@ -510,7 +542,7 @@
   }
 
   .admin-card {
-    @apply bg-white rounded-xl border border-neutral-200;
+    @apply rounded-xl border border-neutral-200 bg-white;
     box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
@@ -537,18 +569,18 @@
   }
 
   .admin-stats-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+    @apply mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4;
   }
 
   .admin-stat-card {
-    @apply stat-card bg-surface/90 backdrop-blur-sm border border-border/50;
-    @apply hover:shadow-hover hover:border-primary/20 hover:scale-[1.02];
+    @apply stat-card border border-border/50 bg-surface/90 backdrop-blur-sm;
+    @apply hover:scale-[1.02] hover:border-primary/20 hover:shadow-hover;
     @apply transition-all duration-300;
   }
 
   .admin-table-container {
-    @apply bg-surface/90 backdrop-blur-sm border border-border/50 rounded-2xl;
-    @apply shadow-soft overflow-hidden;
+    @apply rounded-2xl border border-border/50 bg-surface/90 backdrop-blur-sm;
+    @apply overflow-hidden shadow-soft;
   }
 
   .admin-table-header {
@@ -557,40 +589,40 @@
   }
 
   .admin-table-row {
-    @apply px-6 py-4 border-b border-border/30 transition-all duration-200;
+    @apply border-b border-border/30 px-6 py-4 transition-all duration-200;
     @apply hover:bg-primary-50/30 hover:shadow-soft;
   }
 
   .admin-search-container {
-    @apply relative flex-1 max-w-md;
+    @apply relative max-w-md flex-1;
   }
 
   .admin-search-input {
-    @apply form-input pl-10 bg-surface/90 backdrop-blur-sm border-border/50;
+    @apply form-input border-border/50 bg-surface/90 pl-10 backdrop-blur-sm;
     @apply focus:border-primary-300 focus:ring-primary-200;
   }
 
   .admin-filter-chip {
-    @apply inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium;
-    @apply bg-primary-100 text-primary-700 border border-primary-200;
-    @apply hover:bg-primary-200 transition-colors duration-200;
+    @apply inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium;
+    @apply border border-primary-200 bg-primary-100 text-primary-700;
+    @apply transition-colors duration-200 hover:bg-primary-200;
   }
 
   .admin-status-badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
-    @apply bg-success-100 text-success-700 border border-success-200;
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium;
+    @apply border border-success-200 bg-success-100 text-success-700;
   }
 
   .admin-status-badge.inactive {
-    @apply bg-neutral-100 text-neutral-700 border-neutral-200;
+    @apply border-neutral-200 bg-neutral-100 text-neutral-700;
   }
 
   .admin-status-badge.warning {
-    @apply bg-warning-100 text-warning-700 border-warning-200;
+    @apply border-warning-200 bg-warning-100 text-warning-700;
   }
 
   .admin-status-badge.danger {
-    @apply bg-accent-100 text-accent-700 border-accent-200;
+    @apply border-accent-200 bg-accent-100 text-accent-700;
   }
 
   /* Patrones decorativos como en landing */
@@ -660,14 +692,14 @@
 
   /* Botones de acción rápida mejorados */
   .quick-action-btn {
-    @apply btn-primary text-sm px-4 py-2 shadow-soft;
-    @apply hover:shadow-hover hover:scale-[1.02] hover:-translate-y-0.5;
+    @apply btn-primary px-4 py-2 text-sm shadow-soft;
+    @apply hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-hover;
     @apply transition-all duration-300;
   }
 
   .quick-action-btn.secondary {
     @apply btn-outline border-primary/30 text-primary;
-    @apply hover:bg-primary hover:text-white hover:border-primary;
+    @apply hover:border-primary hover:bg-primary hover:text-white;
   }
 }
 
@@ -749,7 +781,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {

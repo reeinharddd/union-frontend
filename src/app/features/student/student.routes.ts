@@ -34,7 +34,9 @@ export const STUDENT_ROUTES: Routes = [
       {
         path: 'projects',
         loadComponent: () =>
-          import('./projects/project-list/project-list.component').then(m => m.ProjectListComponent),
+          import('./projects/project-list/project-list.component').then(
+            m => m.ProjectListComponent,
+          ),
       },
       {
         path: 'opportunities',
@@ -103,14 +105,15 @@ export const STUDENT_ROUTES: Routes = [
       {
         path: 'events/:id',
         loadComponent: () =>
-          import('./events/event-detaill/event-detaill.component').then(m => m.EventDetaillComponent),
+          import('./events/event-detaill/event-detaill.component').then(
+            m => m.EventDetaillComponent,
+          ),
       },
       {
         path: 'my-register',
         loadComponent: () =>
           import('./events/my-register/my-register.component').then(m => m.MyRegisterComponent),
       },
-      
     ],
   },
 ];

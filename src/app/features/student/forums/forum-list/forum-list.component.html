@@ -1,14 +1,16 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50 to-gray-100 px-4">
+<div class="via-orange-50 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-4">
   <div class="max-w-5x2 mx-auto">
     <!-- Header minimalista y moderno -->
-    <div class="mb-8 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div class="mb-8 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
       <!-- Barra superior con gradiente -->
       <div class="h-2 bg-gradient-to-r from-primary-500 to-secondary-500"></div>
-      
+
       <div class="p-8 text-center">
-        <div class="flex items-center justify-center mb-4">
-          <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mr-4">
-            <span class="text-white text-2xl">🎓</span>
+        <div class="mb-4 flex items-center justify-center">
+          <div
+            class="mr-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500"
+          >
+            <span class="text-2xl text-white">🎓</span>
           </div>
           <div>
             <h1 class="text-3xl font-bold text-gray-800">Foros</h1>
@@ -23,33 +25,38 @@
       <a
         *ngFor="let foro of foros; let i = index"
         [routerLink]="['/student/forum', foro.id]"
-        class="group block bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-100 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+        class="group block overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
         <!-- Barra lateral de color -->
         <div class="flex">
-          <div class="w-1 bg-gradient-to-r from-primary-500 to-secondary-500 group-hover:w-2 transition-all duration-300"></div>
-          
+          <div
+            class="w-1 bg-gradient-to-r from-primary-500 to-secondary-500 transition-all duration-300 group-hover:w-2"
+          ></div>
+
           <div class="flex-1 p-6">
             <!-- Header del foro -->
-            <div class="flex items-start justify-between mb-4">
+            <div class="mb-4 flex items-start justify-between">
               <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-lg font-bold text-white"
+                >
                   {{ foro.nombre.charAt(0) }}
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-gray-900 group-hover:text-[#c64d1f] transition-colors">
+                  <h3
+                    class="text-xl font-bold text-gray-900 transition-colors group-hover:text-[#c64d1f]"
+                  >
                     {{ foro.nombre }}
                   </h3>
-                  <p class="text-sm text-gray-500 flex items-center mt-1">
+                  <p class="mt-1 flex items-center text-sm text-gray-500">
                     <span class="mr-1">👥</span>
                     Comunidad académica activa
                   </p>
                 </div>
               </div>
-              
-              <div class="flex items-center space-x-2">
 
-                <span class="text-gray-400 group-hover:text-[#c64d1f] transition-colors text-lg">
+              <div class="flex items-center space-x-2">
+                <span class="text-lg text-gray-400 transition-colors group-hover:text-[#c64d1f]">
                   →
                 </span>
               </div>
@@ -57,13 +64,13 @@
 
             <!-- Descripción del foro -->
             <div class="mb-4">
-              <p class="text-gray-600 leading-relaxed line-clamp-2">
+              <p class="line-clamp-2 leading-relaxed text-gray-600">
                 {{ foro.descripcion }}
               </p>
             </div>
 
             <!-- Footer con estadísticas -->
-            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+            <div class="flex items-center justify-between border-t border-gray-100 pt-3">
               <div class="flex items-center space-x-4 text-sm text-gray-500">
                 <!-- <div class="flex items-center space-x-1">
                   <span>💬</span>
@@ -78,7 +85,7 @@
                   <span>Académico</span>
                 </div> -->
               </div>
-              
+
               <div class="text-sm font-semibold text-[#c64d1f] group-hover:underline">
                 Explorar foro
               </div>

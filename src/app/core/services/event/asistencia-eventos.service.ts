@@ -53,17 +53,17 @@ export interface AsistenciasResponse {
 
 /**
  * Servicio para gestionar asistencias a eventos
- * 
+ *
  * Endpoints disponibles en '/asistencias-eventos':
  * - GET /asistencias-eventos - Obtener todas las asistencias
- * - POST /asistencias-eventos - Registrarse a un evento  
+ * - POST /asistencias-eventos - Registrarse a un evento
  * - GET /asistencias-eventos/:id - Obtener asistencia por ID
  * - PUT /asistencias-eventos/:id - Actualizar asistencia
  * - DELETE /asistencias-eventos/:id - Cancelar registro
- * 
+ *
  * Estructura de datos:
  * - id: number
- * - evento_id: number  
+ * - evento_id: number
  * - usuario_id: number
  * - registrado_en: string (fecha de registro)
  */
@@ -99,11 +99,11 @@ export class AsistenciaEventosService extends BaseService {
    */
   getAll(filters: AsistenciasFilters = {}): Observable<AsistenciaEvento[]> {
     this._isLoading.set(true);
-    
+
     return this.handleRequest(
       this.apiClient.get<AsistenciasResponse | AsistenciaEvento[]>(this.baseEndpoint, filters),
       'asistencias.getAll',
-      { logRequest: true }
+      { logRequest: true },
     ).pipe(
       map(response => {
         // Handle both array response and object response with data
@@ -119,7 +119,7 @@ export class AsistenciaEventosService extends BaseService {
           return response.data;
         }
       }),
-      tap(() => this._isLoading.set(false))
+      tap(() => this._isLoading.set(false)),
     );
   }
 
@@ -130,7 +130,7 @@ export class AsistenciaEventosService extends BaseService {
     return this.handleRequest(
       this.apiClient.get<AsistenciaEvento>(`${this.baseEndpoint}/${id}`),
       `asistencias.getById.${id}`,
-      { logRequest: true }
+      { logRequest: true },
     );
   }
 
@@ -164,7 +164,7 @@ export class AsistenciaEventosService extends BaseService {
 
     const asistenciaData: CreateAsistenciaRequest = {
       evento_id: eventoId,
-      usuario_id: currentUser.id
+      usuario_id: currentUser.id,
     };
 
     return this.handleRequest(
@@ -173,13 +173,13 @@ export class AsistenciaEventosService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Te has registrado exitosamente al evento',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(newAsistencia => {
         this._asistencias.update(asistencias => [...asistencias, newAsistencia]);
         this._totalAsistencias.update(total => total + 1);
-      })
+      }),
     );
   }
 
@@ -193,15 +193,15 @@ export class AsistenciaEventosService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Registro cancelado exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(() => {
-        this._asistencias.update(asistencias => 
-          asistencias.filter(asistencia => asistencia.id !== asistenciaId)
+        this._asistencias.update(asistencias =>
+          asistencias.filter(asistencia => asistencia.id !== asistenciaId),
         );
         this._totalAsistencias.update(total => total - 1);
-      })
+      }),
     );
   }
 
@@ -216,7 +216,7 @@ export class AsistenciaEventosService extends BaseService {
 
     // Buscar la asistencia del usuario actual para este evento
     const asistencia = this._asistencias().find(
-      a => a.evento_id === eventoId && a.usuario_id === currentUser.id
+      a => a.evento_id === eventoId && a.usuario_id === currentUser.id,
     );
 
     if (!asistencia) {
@@ -236,16 +236,14 @@ export class AsistenciaEventosService extends BaseService {
       {
         showSuccessToast: true,
         successMessage: 'Asistencia actualizada exitosamente',
-        logRequest: true
-      }
+        logRequest: true,
+      },
     ).pipe(
       tap(updatedAsistencia => {
-        this._asistencias.update(asistencias => 
-          asistencias.map(asistencia => 
-            asistencia.id === id ? updatedAsistencia : asistencia
-          )
+        this._asistencias.update(asistencias =>
+          asistencias.map(asistencia => (asistencia.id === id ? updatedAsistencia : asistencia)),
         );
-      })
+      }),
     );
   }
 
@@ -255,7 +253,7 @@ export class AsistenciaEventosService extends BaseService {
   // marcarAsistencia removido
 
   /**
-   * Confirmar registro (método removido - no aplica con la estructura actual) 
+   * Confirmar registro (método removido - no aplica con la estructura actual)
    */
   // confirmarRegistro removido
 
@@ -267,9 +265,7 @@ export class AsistenciaEventosService extends BaseService {
     if (!currentUser) return false;
 
     return this._asistencias().some(
-      asistencia => 
-        asistencia.evento_id === eventoId && 
-        asistencia.usuario_id === currentUser.id
+      asistencia => asistencia.evento_id === eventoId && asistencia.usuario_id === currentUser.id,
     );
   }
 
@@ -280,11 +276,11 @@ export class AsistenciaEventosService extends BaseService {
     const currentUser = this.appState.currentUser();
     if (!currentUser) return null;
 
-    return this._asistencias().find(
-      asistencia => 
-        asistencia.evento_id === eventoId && 
-        asistencia.usuario_id === currentUser.id
-    ) || null;
+    return (
+      this._asistencias().find(
+        asistencia => asistencia.evento_id === eventoId && asistencia.usuario_id === currentUser.id,
+      ) || null
+    );
   }
 
   /**
@@ -295,10 +291,10 @@ export class AsistenciaEventosService extends BaseService {
     registrados: number;
   } {
     const asistenciasEvento = this._asistencias().filter(a => a.evento_id === eventoId);
-    
+
     return {
       total: asistenciasEvento.length,
-      registrados: asistenciasEvento.length
+      registrados: asistenciasEvento.length,
     };
   }
 

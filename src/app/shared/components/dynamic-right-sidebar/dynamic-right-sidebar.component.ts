@@ -11,13 +11,15 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <aside
-      class="border-l border-gray-100/50 flex h-full w-72 flex-col bg-white/95 backdrop-blur-sm"
+      class="flex h-full w-72 flex-col border-l border-gray-100/50 bg-white/95 backdrop-blur-sm"
     >
       <!-- Header del sidebar derecho -->
       <div class="border-b border-gray-100 bg-gradient-to-r from-primary-50/30 to-accent-50/30 p-4">
         <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-accent-400 rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-sm">📊</span>
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-400 to-accent-400"
+          >
+            <span class="text-sm font-bold text-white">📊</span>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-gray-900">{{ getRoleTitle() }}</h3>
@@ -27,9 +29,9 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
       </div>
 
       <!-- Contenido dinámico del sidebar -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-6">
+      <div class="flex-1 space-y-6 overflow-y-auto p-4">
         @for (section of rightSidebarSections(); track section.title) {
-          <div class="bg-gray-50/50 rounded-lg p-4 space-y-3">
+          <div class="space-y-3 rounded-lg bg-gray-50/50 p-4">
             <!-- Título de la sección -->
             <div class="flex items-center justify-between">
               <h4 class="text-sm font-semibold text-gray-700">{{ section.title }}</h4>
@@ -38,7 +40,7 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
             <!-- Contenido según el tipo de sección -->
             @switch (section.type) {
               @case ('welcome') {
-                <div class="text-center space-y-2">
+                <div class="space-y-2 text-center">
                   <p class="text-xs text-gray-600">{{ currentTime() }}</p>
                   <p class="text-sm font-medium text-gray-800">{{ getGreeting() }}</p>
                   @if (section.content?.message) {
@@ -53,15 +55,17 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                     @for (item of section.items; track item.label) {
                       <a
                         [routerLink]="item.route"
-                        class="flex items-center justify-between p-2 rounded-md hover:bg-white/80 transition-colors group cursor-pointer"
+                        class="group flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors hover:bg-white/80"
                       >
                         <div class="flex items-center space-x-2">
-                          <span class="material-icons text-sm" [class]="item.color">{{ item.icon }}</span>
+                          <span class="material-icons text-sm" [class]="item.color">{{
+                            item.icon
+                          }}</span>
                           <span class="text-xs font-medium text-gray-800">{{ item.label }}</span>
                         </div>
                         @if (item.badge) {
                           <span
-                            class="text-xs font-medium px-2 py-0.5 rounded-full"
+                            class="rounded-full px-2 py-0.5 text-xs font-medium"
                             [class]="item.badge.color"
                           >
                             {{ item.badge.text }}
@@ -77,7 +81,7 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                 @if (section.content && section.content.stats && section.content.stats.length > 0) {
                   <div class="grid grid-cols-1 gap-2">
                     @for (stat of section.content.stats; track stat.label) {
-                      <div class="text-center p-2 bg-white/60 rounded-md">
+                      <div class="rounded-md bg-white/60 p-2 text-center">
                         <p class="text-lg font-bold" [class]="stat.color">{{ stat.value }}</p>
                         <p class="text-xs text-gray-600">{{ stat.label }}</p>
                       </div>
@@ -87,10 +91,14 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
               }
 
               @case ('activity') {
-                @if (section.content && section.content.activities && section.content.activities.length > 0) {
+                @if (
+                  section.content &&
+                  section.content.activities &&
+                  section.content.activities.length > 0
+                ) {
                   <div class="space-y-2">
                     @for (activity of section.content.activities; track activity.text) {
-                      <div class="p-2 bg-white/60 rounded-md">
+                      <div class="rounded-md bg-white/60 p-2">
                         <p class="text-xs font-medium text-gray-800">{{ activity.text }}</p>
                         <p class="text-xs text-gray-500">{{ activity.time }}</p>
                       </div>
@@ -101,10 +109,12 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                     @for (item of section.items; track item.label) {
                       <a
                         [routerLink]="item.route"
-                        class="flex items-center justify-between p-2 rounded-md hover:bg-white/80 transition-colors group cursor-pointer"
+                        class="group flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors hover:bg-white/80"
                       >
                         <div class="flex items-center space-x-2">
-                          <span class="material-icons text-sm" [class]="item.color">{{ item.icon }}</span>
+                          <span class="material-icons text-sm" [class]="item.color">{{
+                            item.icon
+                          }}</span>
                           <div>
                             <p class="text-xs font-medium text-gray-800">{{ item.label }}</p>
                             @if (item.description) {
@@ -124,16 +134,18 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                     @for (item of section.items; track item.label) {
                       <a
                         [routerLink]="item.route"
-                        class="block p-2 rounded-md hover:bg-white/80 transition-colors cursor-pointer"
+                        class="block cursor-pointer rounded-md p-2 transition-colors hover:bg-white/80"
                       >
-                        <div class="flex items-center justify-between mb-1">
+                        <div class="mb-1 flex items-center justify-between">
                           <div class="flex items-center space-x-2">
-                            <span class="material-icons text-sm" [class]="item.color">{{ item.icon }}</span>
+                            <span class="material-icons text-sm" [class]="item.color">{{
+                              item.icon
+                            }}</span>
                             <span class="text-xs font-medium text-gray-800">{{ item.label }}</span>
                           </div>
                           @if (item.badge) {
                             <span
-                              class="text-xs font-medium px-2 py-0.5 rounded-full"
+                              class="rounded-full px-2 py-0.5 text-xs font-medium"
                               [class]="item.badge.color"
                             >
                               {{ item.badge.text }}
@@ -141,7 +153,7 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                           }
                         </div>
                         @if (item.description) {
-                          <p class="text-xs text-gray-500 ml-6">{{ item.description }}</p>
+                          <p class="ml-6 text-xs text-gray-500">{{ item.description }}</p>
                         }
                       </a>
                     }
@@ -155,14 +167,16 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
                     @for (item of section.items; track item.label) {
                       <a
                         [routerLink]="item.route"
-                        class="block p-2 rounded-md hover:bg-white/80 transition-colors cursor-pointer"
+                        class="block cursor-pointer rounded-md p-2 transition-colors hover:bg-white/80"
                       >
-                        <div class="flex items-center space-x-2 mb-1">
-                          <span class="material-icons text-sm" [class]="item.color">{{ item.icon }}</span>
+                        <div class="mb-1 flex items-center space-x-2">
+                          <span class="material-icons text-sm" [class]="item.color">{{
+                            item.icon
+                          }}</span>
                           <span class="text-xs font-medium text-gray-800">{{ item.label }}</span>
                         </div>
                         @if (item.description) {
-                          <p class="text-xs text-gray-500 ml-6">{{ item.description }}</p>
+                          <p class="ml-6 text-xs text-gray-500">{{ item.description }}</p>
                         }
                       </a>
                     }
@@ -171,10 +185,14 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
               }
 
               @case ('notifications') {
-                @if (section.content && section.content.notifications && section.content.notifications.length > 0) {
+                @if (
+                  section.content &&
+                  section.content.notifications &&
+                  section.content.notifications.length > 0
+                ) {
                   <div class="space-y-2">
                     @for (notification of section.content.notifications; track notification.text) {
-                      <div class="p-2 bg-white/60 rounded-md border-l-2 border-accent-400">
+                      <div class="rounded-md border-l-2 border-accent-400 bg-white/60 p-2">
                         <p class="text-xs font-medium text-gray-800">{{ notification.text }}</p>
                         <p class="text-xs text-gray-500">{{ notification.time }}</p>
                       </div>
@@ -188,18 +206,20 @@ import { LayoutConfigService } from '@app/core/services/layout/layout-config.ser
       </div>
 
       <!-- Footer con información del usuario -->
-      <div class="border-t border-gray-100 p-4 bg-gray-50/50">
+      <div class="border-t border-gray-100 bg-gray-50/50 p-4">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-accent-400 rounded-full flex items-center justify-center">
-            <span class="text-white font-bold text-xs">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-accent-400"
+          >
+            <span class="text-xs font-bold text-white">
               {{ currentUser()?.nombre?.charAt(0) || 'U' }}
             </span>
           </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-xs font-medium text-gray-900 truncate">
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-xs font-medium text-gray-900">
               {{ currentUser()?.nombre || 'Usuario' }}
             </p>
-            <p class="text-xs text-gray-500 truncate">
+            <p class="truncate text-xs text-gray-500">
               {{ getRoleTitle() }}
             </p>
           </div>
@@ -214,21 +234,28 @@ export class DynamicRightSidebarComponent {
 
   rightSidebarSections = computed(() => this.layoutConfigService.getRightSidebarSections());
   currentUser = computed(() => this.authService.currentUser());
-  currentTime = computed(() => new Date().toLocaleTimeString('es-MX', {
-    hour: '2-digit',
-    minute: '2-digit'
-  }));
+  currentTime = computed(() =>
+    new Date().toLocaleTimeString('es-MX', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  );
 
   getRoleTitle(): string {
     const user = this.currentUser();
     if (!user) return 'Usuario';
 
     switch (user.rol_id) {
-      case 1: return 'Super Administrador';
-      case 2: return 'Estudiante';
-      case 3: return 'Admin Universitario';
-      case 4: return 'Promotor';
-      default: return 'Usuario';
+      case 1:
+        return 'Super Administrador';
+      case 2:
+        return 'Estudiante';
+      case 3:
+        return 'Admin Universitario';
+      case 4:
+        return 'Promotor';
+      default:
+        return 'Usuario';
     }
   }
 

@@ -4,7 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layout-config.service';
-import { catchError, debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ApiClientService } from '../../../core/services/base/api-client.service';
 
 interface StudentSearchResult {
@@ -473,10 +482,10 @@ export class DynamicHeaderComponent {
 
     // Mapeo específico para proyectos según el rol
     const projectRoutes = {
-      'admin': '/admin/proyectos',
-      'student': '/student/projects',
-      'promoter': '/promoter/opportunities', // Los promotores ven oportunidades como su "proyectos"
-      'admin-uni': '/admin-uni/projects'
+      admin: '/admin/proyectos',
+      student: '/student/projects',
+      promoter: '/promoter/opportunities', // Los promotores ven oportunidades como su "proyectos"
+      'admin-uni': '/admin-uni/projects',
     };
 
     const route = projectRoutes[rolePrefix as keyof typeof projectRoutes] || '/student/projects';
@@ -514,11 +523,16 @@ export class DynamicHeaderComponent {
   // Método auxiliar para obtener el prefijo de ruta según el rol
   private getRolePrefix(roleId: number | undefined): string {
     switch (roleId) {
-      case 1: return 'admin';
-      case 2: return 'student';
-      case 3: return 'promoter';
-      case 9: return 'admin-uni';
-      default: return 'student';
+      case 1:
+        return 'admin';
+      case 2:
+        return 'student';
+      case 3:
+        return 'promoter';
+      case 9:
+        return 'admin-uni';
+      default:
+        return 'student';
     }
   }
 

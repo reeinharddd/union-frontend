@@ -16,7 +16,7 @@ import { RightSidebarComponent } from '@app/shared/components/right-sidebar/righ
     DynamicSidebarComponent,
     DynamicHeaderComponent,
     RightSidebarComponent,
-    ChatFloatContainerComponent
+    ChatFloatContainerComponent,
   ],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
@@ -40,7 +40,6 @@ import { RightSidebarComponent } from '@app/shared/components/right-sidebar/righ
 
         <!-- Chat Float Container -->
         <app-chat-float-container>Chat</app-chat-float-container>
-
       </div>
 
       <!-- Right Sidebar -->

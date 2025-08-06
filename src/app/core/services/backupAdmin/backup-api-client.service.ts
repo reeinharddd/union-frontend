@@ -6,18 +6,26 @@ import { Observable } from 'rxjs';
 export class BackupApiClientService {
   private baseUrl = 'http://localhost:3000/api/admin-backup';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ejecutarRespaldoCompleto(): Observable<Blob> {
-    return this.http.post(`${this.baseUrl}/execute-bat`, {}, {
-      responseType: 'blob'
-    });
+    return this.http.post(
+      `${this.baseUrl}/execute-bat`,
+      {},
+      {
+        responseType: 'blob',
+      },
+    );
   }
 
   ejecutarRespaldoParcial(tables: string[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/partial`, { tables }, {
-      responseType: 'blob'
-    });
+    return this.http.post(
+      `${this.baseUrl}/partial`,
+      { tables },
+      {
+        responseType: 'blob',
+      },
+    );
   }
 
   restaurarCompleto(): Observable<any> {

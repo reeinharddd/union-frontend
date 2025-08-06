@@ -1,19 +1,19 @@
-<div class="page-container space-y-6 animate-fade-in">
+<div class="page-container animate-fade-in space-y-6">
   <!-- Header elegante -->
   <div class="admin-header">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 bg-gradient-warm rounded-xl flex items-center justify-center shadow-glow">
-          <i class="material-icons text-white text-xl">forum</i>
+        <div
+          class="bg-gradient-warm shadow-glow flex h-12 w-12 items-center justify-center rounded-xl"
+        >
+          <i class="material-icons text-xl text-white">forum</i>
         </div>
         <div>
           <h1 class="text-3xl font-bold text-white">Gestión de Foros</h1>
-          <p class="text-white/90 text-lg">Administra los foros de discusión</p>
+          <p class="text-lg text-white/90">Administra los foros de discusión</p>
         </div>
       </div>
-      <button
-        (click)="crearForo()"
-        class="btn-primary flex items-center space-x-2">
+      <button (click)="crearForo()" class="btn-primary flex items-center space-x-2">
         <i class="material-icons text-sm">add</i>
         <span>Crear Foro</span>
       </button>
@@ -21,15 +21,15 @@
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
     <div class="stat-card">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-secondary/70 text-sm font-medium">Total Foros</p>
+          <p class="text-sm font-medium text-secondary/70">Total Foros</p>
           <p class="text-3xl font-bold text-secondary">{{ (forums$ | async)?.length || 0 }}</p>
         </div>
-        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-          <i class="material-icons text-primary text-xl">forum</i>
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+          <i class="material-icons text-xl text-primary">forum</i>
         </div>
       </div>
     </div>
@@ -37,11 +37,11 @@
     <div class="stat-card">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-secondary/70 text-sm font-medium">Foros Activos</p>
+          <p class="text-sm font-medium text-secondary/70">Foros Activos</p>
           <p class="text-3xl font-bold text-secondary">{{ getActiveForums() }}</p>
         </div>
-        <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-          <i class="material-icons text-success text-xl">trending_up</i>
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-success/10">
+          <i class="material-icons text-xl text-success">trending_up</i>
         </div>
       </div>
     </div>
@@ -49,11 +49,11 @@
     <div class="stat-card">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-secondary/70 text-sm font-medium">Discusiones</p>
+          <p class="text-sm font-medium text-secondary/70">Discusiones</p>
           <p class="text-3xl font-bold text-secondary">{{ getTotalDiscussions() }}</p>
         </div>
-        <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-          <i class="material-icons text-accent text-xl">chat_bubble_outline</i>
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
+          <i class="material-icons text-xl text-accent">chat_bubble_outline</i>
         </div>
       </div>
     </div>
@@ -65,11 +65,10 @@
       <h2 class="text-xl font-semibold text-secondary">Lista de Foros</h2>
       <div class="flex items-center space-x-3">
         <div class="relative">
-          <input
-            type="text"
-            placeholder="Buscar foros..."
-            class="form-input pl-10 w-80">
-          <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50">search</i>
+          <input type="text" placeholder="Buscar foros..." class="form-input w-80 pl-10" />
+          <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50"
+            >search</i
+          >
         </div>
       </div>
     </div>
@@ -77,22 +76,28 @@
     <div class="card-body p-0">
       <div *ngIf="forums$ | async as forums; else loading">
         <div *ngIf="forums.length > 0; else empty" class="divide-y divide-gray-100">
-          <div *ngFor="let foro of forums; trackBy: trackByForum"
-               class="p-6 hover:bg-gray-50/50 transition-colors group">
+          <div
+            *ngFor="let foro of forums; trackBy: trackByForum"
+            class="group p-6 transition-colors hover:bg-gray-50/50"
+          >
             <div class="flex items-center justify-between">
-              <div class="flex items-start space-x-4 flex-1">
-                <div class="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center">
+              <div class="flex flex-1 items-start space-x-4">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20"
+                >
                   <i class="material-icons text-primary">topic</i>
                 </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-secondary mb-1 group-hover:text-primary transition-colors">
+                <div class="min-w-0 flex-1">
+                  <h3
+                    class="mb-1 text-lg font-semibold text-secondary transition-colors group-hover:text-primary"
+                  >
                     {{ foro.nombre }}
                   </h3>
-                  <p class="text-secondary/70 text-sm mb-3 line-clamp-2">{{ foro.descripcion }}</p>
+                  <p class="mb-3 line-clamp-2 text-sm text-secondary/70">{{ foro.descripcion }}</p>
                   <div class="flex items-center space-x-6 text-sm text-secondary/60">
                     <span class="flex items-center space-x-1">
                       <i class="material-icons text-xs">calendar_today</i>
-                      <span>{{ foro.fecha_creacion | date:'short' }}</span>
+                      <span>{{ foro.fecha_creacion | date: 'short' }}</span>
                     </span>
                     <span class="flex items-center space-x-1">
                       <i class="material-icons text-xs">person</i>
@@ -106,20 +111,25 @@
                 </div>
               </div>
 
-              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div
+                class="flex items-center space-x-2 opacity-0 transition-opacity group-hover:opacity-100"
+              >
                 <button
                   (click)="editarForo(foro.id)"
-                  class="btn-ghost-sm text-primary hover:bg-primary/10">
+                  class="btn-ghost-sm text-primary hover:bg-primary/10"
+                >
                   <i class="material-icons text-sm">edit</i>
                 </button>
                 <button
                   (click)="verForo(foro.id)"
-                  class="btn-ghost-sm text-secondary hover:bg-secondary/10">
+                  class="btn-ghost-sm text-secondary hover:bg-secondary/10"
+                >
                   <i class="material-icons text-sm">visibility</i>
                 </button>
                 <button
                   (click)="eliminarForo(foro.id)"
-                  class="btn-ghost-sm text-danger hover:bg-danger/10">
+                  class="btn-ghost-sm text-danger hover:bg-danger/10"
+                >
                   <i class="material-icons text-sm">delete</i>
                 </button>
               </div>
@@ -135,8 +145,10 @@
 <ng-template #loading>
   <div class="page-container">
     <div class="flex items-center justify-center py-16">
-      <div class="text-center space-y-4">
-        <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+      <div class="space-y-4 text-center">
+        <div
+          class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"
+        ></div>
         <p class="text-secondary/70">Cargando foros...</p>
       </div>
     </div>
@@ -145,16 +157,14 @@
 
 <!-- Empty State -->
 <ng-template #empty>
-  <div class="text-center py-16">
-    <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+  <div class="py-16 text-center">
+    <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-gray-100">
       <i class="material-icons text-4xl text-gray-400">forum</i>
     </div>
-    <h3 class="text-xl font-semibold text-secondary mb-2">No hay foros disponibles</h3>
-    <p class="text-secondary/70 mb-6">Comienza creando tu primer foro de discusión</p>
-    <button
-      (click)="crearForo()"
-      class="btn-primary">
-      <i class="material-icons text-sm mr-2">add</i>
+    <h3 class="mb-2 text-xl font-semibold text-secondary">No hay foros disponibles</h3>
+    <p class="mb-6 text-secondary/70">Comienza creando tu primer foro de discusión</p>
+    <button (click)="crearForo()" class="btn-primary">
+      <i class="material-icons mr-2 text-sm">add</i>
       Crear Primer Foro
     </button>
   </div>
