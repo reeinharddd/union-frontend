@@ -21,8 +21,8 @@ export class StudentRegister2Component {
     private router: Router,
   ) {
     this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      correo: ['', [Validators.required, Validators.email]],
     });
 
     // Recibir el token y usuario_id del formulario anterior
@@ -48,7 +48,7 @@ export class StudentRegister2Component {
       const completeFormData = {
         token: this.token,
         usuario_id: this.usuario_id,
-        fullName: this.registerForm.value.fullName,
+        nombre: this.registerForm.value.nombre,
         correo: this.registerForm.value.correo,
       };
 
@@ -68,7 +68,7 @@ export class StudentRegister2Component {
           queryParams: {
             token: this.token,
             usuario_id: this.usuario_id,
-            fullName: completeFormData.fullName,
+            nombre: completeFormData.nombre,
             correo: completeFormData.correo,
           },
         });

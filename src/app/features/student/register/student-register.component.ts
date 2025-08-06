@@ -32,7 +32,7 @@ export class StudentRegisterComponent {
       // console.log('Formulario completo:', this.tokenForm.value);
 
       // Paso 1: Verificar que el token específico existe en la BD
-      this.apiClient.get(`/tokens-iniciales-acceso?token_acceso=${token}`).subscribe({
+      this.apiClient.get(`/tokens-iniciales-acceso/token-acceso?token_acceso=${token}`).subscribe({
         next: (response: any) => {
           // console.log('Respuesta del servidor:', response);
 

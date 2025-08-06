@@ -22,8 +22,8 @@ export class StudentRegister3Component implements OnDestroy {
   newInterest: string = '';
   token: string = '';
   usuario_id: number = 0;
-  fullName: string = '';
-  email: string = '';
+  nombre: string = '';
+  correo: string = '';
   private queryParamsSubscription!: Subscription;
 
   constructor(
@@ -39,8 +39,8 @@ export class StudentRegister3Component implements OnDestroy {
     this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
       this.token = params['token'];
       this.usuario_id = params['usuario_id'] || 0;
-      this.fullName = params['fullName'];
-      this.email = params['email'];
+      this.nombre = params['nombre'];
+      this.correo = params['correo'];
 
       // Si viene token en query params, guardarlo en localStorage
       if (this.token) {
@@ -53,12 +53,12 @@ export class StudentRegister3Component implements OnDestroy {
       }
 
       // Si no hay fullName/email en params, intentar recuperar de localStorage
-      if (!this.fullName || !this.email) {
+      if (!this.nombre || !this.correo) {
         const savedData = localStorage.getItem('registrationData');
         if (savedData) {
           const parsedData = JSON.parse(savedData);
-          this.fullName = this.fullName || parsedData.fullName || '';
-          this.email = this.email || parsedData.email || '';
+          this.nombre = this.nombre || parsedData.nombre || '';
+          this.correo = this.correo || parsedData.correo || '';
         }
       }
 
@@ -89,12 +89,12 @@ export class StudentRegister3Component implements OnDestroy {
   }
 
   onSubmit() {
-    if (this.registerForm.valid && this.token && this.fullName && this.email) {
+    if (this.registerForm.valid && this.token && this.nombre && this.correo) {
       // Combinar todos los datos del proceso de registro
       const completeRegistrationData = {
         token: this.token,
-        fullName: this.fullName,
-        email: this.email,
+        nombre: this.nombre,
+        correo: this.correo,
         academicProgram: this.registerForm.value.academicProgram,
         interests: this.interests, // Se envía siempre, aunque esté vacío
       };
@@ -114,8 +114,8 @@ export class StudentRegister3Component implements OnDestroy {
         queryParams: {
           token: this.token,
           usuario_id: this.usuario_id,
-          fullName: this.fullName,
-          email: this.email,
+          nombre: this.nombre,
+          correo: this.correo,
           academicProgram: this.registerForm.value.academicProgram,
           interests: JSON.stringify(this.interests),
         },
@@ -128,7 +128,7 @@ export class StudentRegister3Component implements OnDestroy {
       if (!this.token) {
         console.error('Falta token - redirigiendo al primer paso');
         this.router.navigate(['/register/estudiante']);
-      } else if (!this.fullName || !this.email) {
+      } else if (!this.nombre || !this.correo) {
         console.error('Faltan datos personales - redirigiendo al segundo paso');
         this.router.navigate(['/register/estudiante/step2'], {
           queryParams: { token: this.token },

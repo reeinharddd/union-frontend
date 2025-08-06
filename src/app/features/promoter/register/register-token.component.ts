@@ -35,7 +35,7 @@ export class PromotorRegisterComponent {
     this.isLoading = true;
     const token = this.tokenForm.value.token;
 
-    this.apiClient.get(`/tokens-iniciales-acceso?token_acceso=${token}`).subscribe({
+    this.apiClient.get(`/tokens-iniciales-acceso/token-acceso?token_acceso=${token}`).subscribe({
       next: (response: any) => {
         // console.log('Respuesta del servidor:', response);
 
