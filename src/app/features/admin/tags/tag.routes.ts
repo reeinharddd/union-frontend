@@ -3,14 +3,6 @@ import { Routes } from '@angular/router';
 export const TAGS_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./tag-list/tag-list.component').then(m => m.TagListComponent),
-  },
-  {
-    path: 'new',
-    loadComponent: () => import('./tag-form/tag-form.component').then(m => m.TagFormComponent),
-  },
-  {
-    path: ':id/edit',
-    loadComponent: () => import('./tag-form/tag-form.component').then(m => m.TagFormComponent),
+    loadComponent: () => import('./admin-tags.component').then(m => m.AdminTagsComponent),
   },
 ];

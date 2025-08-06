@@ -237,7 +237,20 @@ export class DynamicSidebarComponent {
   // Items del sidebar basados en el rol actual
   sidebarItems = computed((): SidebarItem[] => {
     const config = this.layoutConfigService.getCurrentLayoutConfig();
-    return config.leftSidebar.filter((item: SidebarItem) => this.hasPermission(item));
+    let items = config.leftSidebar.filter((item: SidebarItem) => this.hasPermission(item));
+
+    // Si es admin, añadir acceso rápido a todas las funciones admin desde cualquier perfil
+    const currentUser = this.authService.currentUser();
+    if (currentUser?.rol_id === 1 && !window.location.pathname.startsWith('/admin')) {
+      items.unshift({
+        label: 'Panel de Administración',
+        icon: 'admin_panel_settings',
+        route: '/admin/dashboard',
+        color: 'text-red-500',
+      });
+    }
+
+    return items;
   });
 
   // Control de submenús
@@ -297,8 +310,8 @@ export class DynamicSidebarComponent {
     const routes: { [key: string]: string } = {
       admin: '/admin/profile',
       student: '/student/profile',
-      university_admin: '/admin-uni/profile',
-      promoter: '/promoter/profile',
+      university_admin: '/admin-uni/dashboard',
+      promoter: '/promoter/dashboard',
     };
     return routes[role] || '/student/profile';
   }
@@ -307,16 +320,16 @@ export class DynamicSidebarComponent {
     const role = this.layoutConfigService.getCurrentUserRole();
     const routes: { [key: string]: string } = {
       admin: '/admin/settings',
-      student: '/student/settings',
-      university_admin: '/admin-uni/settings',
-      promoter: '/promoter/settings',
+      student: '/student/dashboard',
+      university_admin: '/admin-uni/dashboard',
+      promoter: '/promoter/dashboard',
     };
-    return routes[role] || '/student/settings';
+    return routes[role] || '/student/dashboard';
   }
 
   // Permisos
-  hasPermission(item: SidebarItem): boolean {
-    return this.layoutConfigService.hasPermission(item);
+  hasPermission(_item: SidebarItem): boolean {
+    return this.layoutConfigService.hasPermission();
   }
 
   // Acciones

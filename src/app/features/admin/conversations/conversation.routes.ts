@@ -4,15 +4,6 @@ export const CONVERSATION_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./conversation-list/conversation-list.component').then(
-        m => m.ConversationListComponent,
-      ),
-  },
-  {
-    path: ':id',
-    loadComponent: () =>
-      import('./conversation-detail/conversation-detail.component').then(
-        m => m.ConversationDetailComponent,
-      ),
+      import('./admin-conversations.component').then(m => m.AdminConversationsComponent),
   },
 ];

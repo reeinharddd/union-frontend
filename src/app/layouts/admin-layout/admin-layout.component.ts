@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '@app/shared/components/header/header.component';
+import { DynamicHeaderComponent } from '@app/shared/components/dynamic-header/dynamic-header.component';
 import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/dynamic-sidebar.component';
 
 @Component({
   selector: 'admin-layout',
   standalone: true,
-  imports: [DynamicSidebarComponent, RouterOutlet, HeaderComponent],
+  imports: [DynamicSidebarComponent, RouterOutlet, DynamicHeaderComponent],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
       <!-- Dynamic Sidebar -->
@@ -15,7 +15,7 @@ import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/
       <!-- Main Content Area -->
       <div class="flex flex-1 flex-col overflow-hidden">
         <!-- Header -->
-        <app-header class="flex-shrink-0"></app-header>
+        <app-dynamic-header class="flex-shrink-0"></app-dynamic-header>
 
         <!-- Main Content -->
         <main class="flex-1 overflow-auto bg-neutral-50 p-6">

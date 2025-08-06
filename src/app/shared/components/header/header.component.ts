@@ -16,7 +16,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { ApiClientService } from '../../../core/services/base/api-client.service';
 
 // ✅ Interface para resultados de búsqueda de estudiantes
-interface StudentSearchResult {
+export interface StudentSearchResult {
   id: number;
   nombre: string;
   apellido?: string;

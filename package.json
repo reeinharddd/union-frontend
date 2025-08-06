@@ -51,6 +51,7 @@
     "@angular-eslint/template-parser": "^20.1.1",
     "@angular/cli": "^17.3.16",
     "@angular/compiler-cli": "^17.3.0",
+    "@playwright/test": "^1.54.2",
     "@types/bun": "latest",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.35.0",

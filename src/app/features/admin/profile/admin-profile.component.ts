@@ -1,404 +1,240 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '@app/core/services/auth/auth.service';
-import { UserService } from '@app/core/services/user/user.service';
-
-interface AdminProfile {
-  id: number;
-  nombre: string;
-  correo: string;
-  telefono?: string;
-  rol_id: number;
-  universidad_id?: number;
-  created_at: string;
-  last_login?: string;
-}
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   template: `
-    <div class="page-container animate-fade-in space-y-6">
-      <!-- Header elegante -->
-      <div class="admin-header">
-        <div class="flex items-center space-x-6">
-          <div class="relative">
-            <div
-              class="bg-gradient-warm shadow-glow flex h-20 w-20 items-center justify-center rounded-2xl"
-            >
-              <span class="text-2xl font-bold text-white">{{ getInitials() }}</span>
-            </div>
-            <div
-              class="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-success"
-            >
-              <i class="material-icons text-xs text-white">check</i>
-            </div>
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+      <!-- Admin Header -->
+      <div class="text-center mb-8">
+        <div class="mx-auto h-24 w-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+          <span class="text-2xl font-bold text-white">EB</span>
+        </div>
+
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Esteban Beltrán</h1>
+        <p class="text-lg text-gray-600 mb-6">Administrador del Sistema</p>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="text-center p-6 bg-blue-50 rounded-lg">
+            <div class="text-3xl font-bold text-blue-600 mb-2">247</div>
+            <div class="text-sm text-gray-600">Usuarios Gestionados</div>
           </div>
-          <div class="flex-1">
-            <h1 class="mb-2 text-3xl font-bold text-white">
-              {{ profile()?.nombre || 'Cargando...' }}
-            </h1>
-            <p class="mb-3 text-lg text-white/90">{{ profile()?.correo }}</p>
-            <div class="flex items-center space-x-3">
-              <span class="badge-primary">
-                <i class="material-icons mr-1 text-sm">admin_panel_settings</i>
-                Administrador del Sistema
-              </span>
-              <span class="badge bg-white/20 text-white">
-                <i class="material-icons mr-1 text-sm">verified</i>
-                Verificado
-              </span>
-            </div>
+          <div class="text-center p-6 bg-green-50 rounded-lg">
+            <div class="text-3xl font-bold text-green-600 mb-2">18</div>
+            <div class="text-sm text-gray-600">Eventos Creados</div>
+          </div>
+          <div class="text-center p-6 bg-purple-50 rounded-lg">
+            <div class="text-3xl font-bold text-purple-600 mb-2">12</div>
+            <div class="text-sm text-gray-600">Universidades</div>
           </div>
         </div>
       </div>
 
-      <!-- Estadísticas modernas -->
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="stat-card group">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="stat-icon gradient-success">
-                <i class="material-icons">login</i>
-              </div>
-              <div>
-                <p class="stat-label">Último acceso</p>
-                <p class="stat-value text-lg">{{ formatDate(profile()?.last_login) }}</p>
-              </div>
-            </div>
-            <i class="material-icons text-success transition-transform group-hover:scale-110"
-              >trending_up</i
-            >
-          </div>
-        </div>
+      <!-- Admin Functions Grid -->
+      <div class="mb-8">
+        <h2 class="text-xl font-bold text-gray-900 mb-6 text-center">Gestión Administrativa</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-        <div class="stat-card group">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="stat-icon gradient-info">
-                <i class="material-icons">schedule</i>
-              </div>
-              <div>
-                <p class="stat-label">Miembro desde</p>
-                <p class="stat-value text-lg">{{ formatDate(profile()?.created_at) }}</p>
-              </div>
+          <!-- Usuarios -->
+          <button
+            (click)="navigateToModule('users')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group">
+            <div class="text-blue-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 0a1.5 1.5 0 001.5-1.5V7.5A1.5 1.5 0 0021 6h-2.25A1.5 1.5 0 0016.5 7.5v11.25"></path>
+              </svg>
             </div>
-            <i class="material-icons text-info transition-transform group-hover:scale-110"
-              >history</i
-            >
-          </div>
-        </div>
+            <div class="text-sm font-medium text-gray-900">Usuarios</div>
+          </button>
 
-        <div class="stat-card group">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="stat-icon gradient-primary">
-                <i class="material-icons">security</i>
-              </div>
-              <div>
-                <p class="stat-label">Nivel de acceso</p>
-                <p class="stat-value text-lg">Completo</p>
-              </div>
+          <!-- Universidades -->
+          <button
+            (click)="navigateToModule('universities')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-all group">
+            <div class="text-green-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
             </div>
-            <i class="material-icons text-primary transition-transform group-hover:scale-110"
-              >shield</i
-            >
-          </div>
+            <div class="text-sm font-medium text-gray-900">Universidades</div>
+          </button>
+
+          <!-- Eventos -->
+          <button
+            (click)="navigateToModule('events')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all group">
+            <div class="text-purple-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Eventos</div>
+          </button>
+
+          <!-- Reportes -->
+          <button
+            (click)="navigateToModule('reports')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-all group">
+            <div class="text-orange-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Reportes</div>
+          </button>
+
+          <!-- Foros -->
+          <button
+            (click)="navigateToModule('forums')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all group">
+            <div class="text-indigo-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Foros</div>
+          </button>
+
+          <!-- Oportunidades -->
+          <button
+            (click)="navigateToModule('opportunities')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-yellow-50 hover:border-yellow-300 transition-all group">
+            <div class="text-yellow-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0l4 4-4 4"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Oportunidades</div>
+          </button>
+
+          <!-- Proyectos -->
+          <button
+            (click)="navigateToModule('proyectos')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all group">
+            <div class="text-red-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Proyectos</div>
+          </button>
+
+          <!-- Configuración -->
+          <button
+            (click)="navigateToModule('settings')"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all group">
+            <div class="text-gray-600 mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <div class="text-sm font-medium text-gray-900">Configuración</div>
+          </button>
         </div>
       </div>
 
-      <!-- Formulario moderno -->
-      <div class="card animate-slide-up">
-        <div class="card-header">
-          <h2 class="text-gradient flex items-center text-xl font-bold">
-            <i class="material-icons mr-3 text-primary">edit</i>
-            Información Personal
-          </h2>
-          <p class="mt-1 text-neutral-600">Mantén tu información actualizada</p>
+      <!-- Additional Admin Functions -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">Funciones Adicionales</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+          <!-- Conversaciones -->
+          <button
+            (click)="navigateToModule('conversations')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-all">
+            <div class="text-teal-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h2m-4 9h4v-3H7v3z"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Conversaciones</div>
+          </button>
+
+          <!-- Backups -->
+          <button
+            (click)="navigateToModule('backups-admin')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-cyan-50 hover:border-cyan-300 transition-all">
+            <div class="text-cyan-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Backups</div>
+          </button>
+
+          <!-- Roles -->
+          <button
+            (click)="navigateToModule('roles')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-pink-50 hover:border-pink-300 transition-all">
+            <div class="text-pink-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Roles</div>
+          </button>
+
+          <!-- Tags -->
+          <button
+            (click)="navigateToModule('tags')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-lime-50 hover:border-lime-300 transition-all">
+            <div class="text-lime-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Tags</div>
+          </button>
+
+          <!-- Shared -->
+          <button
+            (click)="navigateToModule('shared')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-amber-50 hover:border-amber-300 transition-all">
+            <div class="text-amber-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Compartidos</div>
+          </button>
+
+          <!-- Dashboard -->
+          <button
+            (click)="navigateToModule('dashboard')"
+            class="p-3 text-sm border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all">
+            <div class="text-blue-600 mb-2">
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="font-medium text-gray-900">Dashboard</div>
+          </button>
         </div>
-
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="card-body space-y-6">
-          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <!-- Nombre -->
-            <div class="space-y-2">
-              <label for="nombre" class="form-label flex items-center">
-                <i class="material-icons mr-2 text-sm text-primary">person</i>
-                Nombre completo
-              </label>
-              <input
-                id="nombre"
-                type="text"
-                formControlName="nombre"
-                class="form-input"
-                placeholder="Ingresa tu nombre completo"
-              />
-              @if (
-                profileForm.get('nombre')?.errors?.['required'] &&
-                profileForm.get('nombre')?.touched
-              ) {
-                <p class="form-error">
-                  <i class="material-icons mr-1 text-xs">error</i>
-                  El nombre es requerido
-                </p>
-              }
-            </div>
-
-            <!-- Email -->
-            <div class="space-y-2">
-              <label for="correo" class="form-label flex items-center">
-                <i class="material-icons mr-2 text-sm text-primary">email</i>
-                Correo electrónico
-              </label>
-              <input
-                id="correo"
-                type="email"
-                formControlName="correo"
-                class="form-input"
-                placeholder="correo@ejemplo.com"
-              />
-              @if (
-                profileForm.get('correo')?.errors?.['required'] &&
-                profileForm.get('correo')?.touched
-              ) {
-                <p class="form-error">
-                  <i class="material-icons mr-1 text-xs">error</i>
-                  El correo es requerido
-                </p>
-              }
-              @if (
-                profileForm.get('correo')?.errors?.['email'] && profileForm.get('correo')?.touched
-              ) {
-                <p class="form-error">
-                  <i class="material-icons mr-1 text-xs">error</i>
-                  Ingresa un correo válido
-                </p>
-              }
-            </div>
-
-            <!-- Teléfono -->
-            <div class="space-y-2 lg:col-span-2">
-              <label for="telefono" class="form-label flex items-center">
-                <i class="material-icons mr-2 text-sm text-primary">phone</i>
-                Teléfono
-              </label>
-              <input
-                id="telefono"
-                type="tel"
-                formControlName="telefono"
-                class="form-input"
-                placeholder="+52 123 456 7890"
-              />
-              <p class="form-help">Opcional - Formato internacional recomendado</p>
-            </div>
-          </div>
-
-          <!-- Botones modernos -->
-          <div
-            class="flex flex-col justify-end space-y-3 border-t border-neutral-200 pt-6 sm:flex-row sm:space-x-4 sm:space-y-0"
-          >
-            <button type="button" (click)="resetForm()" class="btn-outline sm:order-1">
-              <i class="material-icons mr-2 text-sm">refresh</i>
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              [disabled]="profileForm.invalid || isLoading()"
-              class="btn-primary sm:order-2"
-            >
-              @if (isLoading()) {
-                <div class="loading-spinner mr-2"></div>
-                <span>Guardando...</span>
-              } @else {
-                <i class="material-icons mr-2 text-sm">save</i>
-                <span>Guardar cambios</span>
-              }
-            </button>
-          </div>
-        </form>
       </div>
 
-      <button
-        type="submit"
-        [disabled]="!profileForm.valid || isLoading()"
-        class="flex items-center rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        @if (isLoading()) {
-          <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-        }
-        {{ isLoading() ? 'Guardando...' : 'Guardar cambios' }}
-      </button>
-    </div>
-
-    <!-- Actividad reciente -->
-    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
-      <div class="border-b border-gray-200 px-6 py-4">
-        <h2 class="flex items-center text-lg font-semibold text-gray-900">
-          <i class="material-icons mr-2">history</i>
-          Actividad Reciente
-        </h2>
-      </div>
-      <div class="p-6">
-        <div class="space-y-4">
-          <div class="flex items-start space-x-3">
-            <div class="rounded-lg bg-green-100 p-2">
-              <i class="material-icons text-sm text-green-600">check_circle</i>
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-medium text-gray-900">Sesión iniciada</p>
-              <p class="text-sm text-gray-500">Hace 2 horas</p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3">
-            <div class="rounded-lg bg-blue-100 p-2">
-              <i class="material-icons text-sm text-blue-600">people</i>
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-medium text-gray-900">Revisión de usuarios</p>
-              <p class="text-sm text-gray-500">Hace 4 horas</p>
-            </div>
-          </div>
-          <div class="flex items-start space-x-3">
-            <div class="rounded-lg bg-purple-100 p-2">
-              <i class="material-icons text-sm text-purple-600">backup</i>
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-medium text-gray-900">Respaldo programado</p>
-              <p class="text-sm text-gray-500">Ayer</p>
-            </div>
-          </div>
-        </div>
+      <!-- Dashboard Button -->
+      <div class="text-center">
+        <button
+          (click)="navigateToModule('dashboard')"
+          class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg transform hover:scale-105">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Ver Dashboard Completo
+        </button>
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminProfileComponent implements OnInit {
-  private readonly authService = inject(AuthService);
-  private readonly userService = inject(UserService);
-  private readonly fb = inject(FormBuilder);
+export class AdminProfileComponent {
+  private readonly router = inject(Router);
 
-  // Signals
-  readonly profile = signal<AdminProfile | null>(null);
-  readonly isLoading = signal(false);
-  readonly error = signal<string | null>(null);
-
-  // Form
-  profileForm: FormGroup;
-
-  constructor() {
-    this.profileForm = this.fb.group({
-      nombre: ['', [Validators.required]],
-      correo: ['', [Validators.required, Validators.email]],
-      telefono: [''],
-    });
-  }
-
-  ngOnInit(): void {
-    this.loadProfile();
-  }
-
-  private loadProfile(): void {
-    const currentUser = this.authService.currentUser();
-    if (!currentUser?.id) {
-      this.error.set('No se pudo obtener la información del usuario');
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.userService.getById(currentUser.id).subscribe({
-      next: user => {
-        const adminProfile: AdminProfile = {
-          id: user.id,
-          nombre: user.nombre,
-          correo: user.correo,
-          telefono: user.telefono,
-          rol_id: user.rol_id,
-          universidad_id: user.universidad_id,
-          created_at: user.creado_en || new Date().toISOString(),
-          last_login: user.last_login_at,
-        };
-
-        this.profile.set(adminProfile);
-        this.profileForm.patchValue({
-          nombre: user.nombre,
-          correo: user.correo,
-          telefono: user.telefono || '',
-        });
-        this.isLoading.set(false);
-      },
-      error: error => {
-        console.error('Error loading profile:', error);
-        this.error.set('Error al cargar el perfil');
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  onSubmit(): void {
-    if (!this.profileForm.valid || !this.profile()?.id) return;
-
-    this.isLoading.set(true);
-    const formData = this.profileForm.value;
-
-    this.userService.update(this.profile()!.id, formData).subscribe({
-      next: updatedUser => {
-        const updatedProfile: AdminProfile = {
-          ...this.profile()!,
-          ...updatedUser,
-        };
-        this.profile.set(updatedProfile);
-        this.isLoading.set(false);
-
-        // Mostrar mensaje de éxito (puedes agregar un toast service aquí)
-        console.log('Perfil actualizado exitosamente');
-      },
-      error: error => {
-        console.error('Error updating profile:', error);
-        this.error.set('Error al actualizar el perfil');
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  resetForm(): void {
-    const profile = this.profile();
-    if (profile) {
-      this.profileForm.patchValue({
-        nombre: profile.nombre,
-        correo: profile.correo,
-        telefono: profile.telefono || '',
-      });
-    }
-  }
-
-  getInitials(): string {
-    const name = this.profile()?.nombre || '';
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  }
-
-  formatDate(dateString?: string): string {
-    if (!dateString) return 'No disponible';
-
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 1) return 'Hoy';
-    if (diffDays === 2) return 'Ayer';
-    if (diffDays <= 7) return `Hace ${diffDays} días`;
-
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+  navigateToModule(module: string): void {
+    this.router.navigate([`/admin/${module}`]);
   }
 }

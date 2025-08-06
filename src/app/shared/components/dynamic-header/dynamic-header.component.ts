@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layout-config.service';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { ApiClientService } from '../../../core/services/base/api-client.service';
+import { Subject } from 'rxjs';
 
 interface StudentSearchResult {
   id: number;
@@ -36,44 +34,175 @@ interface StudentSearchResult {
   templateUrl: './dynamic-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DynamicHeaderComponent {
-  private readonly apiClient = inject(ApiClientService);
+export class DynamicHeaderComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly layoutConfigService = inject(LayoutConfigService);
   private readonly router = inject(Router);
 
+  private destroy$ = new Subject<void>();
+
   // Estados locales para UI
   showUserMenu = signal(false);
   showMobileMenu = signal(false);
+  showNotificationsDropdown = signal(false);
+  showMessagesDropdown = signal(false);
 
+  // Search functionality
   searchTerm = signal('');
-  searchResults = signal<StudentSearchResult[]>([]);
+  searchResults = signal<{ id: number; nombre: string; tipo: string }[]>([]);
   isSearching = signal(false);
-  showResults = signal(false);
+  showSearchResults = signal(false);
 
-  private searchSubject = new Subject<string>();
+  // Notifications and messages
+  unreadNotifications = signal(0);
+  unreadMessages = signal(0);
+  recentNotifications = signal<
+    { id: number; mensaje: string; tipo: string; leida: boolean; created_at: string }[]
+  >([]);
+  recentMessages = signal<
+    {
+      id: number;
+      mensaje: string;
+      usuario: { nombre: string; apellido: string };
+      leido: boolean;
+      created_at: string;
+    }[]
+  >([]);
+  recentConversations = signal<
+    {
+      id: number;
+      otro_usuario: { nombre: string; apellido: string };
+      ultimo_mensaje: string;
+      ultimo_mensaje_fecha: string;
+      no_leidos: number;
+    }[]
+  >([]);
 
   // Rol actual del usuario
   currentRole = signal(this.layoutConfigService.getCurrentUserRole());
 
   constructor() {
     // Efecto para actualizar el rol cuando cambie el estado de autenticación
-    effect(() => {
-      const user = this.authService.currentUser();
-      if (user) {
-        const newRole = this.layoutConfigService.getCurrentUserRole();
-        this.currentRole.set(newRole);
-        console.log('🔄 DynamicHeader - Role updated:', newRole);
-      }
-    });
+    effect(
+      () => {
+        const user = this.authService.currentUser();
+        if (user) {
+          const newRole = this.layoutConfigService.getCurrentUserRole();
+          this.currentRole.set(newRole);
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
-    this.searchSubject
-      .pipe(
-        debounceTime(250), // Reducir debounce para mayor responsividad
-        distinctUntilChanged(), // Solo buscar si el término cambió
-        switchMap(term => this.searchStudents(term)),
-      )
-      .subscribe();
+  ngOnInit(): void {
+    this.loadInitialData();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadInitialData(): void {
+    if (this.currentRole() !== 'public') {
+      this.loadUnreadCounts();
+      this.loadRecentData();
+    }
+  }
+
+  private loadUnreadCounts(): void {
+    // Mock data - integrate with real services
+    this.unreadNotifications.set(3);
+    this.unreadMessages.set(5);
+  }
+
+  private loadRecentData(): void {
+    // Mock recent notifications
+    this.recentNotifications.set([
+      {
+        id: 1,
+        mensaje: 'Nuevo proyecto disponible',
+        tipo: 'proyecto',
+        leida: false,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 2,
+        mensaje: 'Evento próximo: Conferencia Tech',
+        tipo: 'evento',
+        leida: false,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+
+    // Mock recent messages
+    this.recentMessages.set([
+      {
+        id: 1,
+        mensaje: 'Te han invitado a un proyecto',
+        usuario: { nombre: 'Ana', apellido: 'García' },
+        leido: false,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 2,
+        mensaje: 'Respuesta a tu foro',
+        usuario: { nombre: 'Carlos', apellido: 'López' },
+        leido: false,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+
+    // Mock recent conversations
+    this.recentConversations.set([
+      {
+        id: 1,
+        otro_usuario: {
+          nombre: 'Juan',
+          apellido: 'Pérez',
+        },
+        ultimo_mensaje: 'Hola, ¿cómo estás?',
+        ultimo_mensaje_fecha: new Date().toISOString(),
+        no_leidos: 2,
+      },
+    ]);
+  }
+
+  // Search functionality
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term);
+    if (term.length >= 2) {
+      this.performSearch(term);
+    } else {
+      this.searchResults.set([]);
+      this.showSearchResults.set(false);
+    }
+  }
+
+  private performSearch(term: string): void {
+    this.isSearching.set(true);
+
+    // Simulate API call with setTimeout
+    setTimeout(() => {
+      // Mock search results
+      const mockResults = [
+        {
+          id: 1,
+          nombre: `Proyecto ${term}`,
+          tipo: 'Proyecto',
+        },
+        {
+          id: 2,
+          nombre: `Usuario ${term}`,
+          tipo: 'Usuario',
+        },
+      ];
+
+      this.searchResults.set(mockResults);
+      this.showSearchResults.set(true);
+      this.isSearching.set(false);
+    }, 500);
   }
 
   // Navegación contextual por rol
@@ -100,31 +229,34 @@ export class DynamicHeaderComponent {
 
     const actions = {
       admin: [
-        { label: 'Nuevo Usuario', link: '/admin/users/new', icon: '👤', color: 'primary' },
+        { label: 'Nuevo Usuario', link: '/admin/users', icon: '👤', color: 'primary' },
         {
           label: 'Nueva Universidad',
-          link: '/admin/universities/new',
+          link: '/admin/universities',
           icon: '🏛️',
           color: 'secondary',
         },
         { label: 'Respaldo', link: '/admin/backups', icon: '💾', color: 'accent' },
       ],
       student: [
-        { label: 'Nuevo Proyecto', link: '/student/projects/new', icon: '🚀', color: 'primary' },
-        { label: 'Unirse a Evento', link: '/student/events', icon: '📅', color: 'secondary' },
-        { label: 'Mis Eventos', link: '/student/my-events', icon: '🎯', color: 'accent' },
-        { label: 'Mis Registros', link: '/student/my-register', icon: '📋', color: 'primary' },
-        { label: 'Explorar Foros', link: '/student/forums', icon: '💬', color: 'accent' },
+        { label: 'Nuevo Proyecto', link: '/student/Addprojects', icon: '🚀', color: 'primary' },
+        {
+          label: 'Ver Oportunidades',
+          link: '/student/opportunities',
+          icon: '📅',
+          color: 'secondary',
+        },
+        { label: 'Explorar Foros', link: '/student/forum', icon: '💬', color: 'accent' },
       ],
       university_admin: [
         {
-          label: 'Registrar Estudiante',
-          link: '/admin-uni/students/register',
+          label: 'Dashboard',
+          link: '/admin-uni/dashboard',
           icon: '🎓',
           color: 'primary',
         },
-        { label: 'Crear Evento', link: '/admin-uni/events/new', icon: '📅', color: 'secondary' },
-        { label: 'Ver Reportes', link: '/admin-uni/reports', icon: '📊', color: 'accent' },
+        { label: 'Dashboard', link: '/admin-uni/dashboard', icon: '📅', color: 'secondary' },
+        { label: 'Dashboard', link: '/admin-uni/dashboard', icon: '📊', color: 'accent' },
       ],
       promoter: [
         {
@@ -133,7 +265,12 @@ export class DynamicHeaderComponent {
           icon: '💼',
           color: 'primary',
         },
-        { label: 'Ver Candidatos', link: '/promoter/candidates', icon: '👥', color: 'secondary' },
+        {
+          label: 'Ver Oportunidades',
+          link: '/promoter/opportunities',
+          icon: '👥',
+          color: 'secondary',
+        },
       ],
       public: [],
     };
@@ -141,51 +278,67 @@ export class DynamicHeaderComponent {
     return actions[role as keyof typeof actions] || [];
   }
 
-  // Filtros por rol
-  getFilters(): string[] {
+  // Filtros de búsqueda por rol
+  getSearchFilters() {
     const role = this.currentRole();
-    console.log('🔍 DynamicHeader - Current role:', role);
 
-    const filters = {
-      admin: ['Usuarios', 'Universidades', 'Proyectos', 'Reportes'],
-      student: ['Proyectos', 'Foros', 'Eventos', 'Oportunidades', 'Cursos'],
-      university_admin: ['Estudiantes', 'Proyectos', 'Eventos'],
-      promoter: ['Oportunidades', 'Candidatos'],
-      public: [],
+    const result = {
+      admin: [
+        { label: 'Gestión de Usuarios', value: 'Gestión de Usuarios' },
+        { label: 'Universidades', value: 'Universidades' },
+        { label: 'Comunicación', value: 'Comunicación' },
+        { label: 'Sistema', value: 'Sistema' },
+        { label: 'Nuevo Usuario', value: 'Nuevo Usuario' },
+      ],
+      student: [
+        { label: 'Proyectos', value: 'Proyectos' },
+        { label: 'Foros', value: 'Foros' },
+        { label: 'Oportunidades', value: 'Oportunidades' },
+      ],
+      university_admin: [{ label: 'Dashboard', value: 'Dashboard' }],
+      promoter: [
+        { label: 'Oportunidades', value: 'Oportunidades' },
+        { label: 'Ver Candidatos', value: 'Ver Candidatos' },
+        { label: 'Mi Perfil', value: 'Mi Perfil' },
+      ],
+      public: [{ label: 'Buscar', value: 'general' }],
     };
 
-    const result = filters[role as keyof typeof filters] || [];
-    console.log('🔍 DynamicHeader - Filters for role:', role, '=', result);
-    return result;
+    return result[role as keyof typeof result] || result.public;
   }
 
   // Navegar al hacer click en filtros
   onFilterClick(filter: string): void {
     const role = this.currentRole();
 
-    // Mapeo de filtros a rutas por rol
+    // Mapeo de filtros a rutas por rol (actualizadas para coincidir con las rutas reales)
     const routeMap: { [key: string]: { [key: string]: string } } = {
       admin: {
+        'Gestión de Usuarios': '/admin/users',
+        Comunicación: '/admin/conversations',
+        Sistema: '/admin/settings',
+        'Nuevo Usuario': '/admin/users',
         Usuarios: '/admin/users',
         Universidades: '/admin/universities',
         Proyectos: '/admin/proyectos',
         Reportes: '/admin/reports',
       },
       student: {
-        Proyectos: '/student/projects',
-        Foros: '/student/forums',
-        Eventos: '/student/events',
+        Proyectos: '/student/dashboard', // No hay ruta directa /student/projects
+        Foros: '/student/forum',
+        Eventos: '/student/opportunities', // No hay eventos específicos
         Oportunidades: '/student/opportunities',
-        Cursos: '/student/courses',
       },
       university_admin: {
-        Estudiantes: '/admin-uni/students',
-        Proyectos: '/admin-uni/projects',
-        Eventos: '/admin-uni/events',
+        Estudiantes: '/admin-uni/dashboard',
+        Proyectos: '/admin-uni/dashboard',
+        Eventos: '/admin-uni/dashboard',
       },
       promoter: {
         Oportunidades: '/promoter/opportunities',
-        Candidatos: '/promoter/candidates',
+        'Ver Candidatos': '/promoter/opportunities', // No hay candidatos específicos
+        'Mi Perfil': '/promoter/dashboard',
+        Candidatos: '/promoter/opportunities',
       },
     };
 
@@ -210,16 +363,16 @@ export class DynamicHeaderComponent {
         { label: 'Reportes', link: '/admin/reports', icon: '📊' },
       ],
       student: [
-        { label: 'Mis Proyectos', link: '/student/projects/my', icon: '📁' },
-        { label: 'Mis Postulaciones', link: '/student/applications', icon: '📤' },
+        { label: 'Mis Proyectos', link: '/student/dashboard', icon: '📁' },
+        { label: 'Ver Oportunidades', link: '/student/opportunities', icon: '📤' },
       ],
       university_admin: [
         { label: 'Panel Universidad', link: '/admin-uni/dashboard', icon: '🏛️' },
-        { label: 'Estudiantes', link: '/admin-uni/students', icon: '🎓' },
+        { label: 'Dashboard', link: '/admin-uni/dashboard', icon: '🎓' },
       ],
       promoter: [
         { label: 'Mis Ofertas', link: '/promoter/opportunities', icon: '💼' },
-        { label: 'Estadísticas', link: '/promoter/stats', icon: '📈' },
+        { label: 'Dashboard', link: '/promoter/dashboard', icon: '📈' },
       ],
       public: [],
     };
@@ -235,7 +388,9 @@ export class DynamicHeaderComponent {
 
   // Control de menús
   toggleUserMenu() {
-    this.showUserMenu.update(value => !value);
+    this.showUserMenu.set(!this.showUserMenu());
+    this.showNotificationsDropdown.set(false);
+    this.showMessagesDropdown.set(false);
     this.showMobileMenu.set(false);
   }
 
@@ -244,12 +399,69 @@ export class DynamicHeaderComponent {
   }
 
   toggleMobileMenu() {
-    this.showMobileMenu.update(value => !value);
+    this.showMobileMenu.set(!this.showMobileMenu());
     this.showUserMenu.set(false);
+    this.showNotificationsDropdown.set(false);
+    this.showMessagesDropdown.set(false);
   }
 
   closeMobileMenu() {
     this.showMobileMenu.set(false);
+  }
+
+  closeNotifications() {
+    this.showNotificationsDropdown.set(false);
+  }
+
+  closeMessages() {
+    this.showMessagesDropdown.set(false);
+  }
+
+  // Navigation methods
+  navigateToHome(): void {
+    const role = this.currentRole();
+    const homeRoutes = {
+      admin: '/admin/dashboard',
+      student: '/student/feed',
+      university_admin: '/admin-uni/dashboard',
+      promoter: '/promoter/dashboard',
+      public: '/landing',
+    };
+
+    const route = homeRoutes[role as keyof typeof homeRoutes] || '/landing';
+    this.router.navigate([route]);
+  }
+
+  // Notification methods
+  markNotificationAsRead(notificationId: number): void {
+    const notifications = this.recentNotifications();
+    const updatedNotifications = notifications.map(notification =>
+      notification.id === notificationId ? { ...notification, leida: true } : notification,
+    );
+    this.recentNotifications.set(updatedNotifications);
+
+    // Update unread count
+    const unreadCount = updatedNotifications.filter(n => !n.leida).length;
+    this.unreadNotifications.set(unreadCount);
+
+    // Close dropdown after marking as read
+    this.showNotificationsDropdown.set(false);
+  }
+
+  // Message methods
+  markMessageAsRead(messageId: number): void {
+    const messages = this.recentMessages();
+    const updatedMessages = messages.map(message =>
+      message.id === messageId ? { ...message, leido: true } : message,
+    );
+    this.recentMessages.set(updatedMessages);
+
+    // Update unread count
+    const unreadCount = updatedMessages.filter(m => !m.leido).length;
+    this.unreadMessages.set(unreadCount);
+
+    // Close dropdown after marking as read
+    this.showMessagesDropdown.set(false);
   }
 
   // Información del usuario
@@ -288,13 +500,26 @@ export class DynamicHeaderComponent {
     return roleNames[role as keyof typeof roleNames] || 'Usuario';
   }
 
+  // Control de dropdowns
+  toggleNotificationsDropdown(): void {
+    this.showNotificationsDropdown.set(!this.showNotificationsDropdown());
+    this.showMessagesDropdown.set(false);
+    this.showUserMenu.set(false);
+  }
+
+  toggleMessagesDropdown(): void {
+    this.showMessagesDropdown.set(!this.showMessagesDropdown());
+    this.showNotificationsDropdown.set(false);
+    this.showUserMenu.set(false);
+  }
+
   // Contadores de badges
   getNotificationCount(): number {
-    return 3; // Mock data - integrate with real notification service
+    return this.unreadNotifications();
   }
 
   getMessageCount(): number {
-    return 5; // Mock data - integrate with real message service
+    return this.unreadMessages();
   }
 
   // Utilidades
@@ -307,23 +532,23 @@ export class DynamicHeaderComponent {
     const routeMap: Record<string, string> = {
       admin: '/admin/profile',
       student: '/student/profile',
-      university_admin: '/admin-uni/profile',
-      promoter: '/promoter/profile',
-      public: '/profile',
+      university_admin: '/admin-uni/dashboard',
+      promoter: '/promoter/dashboard',
+      public: '/landing',
     };
-    return routeMap[role] || '/profile';
+    return routeMap[role] || '/landing';
   }
 
   getSettingsRoute(): string {
     const role = this.currentRole();
     const routeMap: Record<string, string> = {
       admin: '/admin/settings',
-      student: '/student/settings',
-      university_admin: '/admin-uni/settings',
-      promoter: '/promoter/settings',
-      public: '/settings',
+      student: '/student/dashboard',
+      university_admin: '/admin-uni/dashboard',
+      promoter: '/promoter/dashboard',
+      public: '/landing',
     };
-    return routeMap[role] || '/settings';
+    return routeMap[role] || '/landing';
   }
 
   // Actions
@@ -336,111 +561,13 @@ export class DynamicHeaderComponent {
     this.closeUserMenu();
   }
 
+  isLogoutItem(item: { label: string; link: string; icon: string; action?: string }): boolean {
+    return item.action === 'logout';
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
-  }
-
-  private searchStudents(term: string): Observable<StudentSearchResult[]> {
-    if (!term.trim()) {
-      this.searchResults.set([]);
-      this.showResults.set(false);
-      this.isSearching.set(false);
-      return of([]);
-    }
-
-    this.isSearching.set(true);
-    console.log('🔍 Iniciando búsqueda con término:', term);
-
-    // Obtener usuarios con rol_id = 2 (estudiantes) y filtrar en frontend
-    return this.apiClient
-      .get<StudentSearchResult[]>('/usuarios', {
-        rol_id: 2, // Solo estudiantes según requerimiento
-        limit: 50, // Aumentar límite para filtrar mejor en frontend
-      })
-      .pipe(
-        tap((response: StudentSearchResult[]) => {
-          console.log('🔍 Respuesta completa del servidor:', response);
-          console.log('🔍 Tipo de respuesta:', typeof response);
-          console.log('🔍 Es array:', Array.isArray(response));
-
-          const currentUser = this.authService.currentUser();
-          const currentUserId = currentUser?.id;
-
-          // Verificar si la respuesta tiene una estructura diferente
-          let users: StudentSearchResult[] = [];
-          if (Array.isArray(response)) {
-            // Filtrar solo estudiantes (rol_id = 2) y excluir usuario actual
-            users = response.filter(user => user.rol_id === 2 && user.id !== currentUserId);
-          } else if (response && (response as any).data && Array.isArray((response as any).data)) {
-            users = (response as any).data.filter(
-              (user: StudentSearchResult) => user.rol_id === 2 && user.id !== currentUserId,
-            );
-            console.log('🔍 Usando response.data:', users);
-          } else if (
-            response &&
-            (response as any).usuarios &&
-            Array.isArray((response as any).usuarios)
-          ) {
-            users = (response as any).usuarios.filter(
-              (user: StudentSearchResult) => user.rol_id === 2 && user.id !== currentUserId,
-            );
-            console.log('🔍 Usando response.usuarios:', users);
-          } else {
-            console.log('🔍 Estructura de respuesta no reconocida');
-          }
-
-          // ✅ Filtro adicional en frontend por nombre/apellido si el backend no filtra
-          const searchTermLower = term.toLowerCase().trim();
-          users = users.filter(user => {
-            const fullName = `${user.nombre} ${user.apellido || ''}`.toLowerCase();
-            const email = user.correo.toLowerCase();
-            return (
-              fullName.includes(searchTermLower) ||
-              email.includes(searchTermLower) ||
-              user.nombre.toLowerCase().includes(searchTermLower) ||
-              (user.apellido && user.apellido.toLowerCase().includes(searchTermLower))
-            );
-          });
-
-          // Limitar resultados a 8 para la UI
-          users = users.slice(0, 8);
-
-          console.log('🔍 Usuario actual ID:', currentUserId);
-          console.log('🔍 Usuarios filtrados (sin usuario actual):', users.length);
-          console.log('🔍 Término de búsqueda:', searchTermLower);
-
-          this.searchResults.set(users);
-          this.showResults.set(users.length > 0 && this.searchTerm().trim().length > 0);
-          this.isSearching.set(false);
-          console.log('🔍 Usuarios encontrados:', users.length);
-        }),
-        catchError(error => {
-          console.error('❌ Error completo en búsqueda de estudiantes:', error);
-          console.error('❌ Status del error:', error.status);
-          console.error('❌ Mensaje del error:', error.message);
-          console.error('❌ URL solicitada:', error.url);
-          this.isSearching.set(false);
-          this.searchResults.set([]);
-          this.showResults.set(false);
-          return of([]);
-        }),
-        switchMap(() => of(this.searchResults())),
-      );
-  }
-
-  /**
-   * ✅ Manejar cambio en input de búsqueda
-   */
-  onSearchChange(term: string): void {
-    this.searchTerm.set(term);
-    this.searchSubject.next(term);
-
-    // Si el campo está vacío, ocultar resultados inmediatamente
-    if (!term.trim()) {
-      this.showResults.set(false);
-      this.searchResults.set([]);
-    }
   }
 
   /**
@@ -458,7 +585,6 @@ export class DynamicHeaderComponent {
   goToStudentProfile(studentId: number): void {
     this.router.navigate(['/student/public-profile', studentId]);
     this.clearSearch();
-    console.log('👤 Navegando al perfil del estudiante:', studentId);
   }
 
   /**
@@ -468,17 +594,11 @@ export class DynamicHeaderComponent {
     const user = this.authService.currentUser();
     const rolePrefix = this.getRolePrefix(user?.rol_id);
     this.router.navigate([`/${rolePrefix}/dashboard`]);
-    console.log('🏠 Navegando al feed principal');
   }
 
   navigateToProjects(): void {
     const user = this.authService.currentUser();
     const rolePrefix = this.getRolePrefix(user?.rol_id);
-
-    // Debug logs
-    console.log('🔍 User:', user);
-    console.log('🔍 Role ID:', user?.rol_id);
-    console.log('🔍 Role Prefix:', rolePrefix);
 
     // Mapeo específico para proyectos según el rol
     const projectRoutes = {
@@ -489,35 +609,29 @@ export class DynamicHeaderComponent {
     };
 
     const route = projectRoutes[rolePrefix as keyof typeof projectRoutes] || '/student/projects';
-    console.log('🔍 Selected route:', route);
     this.router.navigate([route]);
-    console.log('📁 Navegando a proyectos');
   }
 
   navigateToForums(): void {
     const user = this.authService.currentUser();
     const rolePrefix = this.getRolePrefix(user?.rol_id);
     this.router.navigate([`/${rolePrefix}/forums`]);
-    console.log('💬 Navegando a foros');
   }
 
   navigateToEvents(): void {
     const user = this.authService.currentUser();
     const rolePrefix = this.getRolePrefix(user?.rol_id);
     this.router.navigate([`/${rolePrefix}/events`]);
-    console.log('📅 Navegando a eventos');
   }
 
   navigateToOpportunities(): void {
     const user = this.authService.currentUser();
     const rolePrefix = this.getRolePrefix(user?.rol_id);
     this.router.navigate([`/${rolePrefix}/opportunities`]);
-    console.log('🎯 Navegando a oportunidades');
   }
 
   navigateToCourses(): void {
     // Implementar cuando esté disponible la ruta
-    console.log('📚 Navegando a cursos - En desarrollo');
   }
 
   // Método auxiliar para obtener el prefijo de ruta según el rol
@@ -538,12 +652,10 @@ export class DynamicHeaderComponent {
 
   navigateToNotifications(): void {
     // Por ahora navegamos al dashboard hasta que estén las notificaciones
-    console.log('🔔 Navegando a notificaciones - En desarrollo');
   }
 
   navigateToMessages(): void {
     this.router.navigate(['/student/conversations']);
-    console.log('💬 Navegando a conversaciones');
   }
 
   /**
@@ -552,7 +664,7 @@ export class DynamicHeaderComponent {
   clearSearch(): void {
     this.searchTerm.set('');
     this.searchResults.set([]);
-    this.showResults.set(false);
+    this.showSearchResults.set(false);
     this.isSearching.set(false);
   }
 
@@ -562,7 +674,7 @@ export class DynamicHeaderComponent {
   onSearchBlur(): void {
     // Delay más largo para permitir clic en resultados
     setTimeout(() => {
-      this.showResults.set(false);
+      this.showSearchResults.set(false);
     }, 300);
   }
 
@@ -572,7 +684,7 @@ export class DynamicHeaderComponent {
   onSearchFocus(): void {
     // Mostrar resultados si hay término de búsqueda y resultados
     if (this.searchTerm().trim() && this.searchResults().length > 0) {
-      this.showResults.set(true);
+      this.showSearchResults.set(true);
     }
   }
 
