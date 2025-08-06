@@ -274,11 +274,17 @@ export class LayoutConfigService {
           color: 'text-indigo-500',
         },
         {
-          label: 'Nuevo Proyecto',
+          label: 'Proyectos',
           icon: 'add_box',
-          route: '/student/Addprojects',
+          route: '/student/projects',
           color: 'text-green-500',
           badge: { text: 'Crear', color: 'bg-green-100 text-green-800' },
+        },
+        {
+          label: 'Eventos',
+          icon: 'event',
+          route: '/student/eventos',
+          color: 'text-blue-500',
         },
         {
           label: 'Foros',

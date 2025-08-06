@@ -25,6 +25,11 @@ export const STUDENT_ROUTES: Routes = [
           import('./projects/add-project.component').then(m => m.AddProyectoComponent),
       },
       {
+        path: 'eventos',
+        loadComponent: () =>
+          import('./events/event-list/event-list.component').then(m => m.EventListComponent),
+      },
+      {
         path: 'projects/:id',
         loadComponent: () =>
           import('./projects/project-detail/project-detail.component').then(
