@@ -103,6 +103,8 @@ export class DynamicHeaderComponent {
       student: [
         { label: 'Nuevo Proyecto', link: '/student/projects/new', icon: '🚀', color: 'primary' },
         { label: 'Unirse a Evento', link: '/student/events', icon: '📅', color: 'secondary' },
+        { label: 'Mis Eventos', link: '/student/my-events', icon: '🎯', color: 'accent' },
+        { label: 'Mis Registros', link: '/student/my-register', icon: '📋', color: 'primary' },
         { label: 'Explorar Foros', link: '/student/forums', icon: '💬', color: 'accent' },
       ],
       university_admin: [

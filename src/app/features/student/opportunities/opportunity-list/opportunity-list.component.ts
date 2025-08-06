@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '@app/core/services/auth/token.service';
 import {
@@ -13,11 +13,13 @@ import { UniversityService } from '@app/core/services/university/university.serv
 
 import { WorkModalityService } from '@app/core/services/workModality/workModality.service';
 
+
 @Component({
   selector: 'app-lista-oportunidades',
   templateUrl: './opportunity-list.component.html',
   imports: [CommonModule, FormsModule],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpportunityListComponent implements OnInit {
   oportunidades: Opportunity[] = [];
@@ -32,6 +34,8 @@ export class OpportunityListComponent implements OnInit {
   postulacionesRealizadas: number[] = []; // IDs de oportunidades a las que ya se postuló
   mensajeExito: string = '';
   mensajeError: string = '';
+  
+  private readonly cdr = inject(ChangeDetectorRef);
 
   constructor(
     private opportunityService: OpportunityService,
@@ -55,6 +59,7 @@ export class OpportunityListComponent implements OnInit {
       next: data => {
         this.oportunidades = data;
         this.oportunidadesFiltradas = [...data];
+        this.cdr.markForCheck();  
       },
       error: () => {
         this.isLoading = false;
@@ -67,6 +72,7 @@ export class OpportunityListComponent implements OnInit {
       this.universidadesMap = {};
       data.forEach((uni: any) => {
         this.universidadesMap[uni.id] = uni.nombre;
+        this.cdr.markForCheck();  
       });
     });
   }
