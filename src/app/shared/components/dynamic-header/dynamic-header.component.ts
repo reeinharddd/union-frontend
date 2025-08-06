@@ -25,14 +25,17 @@ export class DynamicHeaderComponent {
 
   constructor() {
     // Efecto para actualizar el rol cuando cambie el estado de autenticación
-    effect(() => {
-      const user = this.authService.currentUser();
-      if (user) {
-        const newRole = this.layoutConfigService.getCurrentUserRole();
-        this.currentRole.set(newRole);
-        console.log('🔄 DynamicHeader - Role updated:', newRole);
-      }
-    });
+    effect(
+      () => {
+        const user = this.authService.currentUser();
+        if (user) {
+          const newRole = this.layoutConfigService.getCurrentUserRole();
+          this.currentRole.set(newRole);
+          console.log('🔄 DynamicHeader - Role updated:', newRole);
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   // Navegación contextual por rol

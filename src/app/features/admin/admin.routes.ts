@@ -59,6 +59,16 @@ export const ADMIN_ROUTES: Routes = [
         loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
       },
       {
+        path: 'conversations',
+        loadChildren: () =>
+          import('./conversations/conversation.routes').then(m => m.CONVERSATION_ROUTES),
+      },
+      {
+        path: 'roles',
+        loadComponent: () =>
+          import('./roles/admin-roles.component').then(m => m.AdminRolesComponent),
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./profile/admin-profile.component').then(m => m.AdminProfileComponent),
@@ -68,13 +78,6 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () =>
           import('./settings/admin-settings.component').then(m => m.AdminSettingsComponent),
       },
-      //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
-      // },
-      // {
-      //   path: 'analytics',
-      //   loadComponent: () =>
-      //     import('./analytics/admin-analytics.component').then(m => m.AdminAnalyticsComponent),
-      // },
     ],
   },
 ];

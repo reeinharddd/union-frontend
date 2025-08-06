@@ -80,7 +80,10 @@ export class UserService extends BaseService {
     const active = users.filter(u => u.is_active).length;
     const byRole = users.reduce(
       (acc, user) => {
-        acc[user.rol_id] = (acc[user.rol_id] || 0) + 1;
+        // Verificar que el usuario y rol_id existan antes de usar
+        if (user && user.rol_id !== null && user.rol_id !== undefined) {
+          acc[user.rol_id] = (acc[user.rol_id] || 0) + 1;
+        }
         return acc;
       },
       {} as Record<number, number>,
