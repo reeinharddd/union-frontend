@@ -1,159 +1,752 @@
-<!-- Header UniON - Elegante y Funcional -->
-<header class="bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50">
-  <div class="max-w-full px-4 lg:px-6">
-    <div class="flex justify-between items-center h-14">
+<!-- Header moderno con diseño UniON -->
+<header class="bg-white/98 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-[100] w-full">
+  <div class="w-full px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 max-w-none header-spacing">
 
-      <!-- Logo y marca -->
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-md">
-            <span class="text-white font-bold text-sm">U</span>
-          </div>
-          <div class="hidden sm:block">
-            <h1 class="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+      <!-- Logo y navegación izquierda -->
+      <div class="flex items-center space-x-4 flex-shrink-0 nav-left">
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <a (click)="navigateToHome()" class="flex items-center space-x-2 cursor-pointer group">
+            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-accent-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+              <span class="text-white font-bold text-lg">U</span>
+            </div>
+            <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent hidden sm:block">
               UniON
-            </h1>
-          </div>
+            </span>
+          </a>
         </div>
+
+            <!-- Navegación contextual desktop -->
+        @if (currentRole() !== 'public') {
+          <nav class="hidden xl:flex items-center space-x-1">
+            @for (navItem of getContextualNavigation(); track navItem.label) {
+              <div class="relative">
+                <a
+                  [routerLink]="navItem.link"
+                  routerLinkActive="nav-active"
+                  class="nav-item flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1"
+                  [class.text-primary-600]="navItem.active"
+                  [class.text-gray-600]="!navItem.active"
+                >
+                  <!-- SVG Icon based on route -->
+                  @if (navItem.link.includes('dashboard')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  } @else if (navItem.link.includes('project')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  } @else if (navItem.link.includes('forum')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z" />
+                    </svg>
+                  } @else if (navItem.link.includes('event')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  } @else if (navItem.link.includes('user')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0z" />
+                    </svg>
+                  } @else if (navItem.link.includes('opportunit')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6" />
+                    </svg>
+                  } @else if (navItem.link.includes('universit')) {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  } @else {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  }
+
+                  <span class="hidden xl:block">{{ navItem.label }}</span>
+
+                  @if (navItem.badge && +navItem.badge > 0) {
+                    <span class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {{ navItem.badge }}
+                    </span>
+                  }
+                </a>
+              </div>
+            }
+          </nav>
+        }
       </div>
 
-      <!-- Barra de búsqueda y filtros (centrada) -->
+      <!-- Barra de búsqueda central -->
       @if (currentRole() !== 'public') {
-        <div class="flex-1 max-w-xl mx-6">
-          <div class="flex items-center space-x-3">
-            <!-- Búsqueda principal -->
-            <div class="flex-1 relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Buscar proyectos, usuarios, eventos..."
-                class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent text-sm transition-all duration-200"
-              >
-            </div>
-
-            <!-- Filtros compactos -->
-            <div class="flex items-center space-x-1">
-              @for (filter of getFilters(); track $index) {
-                <button
-                  (click)="onFilterClick(filter)"
-                  class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-primary-200"
-                >
-                  {{ filter }}
-                </button>
-              }
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- Acciones de la derecha -->
-      @if (currentRole() !== 'public') {
-        <div class="flex items-center space-x-2">
-
-          <!-- Crear contenido -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200" title="Crear">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-
-          <!-- Notificaciones -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Notificaciones">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-5 5v-3.09c0-.26.06-.52.17-.757L12 9.757l-3.17 3.486c.11.237.17.497.17.757V17H4l5-5V7a3 3 0 116 0v5z" />
-            </svg>
-            @if (getNotificationCount() > 0) {
-              <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                {{ getNotificationCount() }}
-              </span>
-            }
-          </button>
-
-          <!-- Mensajes -->
-          <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 relative" title="Mensajes">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            @if (getMessageCount() > 0) {
-              <span class="absolute -top-0.5 -right-0.5 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                {{ getMessageCount() }}
-              </span>
-            }
-          </button>
-
-          <!-- Avatar del usuario -->
-          <div class="relative ml-2">
-            <button
-              (click)="toggleUserMenu()"
-              class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
-              title="{{ getUserName() }}"
-            >
-              <div class="w-7 h-7 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-                {{ getUserInitials() }}
-              </div>
-              <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <div class="search-container hidden md:block">
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-neutral-400 group-focus-within:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-            </button>
+            </div>
+            <input
+              type="text"
+              [value]="searchTerm()"
+              (input)="onSearchChange($any($event.target).value)"
+              (focus)="onSearchFocus()"
+              (blur)="onSearchBlur()"
+              placeholder="Buscar proyectos, usuarios, eventos..."
+              class="search-input w-full pl-12 pr-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-100 transition-all duration-200 bg-white/70 backdrop-blur-sm"
+              autocomplete="off"
+            />
 
-            <!-- Dropdown del usuario - Mejorado -->
-            @if (showUserMenu()) {
-              <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
-                <!-- Header del dropdown -->
-                <div class="p-4 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-gray-100">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center text-white font-semibold shadow-sm">
-                      {{ getUserInitials() }}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <p class="font-semibold text-gray-900 truncate">{{ getUserName() }}</p>
-                      <p class="text-sm text-gray-500 truncate">{{ getUserEmail() }}</p>
-                      <span class="inline-block mt-1 px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
-                        {{ getRoleDisplayName() }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+            <!-- Loading indicator -->
+            @if (isSearching()) {
+              <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
+              </div>
+            }
 
-                <!-- Menu items -->
-                <div class="py-2">
-                  @for (menuItem of getUserMenuItems(); track menuItem.label) {
-                    <a
-                      [routerLink]="menuItem.link"
-                      (click)="onMenuItemClick(menuItem)"
-                      class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors group"
-                      [class.text-red-600]="menuItem.label === 'Cerrar Sesión'"
-                      [class.hover:bg-red-50]="menuItem.label === 'Cerrar Sesión'"
-                    >
-                      <span class="mr-3 text-base group-hover:scale-110 transition-transform">{{ menuItem.icon }}</span>
-                      <span class="font-medium">{{ menuItem.label }}</span>
-                      @if (menuItem.label === 'Cerrar Sesión') {
-                        <svg class="ml-auto h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                      }
-                    </a>
+            <!-- Search Results Dropdown -->
+            @if (showSearchResults() && searchTerm()) {
+              <div class="absolute z-[110] mt-2 w-full bg-white rounded-xl border border-gray-200 dropdown-shadow max-h-80 overflow-y-auto"
+                   (click)="$event.stopPropagation()">
+                <div class="py-1">
+                  @for (result of searchResults(); track result.id) {
+                    <div class="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-150">
+                      <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-medium text-xs">
+                          {{result.nombre.charAt(0).toUpperCase() || '?'}}
+                        </span>
+                      </div>
+                      <div class="ml-3 flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">
+                          {{result.nombre || 'Sin nombre'}}
+                        </p>
+                        <p class="text-xs text-gray-500 truncate">
+                          {{result.tipo || 'Resultado'}}
+                        </p>
+                      </div>
+                    </div>
                   }
                 </div>
+
+                @if (searchResults().length === 0 && searchTerm() && !isSearching()) {
+                  <div class="px-4 py-6 text-sm text-gray-500 text-center">
+                    No se encontraron resultados
+                  </div>
+                }
               </div>
             }
           </div>
         </div>
       }
-    </div>
-  </div>
 
-  <!-- Overlay para cerrar menús -->
-  @if (showUserMenu()) {
+
+      <!-- Navegación derecha -->
+      <div class="flex items-center space-x-2 flex-shrink-0 nav-right">
+
+        <!-- Acciones rápidas -->
+        @if (currentRole() !== 'public') {
+          <div class="hidden xl:flex items-center space-x-1">
+            @for (action of getQuickActions(); track action.label) {
+              <a
+                [routerLink]="action.link"
+                class="group px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:shadow-md border"
+                [class]="'border-' + action.color + '-200 text-' + action.color + '-600 hover:bg-' + action.color + '-50'"
+                [title]="action.label"
+              >
+                <span class="group-hover:scale-110 transition-transform duration-200">
+                  <!-- SVG Icon for quick actions -->
+                  @if (action.link.includes('new') || action.link.includes('create')) {
+                    <svg class="w-4 h-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  } @else if (action.link.includes('backup')) {
+                    <svg class="w-4 h-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  } @else if (action.link.includes('candidate') || action.link.includes('report')) {
+                    <svg class="w-4 h-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  } @else {
+                    <svg class="w-4 h-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  }
+                </span>
+                <span class="hidden xl:inline ml-2">{{ action.label }}</span>
+              </a>
+            }
+          </div>
+        }
+
+        <!-- Notificaciones -->
+        @if (currentRole() !== 'public') {
+          <div class="relative">
+            <button
+              (click)="toggleNotificationsDropdown()"
+              class="p-2 rounded-xl hover:bg-gray-50 transition-colors relative"
+              title="Notificaciones"
+            >
+              <svg class="w-6 h-6 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-4-4V8a7 7 0 10-14 0v5l-4 4h5m8 0v1a3 3 0 01-6 0v-1m6 0H9" />
+              </svg>
+              @if (getNotificationCount() > 0) {
+                <span class="absolute -top-1 -right-1 bg-accent-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  {{ getNotificationCount() }}
+                </span>
+              }
+            </button>
+
+            <!-- Dropdown de notificaciones -->
+            @if (showNotificationsDropdown()) {
+              <div class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-[110] animate-slide-in">
+                <div class="px-4 py-3 border-b border-gray-200">
+                  <h3 class="text-sm font-semibold text-gray-900">Notificaciones</h3>
+                </div>
+
+                <div class="max-h-80 overflow-y-auto">
+                  @for (notification of recentNotifications(); track notification.id) {
+                    <div class="notification-item px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer transition-colors duration-150"
+                         (click)="markNotificationAsRead(notification.id)">
+                      <div class="flex items-start space-x-3">
+                        <!-- Type Icon -->
+                        <div class="flex-shrink-0 mt-1">
+                          <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                               [ngClass]="{
+                                 'bg-blue-100': notification.tipo === 'proyecto',
+                                 'bg-purple-100': notification.tipo === 'evento',
+                                 'bg-green-100': notification.tipo === 'oportunidad',
+                                 'bg-yellow-100': notification.tipo === 'mensaje'
+                               }">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                                 [ngClass]="{
+                                   'text-blue-600': notification.tipo === 'proyecto',
+                                   'text-purple-600': notification.tipo === 'evento',
+                                   'text-green-600': notification.tipo === 'oportunidad',
+                                   'text-yellow-600': notification.tipo === 'mensaje'
+                                 }">
+                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" *ngIf="notification.tipo === 'proyecto'"/>
+                              <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 9h12v8H4V9z" *ngIf="notification.tipo === 'evento'"/>
+                            </svg>
+                          </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm text-gray-900" [class.font-medium]="!notification.leida">
+                            {{ notification.mensaje }}
+                          </p>
+                          <p class="text-xs text-gray-500 mt-1">
+                            {{ (notification.created_at | date:'short') || 'Hace poco' }}
+                          </p>
+                        </div>
+
+                        <!-- Unread indicator -->
+                        @if (!notification.leida) {
+                          <div class="flex-shrink-0">
+                            <div class="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  @if (recentNotifications().length === 0) {
+                    <div class="px-4 py-8 text-center text-sm text-gray-500">
+                      No tienes notificaciones
+                    </div>
+                  }
+                </div>
+
+                <div class="px-4 py-3 border-t border-gray-200 bg-gray-50">
+                  <button
+                    class="w-full text-center text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200"
+                    title="Ver todas las notificaciones">
+                    Ver todas las notificaciones
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Mensajes -->
+          <div class="relative">
+            <button
+              (click)="toggleMessagesDropdown()"
+              class="p-2 rounded-xl hover:bg-gray-50 transition-colors relative"
+              title="Mensajes"
+            >
+              <svg class="w-6 h-6 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.477 8-10 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.477-8 10-8s10 3.582 10 8z" />
+              </svg>
+              @if (getMessageCount() > 0) {
+                <span class="absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {{ getMessageCount() }}
+                </span>
+              }
+            </button>
+
+            <!-- Dropdown de mensajes -->
+            @if (showMessagesDropdown()) {
+              <div class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-[110] animate-slide-in">
+                <div class="px-4 py-3 border-b border-gray-200">
+                  <h3 class="text-sm font-semibold text-gray-900">Mensajes</h3>
+                </div>
+
+                <div class="max-h-80 overflow-y-auto">
+                  @for (conversation of recentConversations(); track conversation.id) {
+                    <div class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer transition-colors duration-150">
+                      <div class="flex items-center space-x-3">
+                        <!-- Avatar -->
+                        <div class="flex-shrink-0">
+                          <div class="w-10 h-10 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-medium text-sm">
+                              {{conversation.otro_usuario.nombre.charAt(0).toUpperCase()}}{{conversation.otro_usuario.apellido.charAt(0).toUpperCase()}}
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium text-gray-900 truncate">
+                              {{ conversation.otro_usuario.nombre }} {{ conversation.otro_usuario.apellido }}
+                            </p>
+                            <p class="text-xs text-gray-500 flex-shrink-0 ml-2">
+                              {{ (conversation.ultimo_mensaje_fecha | date:'short') || 'Ahora' }}
+                            </p>
+                          </div>
+                          <p class="text-sm text-gray-600 truncate mt-1">
+                            {{ conversation.ultimo_mensaje }}
+                          </p>
+                        </div>
+
+                        <!-- Unread badge -->
+                        @if (conversation.no_leidos > 0) {
+                          <div class="flex-shrink-0">
+                            <span class="bg-primary-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+                              {{ conversation.no_leidos }}
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  @if (recentConversations().length === 0) {
+                    <div class="px-4 py-8 text-center text-sm text-gray-500">
+                      No tienes conversaciones
+                    </div>
+                  }
+                </div>
+
+                <div class="px-4 py-3 border-t border-gray-200 bg-gray-50">
+                  <button
+                    class="w-full text-center text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200"
+                    title="Ver todas las conversaciones">
+                    Ver todas las conversaciones
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Menú de usuario -->
+        <div class="relative">
+          <button
+            (click)="toggleUserMenu()"
+            class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 transition-all duration-200 group"
+          >
+            <div class="relative">
+              <div class="w-8 h-8 bg-gradient-to-br from-primary-400 via-accent-400 to-secondary-400 rounded-xl flex items-center justify-center text-white font-medium text-sm shadow-soft">
+                {{ getUserInitials() }}
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-success-500 border-2 border-white rounded-full"></div>
+            </div>
+            @if (currentRole() !== 'public') {
+              <div class="hidden lg:block text-left user-info">
+                <p class="text-sm font-medium text-neutral-800">{{ getUserName() }}</p>
+                <p class="text-xs text-neutral-500">{{ getRoleDisplayName() }}</p>
+              </div>
+              <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            }
+          </button>
+
+          <!-- Dropdown del usuario -->
+          @if (showUserMenu() && currentRole() !== 'public') {
+            <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 z-[110] animate-slide-in">
+              <!-- Header del dropdown -->
+              <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-gradient-to-br from-primary-400 via-accent-400 to-secondary-400 rounded-xl flex items-center justify-center text-white font-medium shadow-soft">
+                    {{ getUserInitials() }}
+                  </div>
+                  <div>
+                    <p class="font-medium text-neutral-800">{{ getUserName() }}</p>
+                    <p class="text-sm text-neutral-500">{{ getUserEmail() }}</p>
+                    <span class="inline-block mt-1 px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-lg">
+                      {{ getRoleDisplayName() }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Menu items -->
+              <div class="py-2">
+                @for (menuItem of getUserMenuItems(); track menuItem.label) {
+                  <button
+                    (click)="onMenuItemClick(menuItem)"
+                    class="flex items-center w-full px-4 py-2.5 text-sm text-neutral-700 hover:bg-gray-50 transition-colors"
+                    [ngClass]="{ 'text-red-600': isLogoutItem(menuItem), 'hover:bg-red-50': isLogoutItem(menuItem) }"
+                  >
+                    <span class="mr-3 text-base">{{ menuItem.icon }}</span>
+                    {{ menuItem.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Botón menú móvil -->
+        <button
+          (click)="toggleMobileMenu()"
+          class="lg:hidden p-2 rounded-xl hover:bg-gray-50 transition-colors"
+          title="Menú móvil"
+        >
+          <svg class="w-6 h-6 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+    <!-- Menú móvil -->
+    @if (showMobileMenu() && currentRole() !== 'public') {
+      <div class="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md animate-slide-in">
+        <div class="px-4 py-4 space-y-2">
+          @for (navItem of getContextualNavigation(); track navItem.label) {
+            <a
+              [routerLink]="navItem.link"
+              routerLinkActive="bg-primary-50 text-primary-600"
+              class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50"
+              (click)="closeMobileMenu()"
+            >
+              <span class="text-lg">
+                <!-- SVG Icon for mobile nav -->
+                @if (navItem.link.includes('dashboard')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                } @else if (navItem.link.includes('project')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                } @else if (navItem.link.includes('forum')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z" />
+                  </svg>
+                } @else if (navItem.link.includes('event')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                } @else if (navItem.link.includes('user')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                }
+              </span>
+              <span>{{ navItem.label }}</span>
+              @if (navItem.badge && +navItem.badge > 0) {
+                <span class="ml-auto bg-accent-500 text-white text-xs rounded-full px-2 py-1">
+                  {{ navItem.badge }}
+                </span>
+              }
+            </a>
+          }
+
+          <!-- Divider -->
+          <div class="border-t border-gray-100 my-2"></div>
+
+          <!-- Acciones rápidas en móvil -->
+          @for (action of getQuickActions().slice(0, 2); track action.label) {
+            <a
+              [routerLink]="action.link"
+              class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50 border border-gray-200"
+              (click)="closeMobileMenu()"
+            >
+              <span class="text-lg">
+                <!-- SVG Icon for mobile quick actions -->
+                @if (action.link.includes('new') || action.link.includes('create')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                } @else if (action.link.includes('backup')) {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                }
+              </span>
+              <span>{{ action.label }}</span>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+  <!-- Overlay para cerrar menús al hacer click fuera -->
+  @if (showUserMenu() || showMobileMenu() || showNotificationsDropdown() || showMessagesDropdown()) {
     <div
-      class="fixed inset-0 z-40"
-      (click)="closeUserMenu()"
+      class="fixed inset-0 z-[90]"
+      (click)="closeUserMenu(); closeMobileMenu(); closeNotifications(); closeMessages()"
     ></div>
   }
-</header>
+
+<style>
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-in {
+    animation: slide-in 0.2s ease-out;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    console.warn("🚀 ~ 0.05:", 0.05)
+  }
+
+  /* Mejoras de iconos y estilos */
+  svg {
+    flex-shrink: 0;
+  }
+
+  /* Hover effects mejorados */
+  .group:hover svg {
+    color: rgb(59 130 246); /* blue-500 */
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 768px) {
+    header .w-full {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  /* Header container fixes */
+  header {
+    width: 100%;
+    left: 0;
+    right: 0;
+    overflow: visible !important;
+    position: sticky;
+    top: 0;
+    z-index: 100 !important;
+  }
+
+  .max-w-none {
+    max-width: none !important;
+  }
+
+  /* Flex container improvements */
+  .header-flex {
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Search input container responsive */
+  .search-container {
+    flex: 1;
+    max-width: 28rem; /* max-w-lg equivalent */
+    margin: 0 1rem;
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .search-container {
+      display: none;
+    }
+  }
+
+  /* Navigation improvements */
+  .nav-left {
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  .nav-right {
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  /* User menu improvements */
+  .user-info {
+    max-width: 150px;
+    overflow: hidden;
+    position: relative;
+    z-index: 102;
+  }
+
+  .user-info p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Prevent header content from being covered by sidebar */
+  .header-content {
+    position: relative;
+    z-index: 100;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 1280px) {
+    .xl\\:flex {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .lg\\:hidden {
+      display: block !important;
+    }
+  }
+
+  /* Compact spacing for smaller screens */
+  @media (max-width: 1200px) {
+    .header-spacing {
+      gap: 0.5rem;
+    }
+  }
+
+  /* Badge improvements */
+  .badge-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: .8;
+    }
+  }
+
+  /* Better focus states */
+  button:focus-visible,
+  input:focus-visible,
+  a:focus-visible {
+    outline: 2px solid rgb(59 130 246);
+    outline-offset: 2px;
+  }
+
+  /* Dropdown improvements */
+  .dropdown-shadow {
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+    z-index: 110 !important;
+  }
+
+  /* Ensure dropdowns appear above all content */
+  [class*="z-[110]"] {
+    z-index: 110 !important;
+    position: relative;
+  }
+
+  /* Fix for sidebar conflicts */
+  .header-spacing {
+    position: relative;
+    z-index: 100;
+  }
+
+  /* Navigation improvements */
+  .nav-left {
+    flex-shrink: 0;
+    min-width: 0;
+    z-index: 101;
+  }
+
+  .nav-right {
+    flex-shrink: 0;
+    min-width: 0;
+    z-index: 101;
+  }
+
+  /* Navigation active state */
+  .nav-active {
+    background: linear-gradient(135deg, rgb(59 130 246 / 0.1), rgb(147 51 234 / 0.1));
+    border-color: rgb(59 130 246 / 0.3);
+    color: rgb(59 130 246);
+  }
+
+  /* Logo hover effect */
+  .logo-hover:hover {
+    transform: scale(1.05);
+  }
+
+  /* Better mobile menu */
+  @media (max-width: 1024px) {
+    .mobile-nav-item {
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .mobile-nav-item:hover {
+      background-color: rgb(249 250 251);
+      transform: translateX(4px);
+    }
+  }
+
+  /* Search improvements */
+  .search-input:focus {
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+  }
+
+  /* User menu improvements */
+  .user-menu-item:hover {
+    background: linear-gradient(90deg, rgb(249 250 251), rgb(243 244 246));
+  }
+
+  /* Notification improvements */
+  .notification-item {
+    transition: all 0.2s ease;
+  }
+
+  .notification-item:hover {
+    background: linear-gradient(135deg, rgb(249 250 251), rgb(243 244 246));
+    transform: translateY(-1px);
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>

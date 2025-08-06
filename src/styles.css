@@ -25,6 +25,66 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* --------------------- HEADER STYLES --------------------- */
+.nav-active {
+  @apply text-primary-600 bg-primary-50 border-primary-200;
+}
+
+.nav-item:hover {
+  @apply bg-gray-50 text-gray-900;
+}
+
+.nav-item svg {
+  @apply transition-colors duration-200;
+}
+
+/* Ensure header icons are always visible */
+header svg {
+  @apply text-gray-600;
+}
+
+header button:hover svg {
+  @apply text-gray-900;
+}
+
+/* Header dropdown animations */
+.header-dropdown {
+  @apply opacity-0 invisible transform scale-95 transition-all duration-150 ease-out;
+}
+
+.header-dropdown.show {
+  @apply opacity-100 visible transform scale-100;
+}
+
+/* Mobile menu animations */
+.mobile-menu-enter {
+  @apply transform translate-y-[-10px] opacity-0;
+}
+
+.mobile-menu-enter-active {
+  @apply transform translate-y-0 opacity-100 transition-all duration-200 ease-out;
+}
+
+/* Search input focus styles */
+input[type="search"]:focus,
+input[placeholder*="Buscar"]:focus {
+  @apply ring-2 ring-primary-500 border-primary-500;
+}
+
+/* Badge animations */
+.notification-badge {
+  @apply animate-pulse;
+}
+
+/* User menu styles */
+.user-menu-item {
+  @apply transition-colors duration-150 ease-in-out;
+}
+
+.user-menu-item:hover {
+  @apply bg-gray-50 text-gray-900;
+}
+
 /* --------------------- BOTONES PRINCIPALES --------------------- */
 .btn {
   display: inline-flex;

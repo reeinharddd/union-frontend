@@ -12,11 +12,11 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
   template: `
     <!-- Sidebar UniON - Compacto y Elegante -->
     <aside
-      class="border-gray-100/50 flex h-full w-56 flex-col border-r bg-white/95 backdrop-blur-sm"
+      class="flex h-full w-56 flex-col border-r border-gray-100/50 bg-white/95 backdrop-blur-sm"
     >
       <!-- Header del sidebar con info del usuario -->
       <div
-        class="border-gray-100 border-b bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4"
+        class="border-b border-gray-100 bg-gradient-to-br from-primary-50/50 to-accent-50/50 p-4"
       >
         <div class="flex items-center space-x-3">
           <div class="relative">
@@ -26,12 +26,12 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
               {{ getUserInitials() }}
             </div>
             <div
-              class="bg-green-500 absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white"
+              class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-green-500"
             ></div>
           </div>
           <div class="min-w-0 flex-1">
-            <p class="text-gray-900 truncate text-sm font-semibold">{{ getUserName() }}</p>
-            <p class="text-gray-500 truncate text-xs">{{ getUserEmail() }}</p>
+            <p class="truncate text-sm font-semibold text-gray-900">{{ getUserName() }}</p>
+            <p class="truncate text-xs text-gray-500">{{ getUserEmail() }}</p>
             <span
               class="mt-1 inline-block rounded-md bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700"
             >
@@ -50,14 +50,17 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
               <a
                 [routerLink]="item.route"
                 routerLinkActive="bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 border-primary-200 shadow-sm font-medium"
-                class="hover:bg-gray-50 text-gray-700 group flex w-full items-center justify-between rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 hover:text-primary-600"
+                class="group flex w-full items-center justify-between rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
                 [class.cursor-pointer]="!item.children"
                 (click)="item.children ? toggleSubmenu(item) : null"
               >
                 <div class="flex items-center space-x-3">
-                  <i class="material-icons text-base transition-transform duration-200 group-hover:scale-105 {{ item.color || 'text-gray-500' }}">{{
-                    item.icon
-                  }}</i>
+                  <i
+                    class="material-icons text-base transition-transform duration-200 group-hover:scale-105 {{
+                      item.color || 'text-gray-500'
+                    }}"
+                    >{{ item.icon }}</i
+                  >
                   <span class="font-medium">{{ item.label }}</span>
                   @if (item.badge) {
                     <span
@@ -71,7 +74,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
 
                 @if (item.children) {
                   <svg
-                    class="text-gray-400 h-4 w-4 transition-all duration-200 group-hover:text-primary-500"
+                    class="h-4 w-4 text-gray-400 transition-all duration-200 group-hover:text-primary-500"
                     [class.rotate-90]="isSubmenuOpen(item)"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -95,12 +98,15 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
                   <a
                     [routerLink]="child.route"
                     routerLinkActive="bg-primary-50 text-primary-600 border-l-3 border-primary-500 font-medium"
-                    class="hover:bg-gray-50 border-l-3 text-gray-600 group flex items-center justify-between rounded-md border-transparent px-3 py-2 text-sm transition-all duration-200 hover:text-primary-600"
+                    class="border-l-3 group flex items-center justify-between rounded-md border-transparent px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-primary-600"
                   >
                     <div class="flex items-center space-x-3">
-                      <i class="material-icons text-sm transition-transform group-hover:scale-105 {{ child.color || 'text-gray-500' }}">{{
-                        child.icon
-                      }}</i>
+                      <i
+                        class="material-icons text-sm transition-transform group-hover:scale-105 {{
+                          child.color || 'text-gray-500'
+                        }}"
+                        >{{ child.icon }}</i
+                      >
                       <span>{{ child.label }}</span>
                     </div>
                     @if (child.badge) {
@@ -120,12 +126,12 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
       </nav>
 
       <!-- Footer del sidebar -->
-      <div class="border-gray-50 bg-gray-50/30 border-t p-3">
+      <div class="border-t border-gray-50 bg-gray-50/30 p-3">
         <div class="space-y-1">
           <!-- Acceso rápido a perfil -->
           <a
             [routerLink]="getProfileRoute()"
-            class="text-gray-600 group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
+            class="group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-primary-50 hover:text-primary-600"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -146,7 +152,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
           <!-- Configuración -->
           <a
             [routerLink]="getSettingsRoute()"
-            class="hover:bg-gray-50 text-gray-600 hover:text-gray-700 group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200"
+            class="group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-gray-700"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -173,7 +179,7 @@ import { LayoutConfigService, SidebarItem } from '@app/core/services/layout/layo
           <!-- Cerrar sesión -->
           <button
             (click)="logout()"
-            class="hover:bg-red-50 hover:text-red-600 text-gray-600 group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-all duration-200"
+            class="group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
           >
             <svg
               class="h-4 w-4 transition-transform group-hover:scale-105"
@@ -231,7 +237,21 @@ export class DynamicSidebarComponent {
   // Items del sidebar basados en el rol actual
   sidebarItems = computed((): SidebarItem[] => {
     const config = this.layoutConfigService.getCurrentLayoutConfig();
-    return config.leftSidebar.filter((item: SidebarItem) => this.hasPermission(item));
+    let items = config.leftSidebar.filter((item: SidebarItem) => this.hasPermission(item));
+
+    // Si es admin, añadir acceso rápido a todas las funciones admin desde cualquier perfil
+    const currentUser = this.authService.currentUser();
+    if (currentUser?.rol_id === 1 && !window.location.pathname.startsWith('/admin')) {
+      items.unshift({
+        label: 'Panel de Administración',
+        icon: 'admin_panel_settings',
+        route: '/admin/dashboard',
+        color: 'text-red-500',
+        badge: { text: 'Admin', color: 'bg-red-100 text-red-800' },
+      });
+    }
+
+    return items;
   });
 
   // Control de submenús
@@ -309,8 +329,8 @@ export class DynamicSidebarComponent {
   }
 
   // Permisos
-  hasPermission(item: SidebarItem): boolean {
-    return this.layoutConfigService.hasPermission(item);
+  hasPermission(_item: SidebarItem): boolean {
+    return this.layoutConfigService.hasPermission();
   }
 
   // Acciones

@@ -35,7 +35,7 @@ export interface RightSidebarSection {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LayoutConfigService {
   private authService = inject(AuthService);
@@ -47,33 +47,142 @@ export class LayoutConfigService {
           label: 'Dashboard',
           icon: 'dashboard',
           route: '/admin/dashboard',
-          color: 'text-blue-500'
+          color: 'text-blue-500',
         },
         {
-          label: 'Usuarios',
+          label: 'Gestión de Usuarios',
           icon: 'people',
-          route: '/admin/users',
           color: 'text-green-500',
-          badge: { text: 'Gestionar', color: 'bg-green-100 text-green-800' }
+          children: [
+            {
+              label: 'Todos los Usuarios',
+              icon: 'person_search',
+              route: '/admin/users',
+              color: 'text-green-600',
+            },
+            {
+              label: 'Usuarios Pendientes',
+              icon: 'pending',
+              route: '/admin/users/pending',
+              color: 'text-yellow-600',
+              badge: { text: 'Verificar', color: 'bg-yellow-100 text-yellow-800' },
+            },
+            {
+              label: 'Roles y Permisos',
+              icon: 'admin_panel_settings',
+              route: '/admin/roles',
+              color: 'text-purple-600',
+            },
+          ],
         },
         {
           label: 'Universidades',
           icon: 'school',
           route: '/admin/universities',
-          color: 'text-purple-500'
+          color: 'text-purple-500',
+          badge: { text: 'Gestionar', color: 'bg-purple-100 text-purple-800' },
         },
         {
-          label: 'Respaldos',
-          icon: 'backup',
-          route: '/admin/backups',
-          color: 'text-orange-500'
+          label: 'Contenido',
+          icon: 'library_books',
+          color: 'text-indigo-500',
+          children: [
+            {
+              label: 'Proyectos',
+              icon: 'engineering',
+              route: '/admin/proyectos',
+              color: 'text-blue-600',
+            },
+            {
+              label: 'Eventos',
+              icon: 'event',
+              route: '/admin/eventos',
+              color: 'text-purple-600',
+            },
+            {
+              label: 'Oportunidades',
+              icon: 'work_outline',
+              route: '/admin/opportunities',
+              color: 'text-teal-600',
+            },
+            {
+              label: 'Foros',
+              icon: 'forum',
+              route: '/admin/foros',
+              color: 'text-orange-600',
+            },
+          ],
         },
         {
-          label: 'Reportes',
-          icon: 'bar_chart',
-          route: '/admin/reports',
-          color: 'text-red-500'
-        }
+          label: 'Comunicaciones',
+          icon: 'chat',
+          color: 'text-blue-500',
+          children: [
+            {
+              label: 'Conversaciones',
+              icon: 'question_answer',
+              route: '/admin/conversations',
+              color: 'text-blue-600',
+            },
+            {
+              label: 'Mensajería General',
+              icon: 'mail',
+              route: '/admin/messages',
+              color: 'text-green-600',
+            },
+          ],
+        },
+        {
+          label: 'Sistema',
+          icon: 'settings',
+          color: 'text-gray-500',
+          children: [
+            {
+              label: 'Respaldos',
+              icon: 'backup',
+              route: '/admin/backups',
+              color: 'text-orange-600',
+            },
+            {
+              label: 'Tags y Categorías',
+              icon: 'local_offer',
+              route: '/admin/tags',
+              color: 'text-pink-600',
+            },
+            {
+              label: 'Configuración',
+              icon: 'tune',
+              route: '/admin/settings',
+              color: 'text-gray-600',
+            },
+          ],
+        },
+        {
+          label: 'Reportes y Analytics',
+          icon: 'analytics',
+          color: 'text-red-500',
+          children: [
+            {
+              label: 'Reportes Generales',
+              icon: 'bar_chart',
+              route: '/admin/reports',
+              color: 'text-red-600',
+            },
+            {
+              label: 'Reportes Urgentes',
+              icon: 'priority_high',
+              route: '/admin/reports/urgent',
+              color: 'text-red-700',
+              badge: { text: 'Atención', color: 'bg-red-100 text-red-800' },
+            },
+            {
+              label: 'Métricas de Uso',
+              icon: 'trending_up',
+              route: '/admin/reports/metrics',
+              color: 'text-blue-600',
+            },
+          ],
+        },
       ],
       rightSidebar: [
         {
@@ -81,8 +190,8 @@ export class LayoutConfigService {
           type: 'welcome' as const,
           content: {
             message: 'Gestiona la plataforma de manera eficiente',
-            timeOfDay: true
-          }
+            timeOfDay: true,
+          },
         },
         {
           title: 'Acciones Rápidas',
@@ -92,22 +201,22 @@ export class LayoutConfigService {
               label: 'Crear Respaldo',
               icon: 'backup',
               route: '/admin/backups/create',
-              color: 'text-blue-500'
+              color: 'text-blue-500',
             },
             {
               label: 'Verificar Usuarios',
               icon: 'verified_user',
               route: '/admin/users/pending',
-              color: 'text-green-500'
+              color: 'text-green-500',
             },
             {
               label: 'Ver Reportes Urgentes',
               icon: 'priority_high',
               route: '/admin/reports/urgent',
               color: 'text-red-500',
-              badge: { text: '3', color: 'bg-red-100 text-red-800' }
-            }
-          ]
+              badge: { text: '3', color: 'bg-red-100 text-red-800' },
+            },
+          ],
         },
         {
           title: 'Estadísticas en Vivo',
@@ -116,9 +225,9 @@ export class LayoutConfigService {
             stats: [
               { label: 'Usuarios Activos', value: '1,234', color: 'text-green-600' },
               { label: 'Proyectos Activos', value: '89', color: 'text-blue-600' },
-              { label: 'Reportes Pendientes', value: '12', color: 'text-orange-600' }
-            ]
-          }
+              { label: 'Reportes Pendientes', value: '12', color: 'text-orange-600' },
+            ],
+          },
         },
         {
           title: 'Actividad Reciente',
@@ -127,16 +236,16 @@ export class LayoutConfigService {
             activities: [
               { text: 'Usuario Ana Torres registrado', time: '2 min ago', type: 'user' },
               { text: 'Proyecto "UniApp" verificado', time: '15 min ago', type: 'project' },
-              { text: 'Reporte de contenido inapropiado', time: '1 hour ago', type: 'report' }
-            ]
-          }
-        }
+              { text: 'Reporte de contenido inapropiado', time: '1 hour ago', type: 'report' },
+            ],
+          },
+        },
       ],
       header: {
         title: 'Administración General',
         showSearch: true,
-        searchPlaceholder: 'Buscar usuarios, proyectos, reportes...'
-      }
+        searchPlaceholder: 'Buscar usuarios, proyectos, reportes...',
+      },
     },
     student: {
       leftSidebar: [
@@ -144,39 +253,33 @@ export class LayoutConfigService {
           label: 'Dashboard',
           icon: 'dashboard',
           route: '/student/dashboard',
-          color: 'text-blue-500'
+          color: 'text-blue-500',
         },
         {
           label: 'Mi Perfil',
           icon: 'person',
           route: '/student/profile',
-          color: 'text-indigo-500'
+          color: 'text-indigo-500',
         },
         {
-          label: 'Proyectos',
-          icon: 'work',
-          route: '/student/projects',
+          label: 'Nuevo Proyecto',
+          icon: 'add_box',
+          route: '/student/Addprojects',
           color: 'text-green-500',
-          badge: { text: 'Activos', color: 'bg-green-100 text-green-800' }
+          badge: { text: 'Crear', color: 'bg-green-100 text-green-800' },
         },
         {
           label: 'Foros',
           icon: 'forum',
-          route: '/student/forums',
-          color: 'text-orange-500'
-        },
-        {
-          label: 'Eventos',
-          icon: 'event',
-          route: '/student/events',
-          color: 'text-purple-500'
+          route: '/student/forum',
+          color: 'text-orange-500',
         },
         {
           label: 'Oportunidades',
           icon: 'work_outline',
           route: '/student/opportunities',
-          color: 'text-teal-500'
-        }
+          color: 'text-teal-500',
+        },
       ],
       rightSidebar: [
         {
@@ -184,103 +287,89 @@ export class LayoutConfigService {
           type: 'welcome' as const,
           content: {
             message: 'Explora, aprende y colabora',
-            timeOfDay: true
-          }
+            timeOfDay: true,
+          },
         },
         {
           title: 'Proyectos Activos',
           type: 'projects' as const,
           items: [
             {
-              label: 'App Móvil UTT',
-              icon: 'phone_android',
-              route: '/student/projects/1',
+              label: 'Crear Nuevo Proyecto',
+              icon: 'add_box',
+              route: '/student/Addprojects',
               color: 'text-blue-500',
-              description: 'Progreso: 75%',
-              badge: { text: 'En desarrollo', color: 'bg-blue-100 text-blue-800' }
+              description: 'Inicia tu idea',
+              badge: { text: 'Nuevo', color: 'bg-green-100 text-green-800' },
             },
             {
-              label: 'Sistema IoT',
-              icon: 'sensors',
-              route: '/student/projects/2',
+              label: 'Ver Proyectos',
+              icon: 'folder_open',
+              route: '/student/dashboard',
               color: 'text-green-500',
-              description: 'Progreso: 45%',
-              badge: { text: 'Planificación', color: 'bg-yellow-100 text-yellow-800' }
+              description: 'Explora proyectos',
+              badge: { text: 'Explorar', color: 'bg-blue-100 text-blue-800' },
             },
-            {
-              label: 'Web Colaborativa',
-              icon: 'web',
-              route: '/student/projects/3',
-              color: 'text-purple-500',
-              description: 'Progreso: 90%',
-              badge: { text: 'Finalizando', color: 'bg-green-100 text-green-800' }
-            }
-          ]
+          ],
         },
         {
           title: 'Foros Populares',
           type: 'activity' as const,
           items: [
             {
-              label: 'Desarrollo Web',
-              icon: 'code',
-              route: '/student/forums/web-dev',
+              label: 'Ver Foros',
+              icon: 'forum',
+              route: '/student/forum',
               color: 'text-blue-500',
-              description: '234 mensajes hoy'
+              description: 'Únete a la conversación',
             },
             {
-              label: 'Machine Learning',
-              icon: 'psychology',
-              route: '/student/forums/ml',
+              label: 'Mi Perfil',
+              icon: 'person',
+              route: '/student/profile',
               color: 'text-indigo-500',
-              description: '156 mensajes hoy'
+              description: 'Actualiza tu perfil',
             },
-            {
-              label: 'Emprendimiento',
-              icon: 'trending_up',
-              route: '/student/forums/entrepreneurship',
-              color: 'text-green-500',
-              description: '89 mensajes hoy'
-            }
-          ]
+          ],
         },
         {
-          title: 'Próximos Eventos',
+          title: 'Oportunidades',
           type: 'events' as const,
           items: [
             {
-              label: 'Workshop Angular 17',
-              icon: 'event',
-              route: '/student/events/1',
+              label: 'Ver Oportunidades',
+              icon: 'work_outline',
+              route: '/student/opportunities',
               color: 'text-red-500',
-              description: 'Mañana 10:00 AM'
+              description: 'Explora ofertas',
             },
-            {
-              label: 'Hackathon UTT',
-              icon: 'code',
-              route: '/student/events/2',
-              color: 'text-blue-500',
-              description: 'Viernes 15 Nov'
-            }
-          ]
+          ],
         },
         {
           title: 'Notificaciones',
           type: 'notifications' as const,
           content: {
             notifications: [
-              { text: 'Nueva oportunidad de prácticas en TechCorp', time: '1 hour ago', type: 'opportunity' },
-              { text: 'Comentario en tu proyecto "App Móvil UTT"', time: '3 hours ago', type: 'comment' },
-              { text: 'Evento "Workshop Angular" mañana', time: '1 day ago', type: 'event' }
-            ]
-          }
-        }
+              {
+                text: 'Nueva oportunidad de prácticas en TechCorp',
+                time: '1 hour ago',
+                type: 'opportunity',
+              },
+              {
+                text: 'Comentario en tu proyecto "App Móvil UTT"',
+                time: '3 hours ago',
+                type: 'comment',
+              },
+              { text: 'Evento "Workshop Angular" mañana', time: '1 day ago', type: 'event' },
+            ],
+          },
+        },
       ],
       header: {
         title: 'Portal Estudiantil',
         showSearch: true,
-        searchPlaceholder: 'Buscar proyectos, foros, eventos...'
-      }
+        searchPlaceholder: 'Buscar proyectos, foros, eventos...',
+      },
     },
     university_admin: {
       leftSidebar: [
@@ -288,33 +377,8 @@ export class LayoutConfigService {
           label: 'Dashboard',
           icon: 'dashboard',
           route: '/admin-uni/dashboard',
-          color: 'text-blue-500'
+          color: 'text-blue-500',
         },
-        {
-          label: 'Estudiantes',
-          icon: 'school',
-          route: '/admin-uni/students',
-          color: 'text-green-500'
-        },
-        {
-          label: 'Proyectos',
-          icon: 'work',
-          route: '/admin-uni/projects',
-          color: 'text-purple-500',
-          badge: { text: '5 Pendientes', color: 'bg-yellow-100 text-yellow-800' }
-        },
-        {
-          label: 'Eventos',
-          icon: 'event',
-          route: '/admin-uni/events',
-          color: 'text-orange-500'
-        },
-        {
-          label: 'Oportunidades',
-          icon: 'work_outline',
-          route: '/admin-uni/opportunities',
-          color: 'text-teal-500'
-        }
       ],
       rightSidebar: [
         {
@@ -322,8 +386,8 @@ export class LayoutConfigService {
           type: 'welcome' as const,
           content: {
             message: 'Gestiona tu institución académica',
-            timeOfDay: true
-          }
+            timeOfDay: true,
+          },
         },
         {
           title: 'Acciones Pendientes',
@@ -334,23 +398,23 @@ export class LayoutConfigService {
               icon: 'fact_check',
               route: '/admin-uni/projects/pending',
               color: 'text-orange-500',
-              badge: { text: '5', color: 'bg-orange-100 text-orange-800' }
+              badge: { text: '5', color: 'bg-orange-100 text-orange-800' },
             },
             {
               label: 'Aprobar Estudiantes',
               icon: 'how_to_reg',
               route: '/admin-uni/students/pending',
               color: 'text-blue-500',
-              badge: { text: '12', color: 'bg-blue-100 text-blue-800' }
+              badge: { text: '12', color: 'bg-blue-100 text-blue-800' },
             },
             {
               label: 'Revisar Reportes',
               icon: 'report',
               route: '/admin-uni/reports',
               color: 'text-red-500',
-              badge: { text: '2', color: 'bg-red-100 text-red-800' }
-            }
-          ]
+              badge: { text: '2', color: 'bg-red-100 text-red-800' },
+            },
+          ],
         },
         {
           title: 'Estadísticas Rápidas',
@@ -359,16 +423,16 @@ export class LayoutConfigService {
             stats: [
               { label: 'Estudiantes Activos', value: '456', color: 'text-green-600' },
               { label: 'Proyectos en Curso', value: '23', color: 'text-blue-600' },
-              { label: 'Eventos este Mes', value: '8', color: 'text-purple-600' }
-            ]
-          }
-        }
+              { label: 'Eventos este Mes', value: '8', color: 'text-purple-600' },
+            ],
+          },
+        },
       ],
       header: {
         title: 'Administración Universitaria',
         showSearch: true,
-        searchPlaceholder: 'Buscar estudiantes, proyectos...'
-      }
+        searchPlaceholder: 'Buscar estudiantes, proyectos...',
+      },
     },
     promoter: {
       leftSidebar: [
@@ -376,26 +440,20 @@ export class LayoutConfigService {
           label: 'Dashboard',
           icon: 'dashboard',
           route: '/promoter/dashboard',
-          color: 'text-blue-500'
+          color: 'text-blue-500',
         },
         {
           label: 'Oportunidades',
           icon: 'work',
           route: '/promoter/opportunities',
-          color: 'text-green-500'
+          color: 'text-green-500',
         },
         {
-          label: 'Candidatos',
-          icon: 'people',
-          route: '/promoter/candidates',
-          color: 'text-purple-500'
+          label: 'Crear Oportunidad',
+          icon: 'add_box',
+          route: '/promoter/opportunities/create',
+          color: 'text-purple-500',
         },
-        {
-          label: 'Mi Perfil',
-          icon: 'business',
-          route: '/promoter/profile',
-          color: 'text-indigo-500'
-        }
       ],
       rightSidebar: [
         {
@@ -403,8 +461,8 @@ export class LayoutConfigService {
           type: 'welcome' as const,
           content: {
             message: 'Encuentra el talento que necesitas',
-            timeOfDay: true
-          }
+            timeOfDay: true,
+          },
         },
         {
           title: 'Métricas',
@@ -413,9 +471,9 @@ export class LayoutConfigService {
             stats: [
               { label: 'Postulaciones Activas', value: '34', color: 'text-green-600' },
               { label: 'Candidatos Nuevos', value: '12', color: 'text-blue-600' },
-              { label: 'Entrevistas Programadas', value: '6', color: 'text-orange-600' }
-            ]
-          }
+              { label: 'Entrevistas Programadas', value: '6', color: 'text-orange-600' },
+            ],
+          },
         },
         {
           title: 'Candidatos Destacados',
@@ -426,31 +484,31 @@ export class LayoutConfigService {
               icon: 'person',
               route: '/promoter/candidates/1',
               color: 'text-blue-500',
-              description: 'Ing. Sistemas - UTT'
+              description: 'Ing. Sistemas - UTT',
             },
             {
               label: 'Luis Pérez',
               icon: 'person',
               route: '/promoter/candidates/2',
               color: 'text-green-500',
-              description: 'Ing. Software - UABC'
+              description: 'Ing. Software - UABC',
             },
             {
               label: 'María García',
               icon: 'person',
               route: '/promoter/candidates/3',
               color: 'text-purple-500',
-              description: 'Ing. Industrial - CETYS'
-            }
-          ]
-        }
+              description: 'Ing. Industrial - CETYS',
+            },
+          ],
+        },
       ],
       header: {
         title: 'Portal Empresarial',
         showSearch: true,
-        searchPlaceholder: 'Buscar candidatos, habilidades...'
-      }
-    }
+        searchPlaceholder: 'Buscar candidatos, habilidades...',
+      },
+    },
   };
 
   getCurrentLayoutConfig() {
@@ -459,10 +517,16 @@ export class LayoutConfigService {
       return this.configurations.student; // Default fallback
     }
 
-    const roleKey = currentUser.rol_id === 1 ? 'admin' :
-                   currentUser.rol_id === 2 ? 'student' :
-                   currentUser.rol_id === 3 ? 'promoter' :
-                   currentUser.rol_id === 9 ? 'university_admin' : 'student';
+    const roleKey =
+      currentUser.rol_id === 1
+        ? 'admin'
+        : currentUser.rol_id === 2
+          ? 'student'
+          : currentUser.rol_id === 3
+            ? 'promoter'
+            : currentUser.rol_id === 9
+              ? 'university_admin'
+              : 'student';
 
     return this.configurations[roleKey as keyof typeof this.configurations];
   }
@@ -485,15 +549,21 @@ export class LayoutConfigService {
       return 'student'; // Default fallback
     }
 
-    const roleKey = currentUser.rol_id === 1 ? 'admin' :
-                   currentUser.rol_id === 2 ? 'student' :
-                   currentUser.rol_id === 3 ? 'promoter' :
-                   currentUser.rol_id === 9 ? 'university_admin' : 'student';
+    const roleKey =
+      currentUser.rol_id === 1
+        ? 'admin'
+        : currentUser.rol_id === 2
+          ? 'student'
+          : currentUser.rol_id === 3
+            ? 'promoter'
+            : currentUser.rol_id === 9
+              ? 'university_admin'
+              : 'student';
 
     return roleKey;
   }
 
-  hasPermission(_item: SidebarItem): boolean {
+  hasPermission(): boolean {
     // Para ahora, todos los items son visibles
     // En el futuro se puede implementar lógica de permisos más compleja
     return true;

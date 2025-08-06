@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
 import { roleGuard } from '@app/core/guards/user/role.guard';
-import { DynamicLayoutComponent } from '@app/layouts/dynamic-layout/dynamic-layout.component';
+import { AdminLayoutComponent } from '@app/layouts/admin-layout/admin-layout.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
-    component: DynamicLayoutComponent,
+    component: AdminLayoutComponent,
     canActivate: [authGuard, roleGuard([1])], // ✅ Admin = 1
     children: [
       {
