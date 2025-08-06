@@ -70,6 +70,13 @@ export const STUDENT_ROUTES: Routes = [
           ),
       },
       {
+        path: 'project-detail/:id',
+        loadComponent: () =>
+          import('./projects/project-detail/project-detail.component').then(
+            m => m.ProjectDetailComponent,
+          ),
+      },
+      {
         path: 'projects/:projectId/colab',
         canActivate: [authGuard],
         loadComponent: () => import('./projects/colab/colab.component').then(m => m.ColabComponent),
@@ -88,6 +95,22 @@ export const STUDENT_ROUTES: Routes = [
             m => m.StudentProfilePublicComponent,
           ),
       },
+      {
+        path: 'events',
+        loadComponent: () =>
+          import('./events/event-list/event-list.component').then(m => m.EventListComponent),
+      },
+      {
+        path: 'events/:id',
+        loadComponent: () =>
+          import('./events/event-detaill/event-detaill.component').then(m => m.EventDetaillComponent),
+      },
+      {
+        path: 'my-register',
+        loadComponent: () =>
+          import('./events/my-register/my-register.component').then(m => m.MyRegisterComponent),
+      },
+      
     ],
   },
 ];

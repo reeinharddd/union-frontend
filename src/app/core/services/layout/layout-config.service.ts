@@ -168,7 +168,7 @@ export class LayoutConfigService {
         {
           label: 'Eventos',
           icon: 'event',
-          route: '/student/eventos',
+          route: '/student/events',
           color: 'text-purple-500'
         },
         {

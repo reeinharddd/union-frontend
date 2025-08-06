@@ -1,0 +1,251 @@
+<div class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
+  <!-- Header con navegación -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <button
+          (click)="volverALista()"
+          class="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Volver a eventos
+        </button>
+        <button
+          (click)="verMisRegistros()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Mis Registros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="flex justify-center items-center py-20">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-600"></div>
+    <span class="ml-4 text-gray-600 text-lg">Cargando detalles del evento...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !isLoading()" class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+      <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+      </svg>
+      <h3 class="text-lg font-medium text-red-800 mb-2">Error al cargar el evento</h3>
+      <p class="text-red-700 mb-4">{{ error() }}</p>
+      <button
+        (click)="loadEventoDetalle()"
+        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Reintentar
+      </button>
+    </div>
+  </div>
+
+  <!-- Event Details -->
+  <div *ngIf="evento() && !isLoading() && !error()" class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Título y Estado -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div class="flex-1">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">
+            {{ evento()!.titulo }}
+          </h1>
+          <div class="flex items-center gap-4 mb-6">
+            <span [class]="getClaseEstado()" class="px-3 py-1 rounded-full text-sm font-medium">
+              {{ getTextoEstado() }}
+            </span>
+            <span *ngIf="isRegistered()" class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+              ✓ Registrado
+            </span>
+          </div>
+        </div>
+        
+        <!-- Botón de acción principal -->
+        <div class="lg:ml-8">
+          <button
+            *ngIf="puedeRegistrarse()"
+            (click)="registrarseEvento()"
+            [disabled]="isRegistering()"
+            class="w-full lg:w-auto px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="isRegistering()">Registrando...</span>
+            <span *ngIf="!isRegistering()">Registrarse al Evento</span>
+          </button>
+          
+          <button
+            *ngIf="isRegistered() && !eventoExpirado()"
+            (click)="cancelarRegistro()"
+            [disabled]="isRegistering()"
+            class="w-full lg:w-auto px-8 py-4 border-2 border-red-600 text-red-600 font-semibold rounded-xl hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="isRegistering()">Cancelando...</span>
+            <span *ngIf="!isRegistering()">Cancelar Registro</span>
+          </button>
+          
+          <div
+            *ngIf="eventoExpirado()"
+            class="w-full lg:w-auto px-8 py-4 bg-gray-300 text-gray-600 font-semibold rounded-xl text-center"
+          >
+            Evento Finalizado
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información Principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <!-- Información del Evento -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Información del Evento</h2>
+          
+          <!-- Descripción -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Descripción</h3>
+            <p class="text-gray-700 leading-relaxed">
+              {{ evento()!.descripcion || 'No hay descripción disponible.' }}
+            </p>
+          </div>
+
+          <!-- Detalles Adicionales -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-2">Organizador</h4>
+              <p class="text-gray-700">{{ evento()!.universidad_nombre }}</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-2">Tipo de Evento</h4>
+              <p class="text-gray-700">{{ evento()!.tipo || 'No especificado' }}</p>
+            </div>
+            <div *ngIf="evento()!.capacidad_maxima">
+              <h4 class="font-semibold text-gray-900 mb-2">Capacidad</h4>
+              <p class="text-gray-700">{{ evento()!.capacidad_maxima }} participantes</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-2">Asistentes Registrados</h4>
+              <p class="text-gray-700">{{ evento()!.asistentes_registrados || 0 }} participantes</p>
+            </div>
+          </div>
+
+          <!-- Ubicación o Enlace -->
+          <div class="mt-8">
+            <div *ngIf="evento()!.es_virtual; else ubicacionPresencial">
+              <h4 class="font-semibold text-gray-900 mb-2">Evento Virtual</h4>
+              <div *ngIf="evento()!.enlace_acceso" class="flex items-center p-4 bg-blue-50 rounded-lg">
+                <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+                <div>
+                  <p class="text-sm text-blue-800 font-medium">Enlace de acceso disponible para registrados</p>
+                  <a *ngIf="isRegistered()" [href]="evento()!.enlace_acceso" target="_blank" 
+                     class="text-blue-600 hover:text-blue-800 text-sm underline">
+                    {{ evento()!.enlace_acceso }}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <ng-template #ubicacionPresencial>
+              <h4 class="font-semibold text-gray-900 mb-2">Ubicación</h4>
+              <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                <svg class="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <p class="text-green-800">{{ evento()!.ubicacion || 'Ubicación por confirmar' }}</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Lateral -->
+      <div class="space-y-6">
+        <!-- Fecha y Hora -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Fecha y Hora</h3>
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-gray-900">{{ formatearFecha(evento()!.fecha_inicio) }}</p>
+                <p class="text-sm text-gray-600">Fecha del evento</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-gray-900">{{ formatearHora(evento()!.fecha_inicio) }}</p>
+                <p class="text-sm text-gray-600">Hora de inicio</p>
+              </div>
+            </div>
+            <div *ngIf="evento()!.fecha_fin" class="flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <p class="font-semibold text-gray-900">{{ formatearHora(evento()!.fecha_fin!) }}</p>
+                <p class="text-sm text-gray-600">Hora de finalización</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modalidad -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Modalidad</h3>
+          <div class="flex items-center">
+            <div [class]="evento()!.es_virtual ? 'bg-blue-100' : 'bg-green-100'" 
+                 class="p-3 rounded-full mr-4">
+              <svg *ngIf="evento()!.es_virtual" class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <svg *ngIf="!evento()!.es_virtual" class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-900">
+                {{ evento()!.es_virtual ? 'Virtual' : 'Presencial' }}
+              </p>
+              <p class="text-sm text-gray-600">
+                {{ evento()!.es_virtual ? 'Acceso en línea' : 'Asistencia física requerida' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registro Requerido -->
+        <div *ngIf="evento()!.requiere_registro" class="bg-orange-50 border border-orange-200 rounded-2xl p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <div>
+              <p class="font-semibold text-orange-800">Registro Requerido</p>
+              <p class="text-sm text-orange-700">Debes registrarte para asistir a este evento</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error de registro -->
+    <div *ngIf="error() && !isLoading()" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-red-800">{{ error() }}</span>
+      </div>
+    </div>
+  </div>
+</div>
