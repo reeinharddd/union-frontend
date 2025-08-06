@@ -1,104 +1,201 @@
-<!-- Modal de reporte -->
+<!-- Modal de reporte premium -->
 <div
   *ngIf="mostrarModalReporte"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
 >
-  <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-    <h2 class="mb-2 text-lg font-semibold">Reportar comentario</h2>
-    <p class="text-gray-700 mb-2 text-sm">Por favor, describe el motivo del reporte:</p>
-    <textarea
-      [(ngModel)]="motivoReporte"
-      rows="4"
-      class="mb-4 w-full rounded border p-2"
-      placeholder="Motivo del reporte..."
-    ></textarea>
-    <div class="flex justify-end gap-2">
-      <button (click)="cerrarModalReporte()" class="bg-gray-200 rounded px-4 py-1">Cancelar</button>
-      <button (click)="enviarReporteComentario()" class="bg-red-500 rounded px-4 py-1 text-black">
-        Enviar reporte
-      </button>
+  <div class="w-full max-w-lg bg-white/95 backdrop-blur-xl rounded-3xl shadow-3xl overflow-hidden transform transition-all">
+    <!-- Header del modal -->
+    <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+            <span class="text-white text-lg">⚠️</span>
+          </div>
+          <h2 class="text-xl font-bold">Reportar Comentario</h2>
+        </div>
+      </div>
+      <p class="text-white/80 text-sm mt-2">Ayúdanos a mantener un ambiente seguro y respetuoso</p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="p-6 space-y-5">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">
+          📝 Motivo del reporte *
+        </label>
+        <textarea
+          [(ngModel)]="motivoReporte"
+          rows="4"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-red-500 focus:outline-none transition-colors text-gray-800 bg-gray-50/50 resize-none"
+          placeholder="Describe específicamente por qué consideras que este comentario es inapropiado..."
+        ></textarea>
+      </div>
+
+      <div class="flex space-x-3 pt-4">
+        <button 
+          (click)="cerrarModalReporte()" 
+          class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
+        >
+          Cancelar
+        </button>
+        <button 
+          (click)="enviarReporteComentario()" 
+          class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+        >
+          Enviar Reporte
+        </button>
+      </div>
     </div>
   </div>
 </div>
-<div class="max-w-8xl mx-auto space-y-6 p-4">
-  <!-- Encabezado del foro -->
-  <div class="text-gray-600 flex items-center gap-2 text-sm">
-    <button class="text-xl" (click)="goBack()">←</button>
-    <span class="font-semibold">{{ foroNombre || 'Comunidad/Foro' }}</span>
-  </div>
 
-  <!-- Título del tema -->
-  <ng-container *ngIf="hiloTitulo || hiloContenido; else cargandoHilo">
-    <h1 class="text-2xl font-bold">{{ hiloTitulo }}</h1>
-    <!-- Contenido principal -->
-    <div class="text-gray-700 leading-relaxed">
-      {{ hiloContenido }}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-6">
+  <div class="max-w-4x2 mx-auto space-y-8">
+    <!-- Header elegante del hilo -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
+      <!-- Gradiente decorativo superior -->
+      <div class="h-1 bg-gradient-to-r from-blue-500 via-[#c64d1f] to-purple-500"></div>
+      
+      <!-- Contenido del header -->
+      <div class="p-8">
+        <!-- Navegación -->
+        <div class="flex items-center space-x-4 mb-6">
+          <button 
+            (click)="goBack()"
+            class="group flex items-center space-x-2 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-[#c64d1f] hover:to-[#e25e2a] px-4 py-2 rounded-2xl font-medium transition-all duration-300 shadow-md"
+          >
+            <span class="text-gray-600 group-hover:text-white transition-colors">←</span>
+            <span class="text-gray-700 group-hover:text-white transition-colors text-sm">Volver</span>
+          </button>
+          
+          <div class="flex items-center space-x-2 text-sm text-gray-600">
+            <span class="text-[#c64d1f]">🎯</span>
+            <span class="font-semibold">{{ foroNombre || 'Comunidad/Foro' }}</span>
+          </div>
+        </div>
+
+        <!-- Título y contenido del hilo -->
+        <!-- Título y contenido del hilo -->
+        <ng-container *ngIf="hiloTitulo || hiloContenido; else cargandoHilo">
+          <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">{{ hiloTitulo }}</h1>
+            <div class="bg-gradient-to-r from-orange-50/80 to-orange-100/80 rounded-2xl p-6 border border-orange-200/60">
+              <p class="text-gray-700 leading-relaxed text-lg">{{ hiloContenido }}</p>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #cargandoHilo>
+          <div class="animate-pulse space-y-4">
+            <div class="h-8 bg-gray-200 rounded-xl w-3/4"></div>
+            <div class="bg-gray-100 rounded-2xl p-6">
+              <div class="space-y-3">
+                <div class="h-4 bg-gray-200 rounded w-full"></div>
+                <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div class="h-4 bg-gray-200 rounded w-4/6"></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
-  </ng-container>
-  <ng-template #cargandoHilo>
-    <h1 class="text-gray-400 text-2xl font-bold">Cargando título...</h1>
-    <div class="text-gray-400 leading-relaxed">Cargando contenido...</div>
-  </ng-template>
 
-  <!-- Votaciones principales -->
-  <!-- <div class="flex items-center gap-2">
-    <button class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-sm">⬆️ 11</button>
-    <button class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-sm">⬇️ 11</button>
-  </div> -->
-
-  <!-- Caja para responder -->
-  <div>
-    <textarea
-      class="mt-4 w-full rounded-md border p-2"
-      rows="4"
-      placeholder="Escribe tu respuesta..."
-      [(ngModel)]="nuevaRespuesta"
-      [disabled]="enviando"
-    ></textarea>
-    <div class="mt-2 flex justify-end gap-2">
-      <button
-        class="bg-gray-200 rounded-md px-4 py-1 text-sm"
-        (click)="enviarRespuesta()"
-        [disabled]="enviando || !nuevaRespuesta.trim()"
-      >
-        {{ enviando ? 'Enviando...' : 'Comentar' }}
-      </button>
-    </div>
-  </div>
-
-  <!-- Respuestas -->
-  <div class="space-y-4 border-t pt-4">
-    <div
-      *ngFor="let respuesta of respuestas"
-      class="rounded-xl border border-white/40 bg-white/30 p-4 shadow-sm"
-    >
-      <div class="text-gray-700 mb-1 flex items-center gap-2 text-xs">
-        <span class="text-orange-700 font-semibold">
-          {{
-            respuesta.autor_nombre && respuesta.autor_nombre.length < 50
-              ? respuesta.autor_nombre
-              : respuesta.autor_id || 'Usuario'
-          }}
-        </span>
-        <span>•</span>
-        <span class="text-gray-500">{{ respuesta.creado_en | date: 'mediumDate' }}</span>
+    <!-- Caja para responder premium -->
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8">
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-10 h-10 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-full flex items-center justify-center">
+          <span class="text-white text-lg">💭</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Únete a la conversación</h3>
+      </div>
+      
+      <textarea
+        class="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:border-[#c64d1f] focus:outline-none transition-all duration-300 text-gray-800 bg-gray-50/50 hover:bg-white focus:bg-white resize-none"
+        rows="4"
+        placeholder="Comparte tu opinión, experiencia o conocimiento sobre este tema..."
+        [(ngModel)]="nuevaRespuesta"
+        [disabled]="enviando"
+      ></textarea>
+      
+      <div class="flex justify-end mt-4">
         <button
-          *ngIf="!esMiComentario(respuesta)"
-          class="text-red-500 ml-auto px-2 py-1 text-xs hover:underline"
-          title="Reportar comentario"
-          (click)="reportarComentario(respuesta)"
+          class="bg-gradient-to-r from-[#c64d1f] to-[#e25e2a] hover:from-[#e25e2a] hover:to-purple-600 text-white px-8 py-3 rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="enviarRespuesta()"
+          [disabled]="enviando || !nuevaRespuesta.trim()"
         >
-          Reportar
+          <span class="flex items-center space-x-2">
+            <span class="text-lg">{{ enviando ? '⏳' : '🚀' }}</span>
+            <span>{{ enviando ? 'Enviando...' : 'Publicar Respuesta' }}</span>
+          </span>
         </button>
       </div>
-      <<<<<<< HEAD
-      <div class="text-gray-800 text-sm leading-relaxed">
-        {{ respuesta.contenido }}
-      </div>
-      =======
-      <div class="text-gray-800 text-sm leading-relaxed">{{ respuesta.contenido }}</div>
-      >>>>>>> alma
     </div>
-    <div *ngIf="respuestas.length === 0" class="text-gray-500 text-sm">No hay respuestas aún.</div>
+
+    <!-- Respuestas premium -->
+    <div class="space-y-6">
+      <div class="flex items-center space-x-3 mb-6">
+        <div class="w-8 h-8 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-lg flex items-center justify-center">
+          <span class="text-white text-sm">💬</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900">Respuestas de la comunidad</h3>
+      </div>
+
+      <div
+        *ngFor="let respuesta of respuestas; let i = index"
+        class="group bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+      >
+        <!-- Header decorativo -->
+        <div class="h-1 bg-gradient-to-r from-[#c64d1f] via-[#e25e2a] to-purple-500"></div>
+        
+        <div class="p-6">
+          <!-- Información del usuario -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-[#c64d1f] to-[#e25e2a] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                {{
+                  (respuesta.autor_nombre && respuesta.autor_nombre.length < 50
+                    ? respuesta.autor_nombre
+                    : respuesta.autor_id || 'Usuario').charAt(0)
+                }}
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800 text-sm">
+                  {{
+                    respuesta.autor_nombre && respuesta.autor_nombre.length < 50
+                      ? respuesta.autor_nombre
+                      : respuesta.autor_id || 'Usuario'
+                  }}
+                </p>
+                <p class="text-xs text-gray-500">{{ respuesta.creado_en | date: 'mediumDate' }}</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <button
+                *ngIf="!esMiComentario(respuesta)"
+                class="text-red-500 hover:bg-red-50 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105"
+                title="Reportar comentario"
+                (click)="reportarComentario(respuesta)"
+              >
+                ⚠️ Reportar
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenido de la respuesta -->
+          <div class="bg-gradient-to-r from-gray-50/80 to-gray-100/80 rounded-2xl p-5 border border-gray-200/60">
+            <p class="text-gray-800 leading-relaxed">{{ respuesta.contenido }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <div *ngIf="respuestas.length === 0" class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-2xl">💭</span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">No hay respuestas aún</h3>
+        <p class="text-gray-500">¡Sé el primero en compartir tu opinión!</p>
+      </div>
+    </div>
   </div>
 </div>

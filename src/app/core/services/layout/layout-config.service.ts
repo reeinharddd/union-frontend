@@ -140,35 +140,35 @@ export class LayoutConfigService {
     },
     student: {
       leftSidebar: [
-        {
+         {
           label: 'Dashboard',
           icon: 'dashboard',
           route: '/student/dashboard',
-          color: 'text-blue-500'
+          color: 'text-blue-500',
         },
         {
           label: 'Mi Perfil',
           icon: 'person',
           route: '/student/profile',
-          color: 'text-indigo-500'
+          color: 'text-indigo-500',
         },
         {
           label: 'Proyectos',
           icon: 'work',
           route: '/student/projects',
           color: 'text-green-500',
-          badge: { text: 'Activos', color: 'bg-green-100 text-green-800' }
+          badge: { text: 'Activos', color: 'bg-green-100 text-green-800' },
         },
         {
           label: 'Foros',
           icon: 'forum',
-          route: '/student/forums',
-          color: 'text-orange-500'
+          route: '/student/forum',
+          color: 'text-orange-500',
         },
         {
           label: 'Eventos',
           icon: 'event',
-          route: '/student/events',
+          route: '/student/eventos',
           color: 'text-purple-500'
         },
         {

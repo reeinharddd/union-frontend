@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LayoutConfigService } from '@app/core/services/layout/layout-config.service';
+import { ChatFloatContainerComponent } from '@app/shared/components/chat/chat-float-container.component';
 import { DynamicHeaderComponent } from '@app/shared/components/dynamic-header/dynamic-header.component';
 import { DynamicSidebarComponent } from '@app/shared/components/dynamic-sidebar/dynamic-sidebar.component';
 import { RightSidebarComponent } from '@app/shared/components/right-sidebar/right-sidebar.component';
@@ -15,6 +16,7 @@ import { RightSidebarComponent } from '@app/shared/components/right-sidebar/righ
     DynamicSidebarComponent,
     DynamicHeaderComponent,
     RightSidebarComponent,
+    ChatFloatContainerComponent
   ],
   template: `
     <div class="flex h-screen overflow-hidden bg-background">
@@ -35,6 +37,10 @@ import { RightSidebarComponent } from '@app/shared/components/right-sidebar/righ
             <router-outlet></router-outlet>
           </div>
         </main>
+
+        <!-- Chat Float Container -->
+        <app-chat-float-container>Chat</app-chat-float-container>
+
       </div>
 
       <!-- Right Sidebar -->

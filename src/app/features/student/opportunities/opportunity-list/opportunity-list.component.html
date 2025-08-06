@@ -1,64 +1,214 @@
-<div class="mx-auto max-w-6xl p-6">
-  <h2 class="text-gray-800 mb-6 text-center text-2xl font-bold">Lista de Oportunidades</h2>
-  <!-- Mensajes de estado -->
-  <div *ngIf="mensajeExito" class="bg-green-100 text-green-700 mb-4 rounded p-4 shadow">
-    {{ mensajeExito }}
-  </div>
-  <div *ngIf="mensajeError" class="bg-red-100 text-red-700 mb-4 rounded p-4 shadow">
-    {{ mensajeError }}
-  </div>
-
-  <!-- Filtro por tipo de oportunidad -->
-  <div class="mb-6 flex justify-end">
-    <select
-      [(ngModel)]="filtroTipo"
-      (change)="filtrarPorTipo()"
-      class="border-gray-300 text-gray-700 focus:border-orange-500 focus:ring-orange-500 rounded-md border px-4 py-2 text-sm shadow-sm focus:outline-none"
-    >
-      <option value="">Todos</option>
-      <option value="2">Académico</option>
-      <option value="1">Laboral</option>
-    </select>
-  </div>
-
-  <!-- Cards de oportunidades -->
-  <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-    <div
-      *ngFor="let oportunidad of oportunidadesFiltradas"
-      class="border-gray-200 rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-md"
-    >
-      <h3 class="text-gray-800 mb-2 text-xl font-semibold">{{ oportunidad.titulo }}</h3>
-      <p class="text-gray-600 mb-1 text-sm">
-        <strong>Modalidad:</strong> {{ modalidadesMap[oportunidad.modality_id] || 'N/A' }}
-      </p>
-      <p class="text-gray-600 mb-1 text-sm">
-        <strong>Empresa:</strong> {{ oportunidad.empresa || 'N/A' }}
-      </p>
-      <p class="text-gray-600 mb-1 text-sm">
-        <strong>Requisitos:</strong> {{ oportunidad.requisitos || 'N/A' }}
-      </p>
-      <p class="text-gray-600 mb-1 text-sm">
-        <strong>Beneficios:</strong> {{ oportunidad.beneficios || 'N/A' }}
-      </p>
-      <p class="text-gray-600 mb-1 text-sm">
-        <strong>Fecha Límite:</strong> {{ oportunidad.fecha_limite || 'N/A' }}
-      </p>
-
-      <button
-        *ngIf="!postulacionesRealizadas.includes(oportunidad.id); else yaPostulado"
-        class="flex w-full transform justify-center rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-hover transition-all duration-200 hover:-translate-y-1 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        (click)="postularse(oportunidad.id)"
-      >
-        Postularse
-      </button>
-
-      <ng-template #yaPostulado>
-        <p class="text-green-700 mt-4 text-center font-semibold">✅ Ya estás postulado</p>
-      </ng-template>
+<!-- UniON Opportunities - Premium Design -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+  <div class="relative overflow-hidden">
+    <!-- Decorative background -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full blur-3xl opacity-30"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-accent-100 to-primary-100 rounded-full blur-3xl opacity-30"></div>
     </div>
-  </div>
 
-  <div *ngIf="oportunidadesFiltradas.length === 0" class="text-gray-600 mt-6 text-center">
-    No hay oportunidades disponibles con este filtro.
+    <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <!-- Header Section -->
+      <div class="text-center mb-12">
+        <!-- <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-2xl mb-6 shadow-lg">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+          </svg>
+        </div> -->
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent mb-3">
+          Oportunidades Académicas
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Descubre oportunidades que impulsen tu carrera académica y profesional
+        </p>
+      </div>
+
+      <!-- Status Messages -->
+      <div *ngIf="mensajeExito" class="mb-8">
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-green-800 font-medium">{{ mensajeExito }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="mensajeError" class="mb-8">
+        <div class="bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-red-800 font-medium">{{ mensajeError }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="mb-8">
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-sm p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-primary-100 to-accent-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">Filtros</h3>
+                <p class="text-sm text-gray-500">Encuentra la oportunidad perfecta</p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+              <label class="text-sm font-medium text-gray-700">Tipo de oportunidad:</label>
+              <select
+                [(ngModel)]="filtroTipo"
+                (change)="filtrarPorTipo()"
+                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 px-4 py-2.5 min-w-[140px] shadow-sm transition-all duration-200 hover:border-primary-400"
+              >
+                <option value="">🎯 Todos</option>
+                <option value="2">🎓 Académico</option>
+                <option value="1">💼 Laboral</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opportunities Grid -->
+      <div class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+        <div
+          *ngFor="let oportunidad of oportunidadesFiltradas"
+          class="group relative bg-white/70 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+        >
+          <!-- Card Header with Gradient -->
+          <div class="relative bg-gradient-to-r from-primary-500 to-secondary-500 p-6 text-white">
+            <div class="absolute top-0 right-0 w-32 h-32 transform translate-x-16 -translate-y-16">
+              <div class="absolute inset-0 bg-white/10 rounded-full"></div>
+            </div>
+            <div class="relative z-10">
+              <div class="flex items-start justify-between mb-3">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+                  </svg>
+                </div>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 backdrop-blur-sm text-white">
+                  {{ modalidadesMap[oportunidad.modality_id] || 'N/A' }}
+                </span>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2 line-clamp-2">
+                {{ oportunidad.titulo }}
+              </h3>
+              <p class="text-white/90 text-sm font-medium">
+                {{ oportunidad.empresa || 'Empresa no especificada' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="p-6 space-y-4">
+            <!-- Requirements -->
+            <div class="space-y-3">
+              <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 mb-1">Requisitos</p>
+                  <p class="text-sm text-gray-600 line-clamp-3">
+                    {{ oportunidad.requisitos || 'No especificados' }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Benefits -->
+              <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 mb-1">Beneficios</p>
+                  <p class="text-sm text-gray-600 line-clamp-3">
+                    {{ oportunidad.beneficios || 'No especificados' }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Deadline -->
+              <div class="flex items-center space-x-3 pt-2 border-t border-gray-100">
+                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-900">Fecha límite</p>
+                  <p class="text-sm text-gray-600">
+                    {{ oportunidad.fecha_limite || 'No especificada' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-4">
+              <button
+                *ngIf="!postulacionesRealizadas.includes(oportunidad.id); else yaPostulado"
+                class="w-full bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                (click)="postularse(oportunidad.id)"
+              >
+                <div class="flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  <span>Postularse ahora</span>
+                </div>
+              </button>
+
+              <ng-template #yaPostulado>
+                <div class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>Ya estás postulado</span>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Hover Effect Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-r from-primary-500/5 to-accent-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="oportunidadesFiltradas.length === 0" class="text-center py-16">
+        <div class="mx-auto w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mb-6">
+          <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No hay oportunidades disponibles</h3>
+        <p class="text-gray-600 max-w-md mx-auto">
+          No se encontraron oportunidades que coincidan con los filtros seleccionados. Intenta cambiar los criterios de búsqueda.
+        </p>
+      </div>
+    </div>
   </div>
 </div>

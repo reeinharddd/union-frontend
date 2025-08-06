@@ -1,4 +1,3 @@
-// Fabian Mendoza
 import { Routes } from '@angular/router';
 import { authGuard } from '@app/core/guards/user/auth.guard';
 import { roleGuard } from '@app/core/guards/user/role.guard';
@@ -31,6 +30,11 @@ export const STUDENT_ROUTES: Routes = [
           import('./projects/project-detail/project-detail.component').then(
             m => m.ProjectDetailComponent,
           ),
+      },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./projects/project-list/project-list.component').then(m => m.ProjectListComponent),
       },
       {
         path: 'opportunities',
