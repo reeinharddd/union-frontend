@@ -33,6 +33,25 @@ export const PROMOTER_ROUTES: Routes = [
             m => m.NuevaOportunidadComponent,
           ),
       },
+      {
+        path: 'candidates',
+        loadComponent: () =>
+          import('./candidates/postulation-candidate.component').then(
+            m => m.PostulationCandidateComponent,
+          ),
+      },
+      {
+        path: 'opportunity/edit/:id',
+        loadComponent: () =>
+          import('./opportunities/eddit/edit-opportunity.component').then(
+            m => m.EditarOportunidadComponent,
+          ),
+      },
+      {
+        path: 'postulation',
+        loadComponent: () =>
+          import('./postulation/postulation.component').then(m => m.PostulationComponent),
+      },
       // {
       //   path: 'events',
       //   loadComponent: () =>
@@ -55,3 +74,4 @@ export const PROMOTER_ROUTES: Routes = [
     ],
   },
 ];
+

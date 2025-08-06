@@ -1,5 +1,5 @@
 <div class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-md">
-  <h2 class="mb-6 text-center text-2xl font-bold text-gray-800">Publicar Nueva Oportunidad</h2>
+  <h2 class="mb-6 text-center text-2xl font-bold text-gray-800">Editar Oportunidad</h2>
 
   <form [formGroup]="oportunidadForm" (ngSubmit)="onSubmit()" class="space-y-4">
     <!-- Título -->
@@ -63,7 +63,7 @@
           "
         >
           <option value="" disabled selected>Seleccione una universidad</option>
-          <option *ngFor="let universidad of universidades" [value]="universidad.id">
+          <option *ngFor="let universidad of universidades" [ngValue]="universidad.id">
             {{ universidad.nombre }}
           </option>
         </select>
@@ -90,7 +90,7 @@
           "
         >
           <option value="" disabled selected>Seleccione el tipo</option>
-          <option *ngFor="let tipo of tiposOportunidad" [value]="tipo.id">
+          <option *ngFor="let tipo of tiposOportunidad" [ngValue]="tipo.id">
             {{ tipo.name }}
           </option>
         </select>
@@ -148,7 +148,7 @@
           "
         >
           <option value="" disabled selected>Seleccione modalidad</option>
-          <option *ngFor="let modalidad of modalidades" [value]="modalidad.id">
+          <option *ngFor="let modalidad of modalidades" [ngValue]="modalidad.id">
             {{ modalidad.name }}
           </option>
         </select>
@@ -234,7 +234,7 @@
     <div class="flex justify-end space-x-4 pt-6">
       <button
         type="button"
-        routerLink="/promoter/dashboard"
+        routerLink="/promoter/opportunities"
         class="rounded-md border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50"
       >
         Cancelar
@@ -244,8 +244,8 @@
         [disabled]="oportunidadForm.invalid || isSubmitting"
         class="flex-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-lg font-medium text-white shadow-md transition hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <span *ngIf="!isSubmitting">Publicar Oportunidad</span>
-        <span *ngIf="isSubmitting">Publicando...</span>
+        <span *ngIf="!isSubmitting">Oportunidad Editada</span>
+        <span *ngIf="isSubmitting">Editando...</span>
       </button>
     </div>
   </form>

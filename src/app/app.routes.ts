@@ -66,6 +66,20 @@ export const routes: Routes = [
             m => m.PromotorRegister2Component,
           ),
       },
+       {
+        path: 'register/institucion',
+        loadComponent: () =>
+          import('./features/admin-uni/register/register-token.component').then(
+            m => m.AdminUniRegisterComponent,
+          ),
+      },
+      {
+        path: 'register/institucion/datos-personales',
+        loadComponent: () =>
+          import('./features/admin-uni/register/register-personalData.component').then(
+            m => m.AdminUniRegister2Component,
+          ),
+      },
     ],
   },
 

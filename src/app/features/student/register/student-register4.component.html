@@ -14,7 +14,7 @@
       <!-- Sección de Seguridad -->
       <div class="mb-6">
         <h2 class="mb-2 text-lg font-semibold text-black">Seguridad</h2>
-        <div class="bg-gray-200 mb-4 h-1 rounded-full"></div>
+        <div class="mb-4 h-1 rounded-full bg-gray-200"></div>
       </div>
 
       <!-- Instrucciones -->
@@ -32,12 +32,12 @@
             type="password"
             formControlName="password"
             placeholder="Ingresa tu contrasena"
-            class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             (input)="checkPasswordStrength()"
           />
           <div
             *ngIf="passwordForm.get('password')?.touched && passwordForm.get('password')?.errors"
-            class="text-red-500 mt-1 text-xs"
+            class="mt-1 text-xs text-red-500"
           >
             <div *ngIf="passwordForm.get('password')?.errors?.['required']">
               La contrasena es requerida
@@ -82,13 +82,13 @@
             type="password"
             formControlName="confirmPassword"
             placeholder="Confirma tu contrasena"
-            class="border-gray-300 w-full rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <div
             *ngIf="
               passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched
             "
-            class="text-red-500 mt-1 text-xs"
+            class="mt-1 text-xs text-red-500"
           >
             Las contrasenas no coinciden
           </div>
