@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '@app/core/services/auth/auth.service';
 import { BackupApiClientService } from '@app/core/services/backupAdmin/backup-api-client.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class BackupsAdminComponent {
   selectedTable = '';
   resultadoRespaldo: string | null = null;
   cargando: boolean = false;
+  tablasSeleccionadas: string[] = [];
 
   // Estados de carga
   cargandoRespaldoCompleto = false;
@@ -78,41 +80,64 @@ export class BackupsAdminComponent {
     'work_modalities',
   ];
 
-  constructor(private backupApi: BackupApiClientService) {}
+
+  constructor(private backupApi: BackupApiClientService, private authService: AuthService) { }
 
   ejecutarRespaldoCompleto() {
     this.cargandoRespaldoCompleto = true;
     this.resultadoRespaldoCompleto = null;
+
     this.backupApi.ejecutarRespaldoCompleto().subscribe({
-      next: res => {
-        this.resultadoRespaldoCompleto = res?.message || 'Respaldo completado.';
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'union_respaldo.sql';
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        this.resultadoRespaldoCompleto = '✅ Respaldo completo descargado correctamente.';
         this.cargandoRespaldoCompleto = false;
       },
       error: err => {
-        this.resultadoRespaldoCompleto = err?.error?.error || 'Error al ejecutar respaldo.';
+        this.resultadoRespaldoCompleto = `❌ Error: ${err?.error?.error || 'No se pudo ejecutar el respaldo.'}`;
         this.cargandoRespaldoCompleto = false;
+      }
+    });
+  }
+
+
+  ejecutarRespaldoParcial() {
+    if (!this.tablasSeleccionadas || this.tablasSeleccionadas.length === 0) {
+      this.resultadoRespaldoParcial = 'Debes seleccionar al menos una tabla.';
+      return;
+    }
+
+    this.cargandoRespaldoParcial = true;
+    this.resultadoRespaldoParcial = null;
+
+    this.backupApi.ejecutarRespaldoParcial(this.tablasSeleccionadas).subscribe({
+      next: blob => {
+        const fileName = 'backup_partial.sql';
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        this.resultadoRespaldoParcial = '✅ Respaldo parcial descargado exitosamente.';
+        this.cargandoRespaldoParcial = false;
+      },
+      error: err => {
+        this.resultadoRespaldoParcial = err?.error?.error || '❌ Error al ejecutar respaldo parcial.';
+        this.cargandoRespaldoParcial = false;
       },
     });
   }
 
-  ejecutarRespaldoParcial() {
-    if (!this.tablaRespaldoParcial) {
-      this.resultadoRespaldoParcial = 'Debes seleccionar una tabla.';
-      return;
-    }
-    this.cargandoRespaldoParcial = true;
-    this.resultadoRespaldoParcial = null;
-    this.backupApi.ejecutarRespaldoParcial([this.tablaRespaldoParcial]).subscribe({
-      next: res => {
-        this.resultadoRespaldoParcial = res?.message || 'Respaldo parcial completado.';
-        this.cargandoRespaldoParcial = false;
-      },
-      error: err => {
-        this.resultadoRespaldoParcial = err?.error?.error || 'Error al ejecutar respaldo parcial.';
-        this.cargandoRespaldoParcial = false;
-      },
-    });
-  }
+
 
   restaurarCompleto() {
     this.cargandoRestaurarCompleto = true;
@@ -121,6 +146,7 @@ export class BackupsAdminComponent {
       next: res => {
         this.resultadoRestaurarCompleto = res?.message || 'Restauración completa realizada.';
         this.cargandoRestaurarCompleto = false;
+        this.authService.logout(); // Cerrar sesión después de restaurar
       },
       error: err => {
         this.resultadoRestaurarCompleto =
@@ -137,6 +163,7 @@ export class BackupsAdminComponent {
       next: res => {
         this.resultadoRestaurarParcial = res?.message || 'Restauración parcial realizada.';
         this.cargandoRestaurarParcial = false;
+        this.authService.logout();
       },
       error: err => {
         this.resultadoRestaurarParcial =
