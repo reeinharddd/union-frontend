@@ -1,8 +1,8 @@
-import { environment } from '@environments/environments/environment';
+
 const API_VERSION = 'api';
 //Fabian Mendoza
 export const API_CONFIG = {
-  BASE_URL: `${environment.apiUrl}/${API_VERSION}`,
+  BASE_URL: `xerothermic-donni-union-67b28843.koyeb.app/${API_VERSION}`,
   TIMEOUT: 30000,
 } as const;
 
