@@ -1,6 +1,8 @@
+import { environment } from '../../../environments/environments/environment';
+const API_VERSION = 'api';
 //Fabian Mendoza
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/api',
+  BASE_URL: `${environment.apiUrl}/${API_VERSION}`,
   TIMEOUT: 30000,
 } as const;
 
