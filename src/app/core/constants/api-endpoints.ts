@@ -1,8 +1,5 @@
-
-const API_VERSION = 'api';
-//Fabian Mendoza
 export const API_CONFIG = {
-  BASE_URL: `xerothermic-donni-union-67b28843.koyeb.app/${API_VERSION}`,
+  BASE_URL: 'http://localhost:3000/api',
   TIMEOUT: 30000,
 } as const;
 
