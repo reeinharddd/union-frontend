@@ -122,26 +122,26 @@ export class LayoutConfigService {
             },
           ],
         },
-        {
-          label: 'Comunicaciones',
-          icon: 'chat',
-          route: '/admin/conversations',
-          color: 'text-blue-500',
-          children: [
-            {
-              label: 'Conversaciones',
-              icon: 'question_answer',
-              route: '/admin/conversations',
-              color: 'text-blue-600',
-            },
-            {
-              label: 'Mensajería General',
-              icon: 'mail',
-              route: '/admin/conversations',
-              color: 'text-green-600',
-            },
-          ],
-        },
+        // {
+        //   label: 'Comunicaciones',
+        //   icon: 'chat',
+        //   route: '/admin/conversations',
+        //   color: 'text-blue-500',
+        //   children: [
+        //     {
+        //       label: 'Conversaciones',
+        //       icon: 'question_answer',
+        //       route: '/admin/conversations',
+        //       color: 'text-blue-600',
+        //     },
+        //     {
+        //       label: 'Mensajería General',
+        //       icon: 'mail',
+        //       route: '/admin/conversations',
+        //       color: 'text-green-600',
+        //     },
+        //   ],
+        // },
         {
           label: 'Sistema',
           icon: 'settings',
@@ -154,47 +154,47 @@ export class LayoutConfigService {
               route: '/admin/backups',
               color: 'text-orange-600',
             },
-            {
-              label: 'Tags y Categorías',
-              icon: 'local_offer',
-              route: '/admin/tags',
-              color: 'text-pink-600',
-            },
-            {
-              label: 'Configuración',
-              icon: 'tune',
-              route: '/admin/settings',
-              color: 'text-gray-600',
-            },
+            // {
+            //   label: 'Tags y Categorías',
+            //   icon: 'local_offer',
+            //   route: '/admin/tags',
+            //   color: 'text-pink-600',
+            // },
+            // {
+            //   label: 'Configuración',
+            //   icon: 'tune',
+            //   route: '/admin/settings',
+            //   color: 'text-gray-600',
+            // },
           ],
         },
-        {
-          label: 'Reportes y Analytics',
-          icon: 'analytics',
-          route: '/admin/reports',
-          color: 'text-red-500',
-          children: [
-            {
-              label: 'Reportes Generales',
-              icon: 'bar_chart',
-              route: '/admin/reports',
-              color: 'text-red-600',
-            },
-            {
-              label: 'Reportes Urgentes',
-              icon: 'priority_high',
-              route: '/admin/reports/urgent',
-              color: 'text-red-700',
-              badge: { text: 'Atención', color: 'bg-red-100 text-red-800' },
-            },
-            {
-              label: 'Métricas de Uso',
-              icon: 'trending_up',
-              route: '/admin/reports/metrics',
-              color: 'text-blue-600',
-            },
-          ],
-        },
+        // {
+        //   label: 'Reportes y Analytics',
+        //   icon: 'analytics',
+        //   route: '/admin/reports',
+        //   color: 'text-red-500',
+        //   children: [
+        //     {
+        //       label: 'Reportes Generales',
+        //       icon: 'bar_chart',
+        //       route: '/admin/reports',
+        //       color: 'text-red-600',
+        //     },
+        //     {
+        //       label: 'Reportes Urgentes',
+        //       icon: 'priority_high',
+        //       route: '/admin/reports/urgent',
+        //       color: 'text-red-700',
+        //       badge: { text: 'Atención', color: 'bg-red-100 text-red-800' },
+        //     },
+        //     {
+        //       label: 'Métricas de Uso',
+        //       icon: 'trending_up',
+        //       route: '/admin/reports/metrics',
+        //       color: 'text-blue-600',
+        //     },
+        //   ],
+        // },
       ],
       rightSidebar: [
         {
@@ -297,12 +297,6 @@ export class LayoutConfigService {
           icon: 'work_outline',
           route: '/student/opportunities',
           color: 'text-teal-500',
-        },
-        {
-          label: 'Mis Postulaciones',
-          icon: 'assignment_turned_in', // Ícono de Material Icons relacionado con postulaciones
-          route: '/student/postulation',
-          color: 'text-purple-500',
         },
       ],
       rightSidebar: [

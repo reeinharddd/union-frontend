@@ -571,6 +571,7 @@ export class AdminUsersComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   readonly users = signal<AdminUser[]>([]);
+  showCreateUserForm = signal(false);
   readonly filteredUsers = signal<AdminUser[]>([]);
   readonly paginatedUsers = signal<AdminUser[]>([]);
   readonly loading = signal(false);
@@ -682,8 +683,16 @@ export class AdminUsersComponent implements OnInit {
   }
 
   openCreateUserModal(): void {
-    // TODO: Implement create user modal
-    // Placeholder for future implementation
+    this.router.navigate(['/admin/users/create']);
+  }
+
+  onUserCreated(): void {
+    this.showCreateUserForm.set(false);
+    this.loadUsers(); // Recarga la lista
+  }
+
+  onCancelCreate(): void {
+    this.showCreateUserForm.set(false);
   }
 
   viewUser(user: AdminUser): void {

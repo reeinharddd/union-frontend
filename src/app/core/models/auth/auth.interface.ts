@@ -47,10 +47,11 @@ export interface User {
   universidad_id?: number;
   verificado: boolean;
   is_active: boolean;
+  is_verified: boolean;
   telefono?: string;
   github_url?: string;
   linkedin_url?: string;
-  biografia?: string;
+  //biografia?: string;
   cv_publico?: boolean;
   last_login_at?: string;
   creado_en: string;

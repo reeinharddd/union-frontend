@@ -54,10 +54,10 @@ export const ADMIN_ROUTES: Routes = [
         path: 'foros',
         loadChildren: () => import('./forums/forum.routes').then(m => m.FORUM_ROUTES),
       },
-      {
-        path: 'reports',
-        loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
-      },
+      // {
+      //   path: 'reports',
+      //   loadChildren: () => import('./reports/reports.routes').then(m => m.REPORTS_ROUTES),
+      // },
       {
         path: 'conversations',
         loadChildren: () =>

@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { User } from '@app/core/models/auth/auth.interface';
-import { UpdateUserRequest } from '@app/core/models/user/user.interface';
+import { UpdateUserRequest, CreateUserRequest } from '@app/core/models/user/user.interface';
 import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { BaseService } from '../base/base.service';
@@ -27,6 +27,22 @@ export class UserService extends BaseService {
       tap(users => {
         this._users.set(users);
         console.log(`📊 Loaded ${users.length} users`);
+      }),
+    );
+  }
+
+  create(data: CreateUserRequest): Observable<User> {
+    return this.handleRequest(
+      this.apiClient.post<User>(API_ENDPOINTS.USERS.BASE, data),
+      'users.create',
+      {
+        showSuccessToast: true,
+        successMessage: 'Usuario creado exitosamente',
+        logRequest: true,
+      },
+    ).pipe(
+      tap(newUser => {
+        this._users.update(users => [...users, newUser]);
       }),
     );
   }
