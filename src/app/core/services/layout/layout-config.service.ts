@@ -403,6 +403,24 @@ export class LayoutConfigService {
           route: '/admin-uni/dashboard',
           color: 'text-blue-500',
         },
+        {
+          label: 'Students',
+          icon: 'people',
+          route: '/admin-uni/students',
+          color: 'text-green-500',
+        },
+        {
+          label: 'Eventos',
+          icon: 'event',
+          route: '/admin-uni/events',
+          color: 'text-orange-500',
+        },
+        {
+          label: 'Proyectos',
+          icon: 'folder_open',
+          route: '/admin-uni/projects',
+          color: 'text-purple-500',
+        }
       ],
       rightSidebar: [
         {

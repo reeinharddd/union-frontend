@@ -26,16 +26,21 @@ export const ADMIN_UNI_ROUTES: Routes = [
         loadComponent: () =>
           import('./students/admin-uni-students.component').then(m => m.AdminUniStudentsComponent),
       },
-      // {
-      //   path: 'projects',
-      //   loadComponent: () =>
-      //     import('./projects/admin-uni-projects.component').then(m => m.AdminUniProjectsComponent),
-      // },
-      // {
-      //   path: 'events',
-      //   loadComponent: () =>
-      //     import('./events/admin-uni-events.component').then(m => m.AdminUniEventsComponent),
-      // },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./projects/projects.component').then(m => m.ProjectsComponent),
+      },
+      {
+        path: 'project-detail/:id',
+        loadComponent: () =>
+          import('./projects/project-detail/project-detail.component').then(m => m.ProjectDetailComponent),
+      },
+      {
+        path: 'events',
+        loadComponent: () =>
+          import('./events/events.component').then(m => m.EventsComponent),
+      },
       // {
       //   path: 'reports',
       //   loadComponent: () =>

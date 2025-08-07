@@ -1,0 +1,279 @@
+<div class="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 p-6">
+  <!-- Header con estadísticas - REQ-4.8 -->
+  <div class="mb-8">
+    <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-orange-100/50">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex-1">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Proyectos</h1>
+          <p class="text-gray-600 mb-4">Administra y verifica proyectos estudiantiles de tu universidad</p>
+          
+          <!-- Información de estadísticas en el header -->
+          <div class="flex items-center space-x-6 text-sm">
+            <div class="flex items-center text-blue-600">
+              <i class="fas fa-project-diagram mr-2"></i>
+              <span class="font-semibold">Total Proyectos: {{ estadisticas().total_proyectos }}</span>
+            </div>
+            <div class="flex items-center text-yellow-600">
+              <i class="fas fa-clock mr-2"></i>
+              <span class="font-semibold">Pendientes: {{ estadisticas().proyectos_pendientes }}</span>
+            </div>
+            <div class="flex items-center text-green-600">
+              <i class="fas fa-check-circle mr-2"></i>
+              <span class="font-semibold">Aprobados: {{ estadisticas().proyectos_aprobados }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de proyectos -->
+  <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-gray-900">
+        <i class="fas fa-list mr-2"></i>
+        Lista de Proyectos
+      </h3>
+      <div class="text-sm text-gray-600">
+        Página {{ currentPage() }} de {{ totalPages() }}
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading()" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#c64d1f]"></div>
+      <p class="mt-4 text-gray-600">Cargando proyectos...</p>
+    </div>
+
+    <!-- Lista de proyectos -->
+    <div *ngIf="!isLoading() && projects().length > 0" class="space-y-4">
+      <div *ngFor="let proyecto of projects()" 
+           class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
+        
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <!-- Título y estado -->
+            <div class="flex items-center space-x-3 mb-3">
+              <h4 class="text-xl font-bold text-gray-900">{{ proyecto.nombre }}</h4>
+              <span *ngIf="esProyectoReciente(proyecto.creado_en)" 
+                    class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">
+                <i class="fas fa-star mr-1"></i>
+                Nuevo
+              </span>
+              <span [ngClass]="obtenerClaseEstado(proyecto.estado_verificacion)" 
+                    class="px-3 py-1 rounded-full text-sm font-semibold">
+                {{ obtenerLabelEstado(proyecto.estado_verificacion) }}
+              </span>
+              <span *ngIf="proyecto.vista_publica" 
+                    class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+                <i class="fas fa-globe mr-1"></i>
+                Público
+              </span>
+            </div>
+
+            <!-- Descripción -->
+            <p class="text-gray-600 mb-4 line-clamp-2">{{ proyecto.descripcion }}</p>
+
+            <!-- Información del proyecto -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div class="flex items-center text-gray-700">
+                <i class="fas fa-user mr-2 text-[#c64d1f]"></i>
+                <span *ngIf="userNames[proyecto.creador_id]">Creado: {{ userNames[proyecto.creador_id] }}</span>
+              </div>
+              
+              <div class="flex items-center text-gray-700">
+                <i class="fas fa-calendar mr-2 text-[#c64d1f]"></i>
+                <span>{{ formatearFecha(proyecto.creado_en) }}</span>
+              </div>
+
+              <div class="flex items-center text-gray-700" *ngIf="proyecto.participantes_count > 0">
+                <i class="fas fa-users mr-2 text-[#c64d1f]"></i>
+                <span>{{ proyecto.participantes_count }} participantes</span>
+              </div>
+            </div>
+
+            <!-- URLs del proyecto -->
+            <div class="flex items-center space-x-4 mt-4" *ngIf="proyecto.repositorio_url || proyecto.demo_url">
+              <a *ngIf="proyecto.repositorio_url" 
+                 [href]="proyecto.repositorio_url" 
+                 target="_blank"
+                 class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm">
+                <i class="fab fa-github mr-1"></i>
+                Repositorio
+              </a>
+              <a *ngIf="proyecto.demo_url" 
+                 [href]="proyecto.demo_url" 
+                 target="_blank"
+                 class="inline-flex items-center text-green-600 hover:text-green-800 text-sm">
+                <i class="fas fa-external-link-alt mr-1"></i>
+                Demo
+              </a>
+            </div>
+
+            <!-- Tecnologías -->
+            <div class="flex flex-wrap gap-2 mt-4" *ngIf="proyecto.tecnologias && proyecto.tecnologias.length > 0">
+              <span *ngFor="let tech of proyecto.tecnologias" 
+                    class="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs">
+                {{ tech }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex flex-col space-y-2 ml-6">
+            <!-- <button 
+              (click)="verDetallesProyecto(proyecto)"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold">
+              <i class="fas fa-eye mr-1"></i>
+              Ver Detalles
+            </button> -->
+            
+            <button 
+              (click)="abrirModalVerificacion(proyecto)"
+              class="bg-[#c64d1f] text-white px-4 py-2 rounded-lg hover:bg-[#b04419] transition-colors text-sm font-semibold">
+              <i class="fas fa-check mr-1"></i>
+              Verificar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!isLoading() && projects().length === 0" class="text-center py-12">
+      <i class="fas fa-project-diagram text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay proyectos</h3>
+      <p class="text-gray-500 mb-6">
+        No se encontraron proyectos en tu universidad
+      </p>
+    </div>
+
+    <!-- Paginación -->
+    <div *ngIf="!isLoading() && projects().length > 0" class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+      <div class="text-sm text-gray-600">
+        Mostrando {{ projects().length }} proyectos
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <button 
+          (click)="cambiarPagina(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+          class="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <span class="px-4 py-2 bg-[#c64d1f] text-white rounded-lg font-semibold">
+          {{ currentPage() }}
+        </span>
+        
+        <button 
+          (click)="cambiarPagina(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+          class="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Verificar Proyecto - REQ-4.8 -->
+<div *ngIf="showVerificationModal()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">
+        <i class="fas fa-check-circle mr-2 text-[#c64d1f]"></i>
+        Verificar Proyecto
+      </h2>
+      <button 
+        (click)="cerrarModalVerificacion()"
+        class="text-gray-500 hover:text-gray-700 text-2xl">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Información del proyecto -->
+    <div *ngIf="selectedProject()" class="bg-gray-50 rounded-2xl p-6 mb-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-2">{{ selectedProject()?.nombre }}</h3>
+      <p class="text-gray-600 mb-4">{{ selectedProject()?.descripcion }}</p>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="font-semibold text-gray-700">Creador:</span>
+          <span class="ml-2">{{ selectedProject()?.creador_nombre }}</span>
+        </div>
+        <div>
+          <span class="font-semibold text-gray-700">Fecha de creación:</span>
+          <span class="ml-2">{{ formatearFecha(selectedProject()?.creado_en || '') }}</span>
+        </div>
+        <div>
+          <span class="font-semibold text-gray-700">Estado actual:</span>
+          <span class="ml-2">{{ obtenerLabelEstado(selectedProject()?.estado_verificacion || '') }}</span>
+        </div>
+        <div>
+          <span class="font-semibold text-gray-700">Visibilidad:</span>
+          <span class="ml-2">{{ selectedProject()?.vista_publica ? 'Público' : 'Privado' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de verificación -->
+    <form [formGroup]="verificationForm" (ngSubmit)="verificarProyecto()" class="space-y-6">
+      <!-- Estado de verificación -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Estado de Verificación *</label>
+        <select 
+          formControlName="estado_verificacion"
+          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors"
+          [class.border-red-300]="verificationForm.get('estado_verificacion')?.invalid && verificationForm.get('estado_verificacion')?.touched">
+          <option value="">Selecciona un estado</option>
+          <option *ngFor="let estado of estadosVerificacion" [value]="estado.value">
+            {{ estado.label }}
+          </option>
+        </select>
+        <div *ngIf="verificationForm.get('estado_verificacion')?.invalid && verificationForm.get('estado_verificacion')?.touched" 
+             class="text-red-600 text-sm mt-1">
+          El estado de verificación es requerido
+        </div>
+      </div>
+
+      <!-- Comentario opcional -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Comentario (Opcional)</label>
+        <textarea 
+          formControlName="comentario"
+          rows="4"
+          placeholder="Escribe un comentario sobre la verificación..."
+          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors resize-none"
+          [class.border-red-300]="verificationForm.get('comentario')?.invalid && verificationForm.get('comentario')?.touched">
+        </textarea>
+        <div *ngIf="verificationForm.get('comentario')?.invalid && verificationForm.get('comentario')?.touched" 
+             class="text-red-600 text-sm mt-1">
+          El comentario no puede exceder 500 caracteres
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        <button 
+          type="button"
+          (click)="cerrarModalVerificacion()"
+          class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+          Cancelar
+        </button>
+        <button 
+          type="submit"
+          [disabled]="verificationForm.invalid || isLoading()"
+          class="px-6 py-3 bg-[#c64d1f] text-white rounded-xl font-semibold hover:bg-[#b04419] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="!isLoading()">
+            <i class="fas fa-check mr-2"></i>
+            Verificar Proyecto
+          </span>
+          <span *ngIf="isLoading()">
+            <i class="fas fa-spinner fa-spin mr-2"></i>
+            Verificando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
