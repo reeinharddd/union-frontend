@@ -414,7 +414,7 @@ export class LayoutConfigService {
           icon: 'folder_open',
           route: '/admin-uni/projects',
           color: 'text-purple-500',
-        }
+        },
       ],
       rightSidebar: [
         {

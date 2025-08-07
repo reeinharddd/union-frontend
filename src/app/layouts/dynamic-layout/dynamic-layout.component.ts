@@ -66,6 +66,6 @@ export class DynamicLayoutComponent {
     // Solo Student y University Admin tienen sidebar derecho
     // Admin y Promoter: solo sidebar izquierdo
     const role = this.layoutConfigService.getCurrentUserRole();
-    return role === 'student' || role === 'university_admin';
+    return role === 'student';
   }
 }

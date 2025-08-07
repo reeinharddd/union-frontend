@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 p-6">
+<div class="from-orange-50 via-orange-100 to-orange-200 min-h-screen bg-gradient-to-br p-6">
   <!-- Header con estadísticas - REQ-4.14.2 -->
   <div class="mb-8">
-    <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-orange-100/50">
-      <div class="flex items-center justify-between mb-6">
+    <div class="border-orange-100/50 rounded-3xl border bg-white/90 p-8 shadow-xl backdrop-blur-sm">
+      <div class="mb-6 flex items-center justify-between">
         <div class="flex-1">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Eventos</h1>
-          <p class="text-gray-600 mb-4">Administra eventos y webinars de tu universidad</p>
-          
+          <h1 class="mb-2 text-3xl font-bold text-gray-900">Gestión de Eventos</h1>
+          <p class="mb-4 text-gray-600">Administra eventos y webinars de tu universidad</p>
+
           <!-- Información de estadísticas en el header -->
           <div class="flex items-center space-x-6 text-sm">
             <div class="flex items-center text-blue-600">
@@ -15,13 +15,16 @@
             </div>
             <div class="flex items-center text-green-600">
               <i class="fas fa-play-circle mr-2"></i>
-              <span class="font-semibold">Eventos Activos: {{ estadisticas().eventos_activos }}</span>
+              <span class="font-semibold"
+                >Eventos Activos: {{ estadisticas().eventos_activos }}</span
+              >
             </div>
           </div>
         </div>
-        <button 
+        <button
           (click)="abrirModalCrear()"
-          class="bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+          class="rounded-xl bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        >
           <i class="fas fa-plus mr-2"></i>
           Crear Evento
         </button>
@@ -29,56 +32,60 @@
     </div>
   </div>
   <!-- Lista de eventos - REQ-4.14.2 -->
-  <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-    <div class="flex items-center justify-between mb-6">
+  <div class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm">
+    <div class="mb-6 flex items-center justify-between">
       <h3 class="text-xl font-bold text-gray-900">
         <i class="fas fa-list mr-2"></i>
         Lista de Eventos
       </h3>
-      <div class="text-sm text-gray-600">
-        Página {{ currentPage() }} de {{ totalPages() }}
-      </div>
+      <div class="text-sm text-gray-600">Página {{ currentPage() }} de {{ totalPages() }}</div>
     </div>
 
     <!-- Loading state -->
-    <div *ngIf="isLoading()" class="text-center py-12">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#c64d1f]"></div>
+    <div *ngIf="isLoading()" class="py-12 text-center">
+      <div
+        class="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#c64d1f]"
+      ></div>
       <p class="mt-4 text-gray-600">Cargando eventos...</p>
     </div>
 
     <!-- Lista de eventos -->
     <div *ngIf="!isLoading() && eventos().length > 0" class="space-y-4">
-      <div *ngFor="let evento of eventos()" 
-           class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
-        
+      <div
+        *ngFor="let evento of eventos()"
+        class="rounded-2xl border border-gray-200 p-6 transition-shadow duration-300 hover:shadow-lg"
+      >
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <!-- Título y tipo -->
-            <div class="flex items-center space-x-3 mb-3">
+            <div class="mb-3 flex items-center space-x-3">
               <h4 class="text-xl font-bold text-gray-900">{{ evento.titulo }}</h4>
-              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+              <span class="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
                 {{ obtenerNombreTipo(evento.event_type_id) }}
               </span>
-              <span [ngClass]="{
-                'bg-green-100 text-green-800': evento.state_id === 1,
-                'bg-red-100 text-red-800': evento.state_id === 2,
-                'bg-yellow-100 text-yellow-800': evento.state_id === 3,
-                'bg-gray-100 text-gray-800': evento.state_id === 4
-              }" class="px-3 py-1 rounded-full text-sm font-semibold">
+              <span
+                [ngClass]="{
+                  'bg-green-100 text-green-800': evento.state_id === 1,
+                  'bg-red-100 text-red-800': evento.state_id === 2,
+                  'bg-yellow-100 text-yellow-800': evento.state_id === 3,
+                  'bg-gray-100 text-gray-800': evento.state_id === 4,
+                }"
+                class="rounded-full px-3 py-1 text-sm font-semibold"
+              >
                 {{ obtenerNombreEstado(evento.state_id) }}
               </span>
             </div>
 
             <!-- Descripción -->
-            <p class="text-gray-600 mb-4 line-clamp-2">{{ evento.descripcion }}</p>
+            <p class="mb-4 line-clamp-2 text-gray-600">{{ evento.descripcion }}</p>
 
             <!-- Información del evento -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
               <div class="flex items-center text-gray-700">
                 <i class="fas fa-calendar mr-2 text-[#c64d1f]"></i>
                 <span>{{ formatearFecha(evento.fecha_inicio) }}</span>
               </div>
-              
+
               <div class="flex items-center text-gray-700" *ngIf="evento.ubicacion">
                 <i class="fas fa-map-marker-alt mr-2 text-[#c64d1f]"></i>
                 <span>{{ evento.ubicacion }}</span>
@@ -100,12 +107,16 @@
               </div>
 
               <!-- Indicador de tiempo -->
-              <div class="flex items-center" 
-                   [ngClass]="{
-                     'text-green-600': calcularDiasRestantes(evento.fecha_inicio) > 7,
-                     'text-yellow-600': calcularDiasRestantes(evento.fecha_inicio) <= 7 && calcularDiasRestantes(evento.fecha_inicio) > 0,
-                     'text-red-600': calcularDiasRestantes(evento.fecha_inicio) <= 0
-                   }">
+              <div
+                class="flex items-center"
+                [ngClass]="{
+                  'text-green-600': calcularDiasRestantes(evento.fecha_inicio) > 7,
+                  'text-yellow-600':
+                    calcularDiasRestantes(evento.fecha_inicio) <= 7 &&
+                    calcularDiasRestantes(evento.fecha_inicio) > 0,
+                  'text-red-600': calcularDiasRestantes(evento.fecha_inicio) <= 0,
+                }"
+              >
                 <i class="fas fa-clock mr-2"></i>
                 <span *ngIf="calcularDiasRestantes(evento.fecha_inicio) > 0">
                   En {{ calcularDiasRestantes(evento.fecha_inicio) }} días
@@ -118,10 +129,11 @@
           </div>
 
           <!-- Acciones - REQ-4.14.1 -->
-          <div class="flex flex-col space-y-2 ml-4">
-            <button 
+          <div class="ml-4 flex flex-col space-y-2">
+            <button
               (click)="abrirModalEditar(evento)"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold">
+              class="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+            >
               <i class="fas fa-edit mr-1"></i>
               Editar
             </button>
@@ -132,18 +144,20 @@
               <i class="fas fa-users mr-1"></i>
               Asistentes
             </button> -->
-            <select 
+            <select
               (change)="cambiarEstadoEvento(evento, +$any($event.target).value)"
               [value]="evento.state_id"
-              class="text-sm border border-gray-300 rounded-lg px-2 py-1">
+              class="rounded-lg border border-gray-300 px-2 py-1 text-sm"
+            >
               <option *ngFor="let estado of estadosComunes" [value]="estado.value">
                 {{ estado.label }}
               </option>
             </select>
 
-            <button 
+            <button
               (click)="eliminarEvento(evento)"
-              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-semibold">
+              class="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600"
+            >
               <i class="fas fa-trash mr-1"></i>
               Eliminar
             </button>
@@ -153,42 +167,44 @@
     </div>
 
     <!-- Estado vacío -->
-    <div *ngIf="!isLoading() && eventos().length === 0" class="text-center py-12">
-      <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
-      <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay eventos</h3>
-      <p class="text-gray-500 mb-6">
-        No se encontraron eventos en tu universidad
-      </p>
-      <button 
+    <div *ngIf="!isLoading() && eventos().length === 0" class="py-12 text-center">
+      <i class="fas fa-calendar-times mb-4 text-6xl text-gray-300"></i>
+      <h3 class="mb-2 text-xl font-semibold text-gray-600">No hay eventos</h3>
+      <p class="mb-6 text-gray-500">No se encontraron eventos en tu universidad</p>
+      <button
         (click)="abrirModalCrear()"
-        class="bg-[#c64d1f] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#b04419] transition-colors">
+        class="rounded-xl bg-[#c64d1f] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#b04419]"
+      >
         <i class="fas fa-plus mr-2"></i>
         Crear Evento
       </button>
     </div>
 
     <!-- Paginación -->
-    <div *ngIf="!isLoading() && eventos().length > 0" class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
-      <div class="text-sm text-gray-600">
-        Mostrando {{ eventos().length }} eventos
-      </div>
-      
+    <div
+      *ngIf="!isLoading() && eventos().length > 0"
+      class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6"
+    >
+      <div class="text-sm text-gray-600">Mostrando {{ eventos().length }} eventos</div>
+
       <div class="flex items-center space-x-2">
-        <button 
+        <button
           (click)="cambiarPagina(currentPage() - 1)"
           [disabled]="currentPage() === 1"
-          class="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          class="rounded-lg border border-gray-300 px-3 py-2 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
           <i class="fas fa-chevron-left"></i>
         </button>
-        
-        <span class="px-4 py-2 bg-[#c64d1f] text-white rounded-lg font-semibold">
+
+        <span class="rounded-lg bg-[#c64d1f] px-4 py-2 font-semibold text-white">
           {{ currentPage() }}
         </span>
-        
-        <button 
+
+        <button
           (click)="cambiarPagina(currentPage() + 1)"
           [disabled]="currentPage() === totalPages()"
-          class="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          class="rounded-lg border border-gray-300 px-3 py-2 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -197,16 +213,17 @@
 </div>
 
 <!-- Modal Crear Evento - REQ-4.14.1 -->
-<div *ngIf="showCreateModal()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-    <div class="flex items-center justify-between mb-6">
+<div
+  *ngIf="showCreateModal()"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+>
+  <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-8">
+    <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold text-gray-900">
         <i class="fas fa-plus-circle mr-2 text-[#c64d1f]"></i>
         Crear Nuevo Evento
       </h2>
-      <button 
-        (click)="cerrarModalCrear()"
-        class="text-gray-500 hover:text-gray-700 text-2xl">
+      <button (click)="cerrarModalCrear()" class="text-2xl text-gray-500 hover:text-gray-700">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -214,43 +231,58 @@
     <form [formGroup]="createEventForm" (ngSubmit)="crearEvento()" class="space-y-6">
       <!-- Título -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Título del Evento *</label>
-        <input 
-          type="text" 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Título del Evento *</label>
+        <input
+          type="text"
           formControlName="titulo"
           placeholder="Nombre del evento"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors"
-          [class.border-red-300]="createEventForm.get('titulo')?.invalid && createEventForm.get('titulo')?.touched">
-        <div *ngIf="createEventForm.get('titulo')?.invalid && createEventForm.get('titulo')?.touched" 
-             class="text-red-600 text-sm mt-1">
+          class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          [class.border-red-300]="
+            createEventForm.get('titulo')?.invalid && createEventForm.get('titulo')?.touched
+          "
+        />
+        <div
+          *ngIf="createEventForm.get('titulo')?.invalid && createEventForm.get('titulo')?.touched"
+          class="mt-1 text-sm text-red-600"
+        >
           El título es requerido (mínimo 3 caracteres)
         </div>
       </div>
 
       <!-- Descripción -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Descripción *</label>
-        <textarea 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Descripción *</label>
+        <textarea
           formControlName="descripcion"
           placeholder="Describe el evento, objetivos y contenido"
           rows="4"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors resize-none"
-          [class.border-red-300]="createEventForm.get('descripcion')?.invalid && createEventForm.get('descripcion')?.touched">
+          class="w-full resize-none rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          [class.border-red-300]="
+            createEventForm.get('descripcion')?.invalid &&
+            createEventForm.get('descripcion')?.touched
+          "
+        >
         </textarea>
-        <div *ngIf="createEventForm.get('descripcion')?.invalid && createEventForm.get('descripcion')?.touched" 
-             class="text-red-600 text-sm mt-1">
+        <div
+          *ngIf="
+            createEventForm.get('descripcion')?.invalid &&
+            createEventForm.get('descripcion')?.touched
+          "
+          class="mt-1 text-sm text-red-600"
+        >
           La descripción es requerida (mínimo 5 caracteres)
         </div>
       </div>
 
       <!-- Grid de campos -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <!-- Tipo -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Modalidad *</label>
-          <select 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Modalidad *</label>
+          <select
             formControlName="tipo"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          >
             <option value="">Seleccionar modalidad</option>
             <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">
               {{ modalidad.label }}
@@ -260,10 +292,11 @@
 
         <!-- Tipo de evento -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Evento *</label>
-          <select 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Tipo de Evento *</label>
+          <select
             formControlName="event_type_id"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          >
             <option value="">Seleccionar tipo</option>
             <option *ngFor="let tipo of tiposEventos()" [value]="tipo.id">
               {{ tipo.nombre }}
@@ -273,81 +306,94 @@
 
         <!-- Fecha inicio -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha y Hora Inicio *</label>
-          <input 
-            type="datetime-local" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700"
+            >Fecha y Hora Inicio *</label
+          >
+          <input
+            type="datetime-local"
             formControlName="fecha_inicio"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
 
         <!-- Fecha fin -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha y Hora Fin *</label>
-          <input 
-            type="datetime-local" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Fecha y Hora Fin *</label>
+          <input
+            type="datetime-local"
             formControlName="fecha_fin"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors"
-            [class.border-red-300]="createEventForm.get('fecha_fin')?.hasError('fechaInvalida')">
-          <div *ngIf="createEventForm.get('fecha_fin')?.hasError('fechaInvalida')" 
-               class="text-red-600 text-sm mt-1">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+            [class.border-red-300]="createEventForm.get('fecha_fin')?.hasError('fechaInvalida')"
+          />
+          <div
+            *ngIf="createEventForm.get('fecha_fin')?.hasError('fechaInvalida')"
+            class="mt-1 text-sm text-red-600"
+          >
             La fecha de fin debe ser posterior a la fecha de inicio
           </div>
         </div>
 
         <!-- Ubicación -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Ubicación</label>
-          <input 
-            type="text" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Ubicación</label>
+          <input
+            type="text"
             formControlName="ubicacion"
             placeholder="Dirección o sala virtual"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
 
         <!-- Capacidad -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Capacidad Máxima</label>
-          <input 
-            type="number" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Capacidad Máxima</label>
+          <input
+            type="number"
             formControlName="capacidad_maxima"
             placeholder="Número de participantes"
             min="1"
             max="1000"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
       </div>
 
       <!-- Enlace de acceso -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Enlace de Acceso</label>
-        <input 
-          type="url" 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Enlace de Acceso</label>
+        <input
+          type="url"
           formControlName="enlace_acceso"
           placeholder="https://meet.google.com/... o enlace de registro"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
-        <p class="text-sm text-gray-500 mt-1">Para eventos virtuales o registro externo</p>
+          class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+        />
+        <p class="mt-1 text-sm text-gray-500">Para eventos virtuales o registro externo</p>
       </div>
 
       <!-- Botones -->
       <div class="flex items-center space-x-4 pt-6">
-        <button 
+        <button
           type="submit"
           [disabled]="createEventForm.invalid || isLoading()"
-          class="flex-1 bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+          class="flex-1 rounded-xl bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+        >
           <span *ngIf="!isLoading()">
             <i class="fas fa-save mr-2"></i>
             Crear Evento
           </span>
           <span *ngIf="isLoading()" class="flex items-center justify-center">
-            <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+            <div
+              class="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+            ></div>
             Creando...
           </span>
         </button>
-        
-        <button 
+
+        <button
           type="button"
           (click)="cerrarModalCrear()"
-          class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+          class="rounded-xl border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+        >
           Cancelar
         </button>
       </div>
@@ -356,16 +402,17 @@
 </div>
 
 <!-- Modal Editar Evento - REQ-4.14.1 -->
-<div *ngIf="showEditModal()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-    <div class="flex items-center justify-between mb-6">
+<div
+  *ngIf="showEditModal()"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+>
+  <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-8">
+    <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold text-gray-900">
         <i class="fas fa-edit mr-2 text-[#c64d1f]"></i>
         Editar Evento
       </h2>
-      <button 
-        (click)="cerrarModalEditar()"
-        class="text-gray-500 hover:text-gray-700 text-2xl">
+      <button (click)="cerrarModalEditar()" class="text-2xl text-gray-500 hover:text-gray-700">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -373,34 +420,39 @@
     <form [formGroup]="editEventForm" (ngSubmit)="editarEvento()" class="space-y-6">
       <!-- Título -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Título del Evento *</label>
-        <input 
-          type="text" 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Título del Evento *</label>
+        <input
+          type="text"
           formControlName="titulo"
           placeholder="Nombre del evento"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors"
-          [class.border-red-300]="editEventForm.get('titulo')?.invalid && editEventForm.get('titulo')?.touched">
+          class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          [class.border-red-300]="
+            editEventForm.get('titulo')?.invalid && editEventForm.get('titulo')?.touched
+          "
+        />
       </div>
 
       <!-- Descripción -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Descripción *</label>
-        <textarea 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Descripción *</label>
+        <textarea
           formControlName="descripcion"
           placeholder="Describe el evento, objetivos y contenido"
           rows="4"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors resize-none">
+          class="w-full resize-none rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+        >
         </textarea>
       </div>
 
       <!-- Grid de campos -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <!-- Tipo -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Modalidad *</label>
-          <select 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Modalidad *</label>
+          <select
             formControlName="tipo"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          >
             <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">
               {{ modalidad.label }}
             </option>
@@ -409,10 +461,11 @@
 
         <!-- Tipo de evento -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Evento *</label>
-          <select 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Tipo de Evento *</label>
+          <select
             formControlName="event_type_id"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          >
             <option *ngFor="let tipo of tiposEventos()" [value]="tipo.id">
               {{ tipo.nombre }}
             </option>
@@ -421,80 +474,93 @@
 
         <!-- Fecha inicio -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha y Hora Inicio *</label>
-          <input 
-            type="datetime-local" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700"
+            >Fecha y Hora Inicio *</label
+          >
+          <input
+            type="datetime-local"
             formControlName="fecha_inicio"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
 
         <!-- Fecha fin -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha y Hora Fin *</label>
-          <input 
-            type="datetime-local" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Fecha y Hora Fin *</label>
+          <input
+            type="datetime-local"
             formControlName="fecha_fin"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors"
-            [class.border-red-300]="editEventForm.get('fecha_fin')?.hasError('fechaInvalida')">
-          <div *ngIf="editEventForm.get('fecha_fin')?.hasError('fechaInvalida')" 
-               class="text-red-600 text-sm mt-1">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+            [class.border-red-300]="editEventForm.get('fecha_fin')?.hasError('fechaInvalida')"
+          />
+          <div
+            *ngIf="editEventForm.get('fecha_fin')?.hasError('fechaInvalida')"
+            class="mt-1 text-sm text-red-600"
+          >
             La fecha de fin debe ser posterior a la fecha de inicio
           </div>
         </div>
 
         <!-- Ubicación -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Ubicación</label>
-          <input 
-            type="text" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Ubicación</label>
+          <input
+            type="text"
             formControlName="ubicacion"
             placeholder="Dirección o sala virtual"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
 
         <!-- Capacidad -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Capacidad Máxima</label>
-          <input 
-            type="number" 
+          <label class="mb-2 block text-sm font-semibold text-gray-700">Capacidad Máxima</label>
+          <input
+            type="number"
             formControlName="capacidad_maxima"
             placeholder="Número de participantes"
             min="1"
             max="1000"
-            class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+            class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+          />
         </div>
       </div>
 
       <!-- Enlace de acceso -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Enlace de Acceso</label>
-        <input 
-          type="url" 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Enlace de Acceso</label>
+        <input
+          type="url"
           formControlName="enlace_acceso"
           placeholder="https://meet.google.com/... o enlace de registro"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+          class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+        />
       </div>
 
       <!-- Botones -->
       <div class="flex items-center space-x-4 pt-6">
-        <button 
+        <button
           type="submit"
           [disabled]="editEventForm.invalid || isLoading()"
-          class="flex-1 bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+          class="flex-1 rounded-xl bg-gradient-to-r from-[#c64d1f] to-[#d45f2f] py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+        >
           <span *ngIf="!isLoading()">
             <i class="fas fa-save mr-2"></i>
             Guardar Cambios
           </span>
           <span *ngIf="isLoading()" class="flex items-center justify-center">
-            <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+            <div
+              class="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+            ></div>
             Guardando...
           </span>
         </button>
-        
-        <button 
+
+        <button
           type="button"
           (click)="cerrarModalEditar()"
-          class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+          class="rounded-xl border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+        >
           Cancelar
         </button>
       </div>

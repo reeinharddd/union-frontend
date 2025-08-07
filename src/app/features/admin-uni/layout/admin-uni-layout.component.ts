@@ -33,7 +33,7 @@ import { DynamicSidebarComponent } from '../../../shared/components/dynamic-side
           </div>
 
           <!-- Sidebar derecho -->
-          <app-dynamic-right-sidebar class="flex-shrink-0" />
+          <!-- <app-dynamic-right-sidebar class="flex-shrink-0" /> -->
         </main>
       </div>
     </div>

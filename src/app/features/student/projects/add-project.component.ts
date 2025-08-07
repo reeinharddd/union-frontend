@@ -35,7 +35,7 @@ export class AddProyectoComponent implements OnInit {
     this.proyectoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(200)]],
       descripcion: ['', Validators.required],
-      estado_verificacion: ['pendiente', [Validators.required]],
+      estado_verificacion: ['pendiente'],
       vista_publica: [false],
     });
   }

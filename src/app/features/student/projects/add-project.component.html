@@ -35,27 +35,6 @@
     </div>
 
     <!-- Estado de Verificación -->
-    <div>
-      <select
-        formControlName="estado_verificacion"
-        class="border-orange-400 focus:ring-orange-500 w-full rounded-lg border px-4 py-3 text-gray-700 focus:outline-none focus:ring-2"
-      >
-        <option value="" disabled selected>Selecciona el estado de verificación</option>
-        <option value="Pendiente">Pendiente</option>
-        <option value="En revisión">En revisión</option>
-        <option value="Verificado">Verificado</option>
-        <option value="Rechazado">Rechazado</option>
-      </select>
-      <div
-        *ngIf="
-          proyectoForm.get('estado_verificacion')?.touched &&
-          proyectoForm.get('estado_verificacion')?.invalid
-        "
-        class="mt-1 text-sm text-red-500"
-      >
-        Selecciona un estado válido
-      </div>
-    </div>
 
     <!-- Vista pública -->
     <div class="flex items-center space-x-2">

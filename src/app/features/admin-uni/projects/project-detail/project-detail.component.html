@@ -1,65 +1,74 @@
-<div class="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 p-6">
-  
+<div class="from-orange-50 via-orange-100 to-orange-200 min-h-screen bg-gradient-to-br p-6">
   <!-- Loading state -->
-  <div *ngIf="isLoading() && !project()" class="text-center py-12">
-    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#c64d1f]"></div>
+  <div *ngIf="isLoading() && !project()" class="py-12 text-center">
+    <div class="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#c64d1f]"></div>
     <p class="mt-4 text-gray-600">Cargando proyecto...</p>
   </div>
 
   <!-- Contenido del proyecto -->
   <div *ngIf="project()" class="space-y-8">
-    
     <!-- Header con navegación -->
-    <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-      <div class="flex items-center justify-between mb-4">
-        <button 
+    <div class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm">
+      <div class="mb-4 flex items-center justify-between">
+        <button
           (click)="volverALista()"
-          class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+          class="inline-flex items-center text-gray-600 transition-colors hover:text-gray-900"
+        >
           <i class="fas fa-arrow-left mr-2"></i>
           Volver a Proyectos
         </button>
-        
+
         <div class="flex items-center space-x-3">
-          <span [ngClass]="obtenerClaseEstado(project()!.estado_verificacion)" 
-                class="px-4 py-2 rounded-full text-sm font-semibold">
-            <i [class]="'fas fa-' + obtenerConfigEstado(project()!.estado_verificacion).icon + ' mr-1'"></i>
+          <span
+            [ngClass]="obtenerClaseEstado(project()!.estado_verificacion)"
+            class="rounded-full px-4 py-2 text-sm font-semibold"
+          >
+            <i
+              [class]="
+                'fas fa-' + obtenerConfigEstado(project()!.estado_verificacion).icon + ' mr-1'
+              "
+            ></i>
             {{ obtenerConfigEstado(project()!.estado_verificacion).label }}
           </span>
-          
-          <span *ngIf="esProyectoReciente(project()!.creado_en)" 
-                class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+
+          <span
+            *ngIf="esProyectoReciente(project()!.creado_en)"
+            class="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800"
+          >
             <i class="fas fa-star mr-1"></i>
             Nuevo
           </span>
-          
-          <span *ngIf="project()!.vista_publica" 
-                class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+
+          <span
+            *ngIf="project()!.vista_publica"
+            class="rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-800"
+          >
             <i class="fas fa-globe mr-1"></i>
             Público
           </span>
         </div>
       </div>
-      
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ project()!.nombre }}</h1>
+
+      <h1 class="mb-2 text-3xl font-bold text-gray-900">{{ project()!.nombre }}</h1>
       <p class="text-gray-600">{{ project()!.descripcion }}</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <!-- Información principal del proyecto -->
-      <div class="lg:col-span-2 space-y-8">
-        
+      <div class="space-y-8 lg:col-span-2">
         <!-- Detalles básicos -->
-        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">
+        <div
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-6 text-xl font-bold text-gray-900">
             <i class="fas fa-info-circle mr-2 text-[#c64d1f]"></i>
             Información del Proyecto
           </h2>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Creador</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700">Creador</label>
                 <div class="flex items-center">
                   <i class="fas fa-user mr-2 text-gray-500"></i>
                   <span class="text-gray-900">{{ project()!.creador_nombre }}</span>
@@ -68,52 +77,69 @@
 
               <!-- DEBUG: Mostrar ID del creador -->
               <div>
-                <label class="block text-xs font-semibold text-gray-400 mb-1">ID del Creador (debug)</label>
+                <label class="mb-1 block text-xs font-semibold text-gray-400"
+                  >ID del Creador (debug)</label
+                >
                 <span class="text-xs text-gray-500">{{ project()!.creador_id }}</span>
               </div>
-              
+
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Universidad</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700">Universidad</label>
                 <div class="flex items-center">
                   <i class="fas fa-university mr-2 text-gray-500"></i>
                   <span class="text-gray-900">{{ project()!.universidad_nombre }}</span>
                 </div>
               </div>
-              
+
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Participantes</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700">Participantes</label>
                 <div class="flex items-center">
                   <i class="fas fa-users mr-2 text-gray-500"></i>
-                  <span class="text-gray-900">{{ project()!.participantes_count }} participantes</span>
+                  <span class="text-gray-900"
+                    >{{ project()!.participantes_count }} participantes</span
+                  >
                 </div>
               </div>
             </div>
-            
+
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Fecha de Creación</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700"
+                  >Fecha de Creación</label
+                >
                 <div class="flex items-center">
                   <i class="fas fa-calendar mr-2 text-gray-500"></i>
                   <div class="flex flex-col">
                     <span class="text-gray-900">{{ formatearFecha(project()!.creado_en) }}</span>
-                    <span class="text-sm text-gray-500">{{ formatearFechaRelativa(project()!.creado_en) }}</span>
+                    <span class="text-sm text-gray-500">{{
+                      formatearFechaRelativa(project()!.creado_en)
+                    }}</span>
                   </div>
                 </div>
               </div>
-              
+
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Me Gusta</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700">Me Gusta</label>
                 <div class="flex items-center">
                   <i class="fas fa-heart mr-2 text-gray-500"></i>
                   <span class="text-gray-900">{{ project()!.likes_count || 0 }} me gusta</span>
                 </div>
               </div>
-              
+
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Visibilidad</label>
+                <label class="mb-1 block text-sm font-semibold text-gray-700">Visibilidad</label>
                 <div class="flex items-center">
-                  <i [class]="project()!.vista_publica ? 'fas fa-globe text-green-500' : 'fas fa-lock text-gray-500'" class="mr-2"></i>
-                  <span class="text-gray-900">{{ project()!.vista_publica ? 'Público' : 'Privado' }}</span>
+                  <i
+                    [class]="
+                      project()!.vista_publica
+                        ? 'fas fa-globe text-green-500'
+                        : 'fas fa-lock text-gray-500'
+                    "
+                    class="mr-2"
+                  ></i>
+                  <span class="text-gray-900">{{
+                    project()!.vista_publica ? 'Público' : 'Privado'
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -121,16 +147,20 @@
         </div>
 
         <!-- Tecnologías -->
-        <div *ngIf="project()!.tecnologias && project()!.tecnologias.length > 0" 
-             class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">
+        <div
+          *ngIf="project()!.tecnologias && project()!.tecnologias.length > 0"
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-6 text-xl font-bold text-gray-900">
             <i class="fas fa-code mr-2 text-[#c64d1f]"></i>
             Tecnologías Utilizadas
           </h2>
-          
+
           <div class="flex flex-wrap gap-3">
-            <span *ngFor="let tech of project()!.tecnologias" 
-                  class="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+            <span
+              *ngFor="let tech of project()!.tecnologias"
+              class="rounded-full bg-gradient-to-r from-blue-100 to-blue-200 px-4 py-2 text-sm font-semibold text-blue-800"
+            >
               <i class="fas fa-tag mr-1"></i>
               {{ tech }}
             </span>
@@ -138,33 +168,39 @@
         </div>
 
         <!-- Enlaces del Proyecto -->
-        <div *ngIf="tieneEnlaces()" 
-             class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">
+        <div
+          *ngIf="tieneEnlaces()"
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-6 text-xl font-bold text-gray-900">
             <i class="fas fa-link mr-2 text-[#c64d1f]"></i>
             Enlaces del Proyecto
           </h2>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div *ngIf="tieneRepositorio()">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Repositorio</label>
-              <a [href]="obtenerUrlCompleta(project()!.repositorio_url!)" 
-                 target="_blank"
-                 class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm break-all">
+              <label class="mb-2 block text-sm font-semibold text-gray-700">Repositorio</label>
+              <a
+                [href]="obtenerUrlCompleta(project()!.repositorio_url!)"
+                target="_blank"
+                class="inline-flex items-center break-all text-sm text-blue-600 hover:text-blue-800"
+              >
                 <i class="fab fa-github mr-1"></i>
                 {{ project()!.repositorio_url }}
               </a>
             </div>
             <div *ngIf="tieneDemo()">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Demo en Vivo</label>
-              <a [href]="obtenerUrlCompleta(project()!.demo_url!)" 
-                 target="_blank"
-                 class="inline-flex items-center bg-green-600 text-white px-4 py-3 rounded-xl hover:bg-green-700 transition-colors text-sm font-semibold w-full justify-center">
+              <label class="mb-2 block text-sm font-semibold text-gray-700">Demo en Vivo</label>
+              <a
+                [href]="obtenerUrlCompleta(project()!.demo_url!)"
+                target="_blank"
+                class="inline-flex w-full items-center justify-center rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-700"
+              >
                 <i class="fas fa-rocket mr-2"></i>
                 Ver Demo
                 <i class="fas fa-external-link-alt ml-2 text-xs"></i>
               </a>
-              <div class="text-xs text-gray-500 mt-1 break-all">{{ project()!.demo_url }}</div>
+              <div class="mt-1 break-all text-xs text-gray-500">{{ project()!.demo_url }}</div>
             </div>
           </div>
         </div>
@@ -172,18 +208,20 @@
 
       <!-- Panel de acciones administrativas -->
       <div class="space-y-6">
-        
         <!-- Acciones de verificación -->
-        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">
+        <div
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-6 text-xl font-bold text-gray-900">
             <i class="fas fa-shield-alt mr-2 text-[#c64d1f]"></i>
             Acciones Administrativas
           </h2>
-          
+
           <div class="space-y-4">
-            <button 
+            <button
               (click)="abrirModalVerificacion()"
-              class="w-full bg-[#c64d1f] text-white px-4 py-3 rounded-xl font-semibold hover:bg-[#b04419] transition-colors">
+              class="w-full rounded-xl bg-[#c64d1f] px-4 py-3 font-semibold text-white transition-colors hover:bg-[#b04419]"
+            >
               <i class="fas fa-check-circle mr-2"></i>
               Cambiar Estado de Verificación
             </button>
@@ -191,25 +229,35 @@
         </div>
 
         <!-- Estado actual -->
-        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <div
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-4 text-xl font-bold text-gray-900">
             <i class="fas fa-clipboard-check mr-2 text-[#c64d1f]"></i>
             Estado Actual
           </h2>
-          
+
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-gray-700">Verificación:</span>
-              <span [ngClass]="obtenerClaseEstado(project()!.estado_verificacion)" 
-                    class="px-3 py-1 rounded-full text-sm font-semibold">
+              <span
+                [ngClass]="obtenerClaseEstado(project()!.estado_verificacion)"
+                class="rounded-full px-3 py-1 text-sm font-semibold"
+              >
                 {{ obtenerConfigEstado(project()!.estado_verificacion).label }}
               </span>
             </div>
-            
+
             <div class="flex items-center justify-between">
               <span class="text-gray-700">Visibilidad:</span>
-              <span [ngClass]="project()!.vista_publica ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'" 
-                    class="px-3 py-1 rounded-full text-sm font-semibold">
+              <span
+                [ngClass]="
+                  project()!.vista_publica
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800'
+                "
+                class="rounded-full px-3 py-1 text-sm font-semibold"
+              >
                 {{ project()!.vista_publica ? 'Público' : 'Privado' }}
               </span>
             </div>
@@ -217,35 +265,39 @@
         </div>
 
         <!-- Estadísticas rápidas -->
-        <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-orange-100/50">
-          <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <div
+          class="border-orange-100/50 rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+        >
+          <h2 class="mb-4 text-xl font-bold text-gray-900">
             <i class="fas fa-chart-bar mr-2 text-[#c64d1f]"></i>
             Estadísticas
           </h2>
-          
+
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-gray-700 flex items-center">
+              <span class="flex items-center text-gray-700">
                 <i class="fas fa-users mr-2 text-gray-500"></i>
                 Participantes:
               </span>
               <span class="font-semibold text-gray-900">{{ project()!.participantes_count }}</span>
             </div>
-            
+
             <div class="flex items-center justify-between">
-              <span class="text-gray-700 flex items-center">
+              <span class="flex items-center text-gray-700">
                 <i class="fas fa-heart mr-2 text-gray-500"></i>
                 Me Gusta:
               </span>
               <span class="font-semibold text-gray-900">{{ project()!.likes_count || 0 }}</span>
             </div>
-            
+
             <div class="flex items-center justify-between">
-              <span class="text-gray-700 flex items-center">
+              <span class="flex items-center text-gray-700">
                 <i class="fas fa-code mr-2 text-gray-500"></i>
                 Tecnologías:
               </span>
-              <span class="font-semibold text-gray-900">{{ project()!.tecnologias.length || 0 }}</span>
+              <span class="font-semibold text-gray-900">{{
+                project()!.tecnologias.length || 0
+              }}</span>
             </div>
           </div>
         </div>
@@ -255,26 +307,33 @@
 </div>
 
 <!-- Modal Verificar Proyecto -->
-<div *ngIf="showVerificationModal()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-    <div class="flex items-center justify-between mb-6">
+<div
+  *ngIf="showVerificationModal()"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+>
+  <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-8">
+    <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold text-gray-900">
         <i class="fas fa-check-circle mr-2 text-[#c64d1f]"></i>
         Cambiar Estado de Verificación
       </h2>
-      <button 
+      <button
         (click)="cerrarModalVerificacion()"
-        class="text-gray-500 hover:text-gray-700 text-2xl">
+        class="text-2xl text-gray-500 hover:text-gray-700"
+      >
         <i class="fas fa-times"></i>
       </button>
     </div>
 
     <form [formGroup]="verificationForm" (ngSubmit)="verificarProyecto()" class="space-y-6">
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Estado de Verificación *</label>
-        <select 
+        <label class="mb-2 block text-sm font-semibold text-gray-700"
+          >Estado de Verificación *</label
+        >
+        <select
           formControlName="estado_verificacion"
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors">
+          class="w-full rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+        >
           <option value="">Selecciona un estado</option>
           <option *ngFor="let estado of estadosVerificacion" [value]="estado.value">
             {{ estado.label }}
@@ -283,26 +342,29 @@
       </div>
 
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Comentario (Opcional)</label>
-        <textarea 
+        <label class="mb-2 block text-sm font-semibold text-gray-700">Comentario (Opcional)</label>
+        <textarea
           formControlName="comentario"
           rows="4"
           placeholder="Escribe un comentario sobre la verificación..."
-          class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#c64d1f] focus:outline-none transition-colors resize-none">
+          class="w-full resize-none rounded-xl border-2 border-gray-200 p-3 transition-colors focus:border-[#c64d1f] focus:outline-none"
+        >
         </textarea>
       </div>
 
-      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-        <button 
+      <div class="flex items-center justify-end space-x-4 border-t border-gray-200 pt-6">
+        <button
           type="button"
           (click)="cerrarModalVerificacion()"
-          class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+          class="rounded-xl border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+        >
           Cancelar
         </button>
-        <button 
+        <button
           type="submit"
           [disabled]="verificationForm.invalid || isLoading()"
-          class="px-6 py-3 bg-[#c64d1f] text-white rounded-xl font-semibold hover:bg-[#b04419] transition-colors disabled:opacity-50">
+          class="rounded-xl bg-[#c64d1f] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#b04419] disabled:opacity-50"
+        >
           <span *ngIf="!isLoading()">
             <i class="fas fa-check mr-2"></i>
             Actualizar Estado

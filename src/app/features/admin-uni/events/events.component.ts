@@ -1,8 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AdminUniEventsService, EstadoEvento, EventoCreacionRequest, EventoUniversitario, TipoEvento } from '../../../core/services/admin-uni/admin-uni-events.services';
+import {
+  AdminUniEventsService,
+  EstadoEvento,
+  EventoCreacionRequest,
+  EventoUniversitario,
+  TipoEvento,
+} from '../../../core/services/admin-uni/admin-uni-events.services';
 
 @Component({
   selector: 'app-events',
@@ -10,15 +23,14 @@ import { AdminUniEventsService, EstadoEvento, EventoCreacionRequest, EventoUnive
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './events.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsComponent implements OnInit {
-  
   // Servicios inyectados
   private eventsService = inject(AdminUniEventsService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
-   private readonly cdr = inject(ChangeDetectorRef);   
+  private readonly cdr = inject(ChangeDetectorRef);
 
   // Signals para manejo reactivo del estado
   eventos = signal<EventoUniversitario[]>([]);
@@ -28,7 +40,7 @@ export class EventsComponent implements OnInit {
   showCreateModal = signal(false);
   showEditModal = signal(false);
   selectedEvento = signal<EventoUniversitario | null>(null);
-  
+
   // Estadísticas para dashboard
   estadisticas = signal({
     total_eventos: 0,
@@ -36,7 +48,7 @@ export class EventsComponent implements OnInit {
     eventos_proximos: 0,
     eventos_finalizados: 0,
     total_registros: 0,
-    capacidad_utilizada: 0
+    capacidad_utilizada: 0,
   });
 
   // Paginación
@@ -60,7 +72,7 @@ export class EventsComponent implements OnInit {
       fecha_fin: ['', Validators.required],
       ubicacion: [''],
       enlace_acceso: [''],
-      capacidad_maxima: [null, [Validators.min(1), Validators.max(1000)]]
+      capacidad_maxima: [null, [Validators.min(1), Validators.max(1000)]],
     });
 
     // Inicializar formulario de edición
@@ -74,7 +86,7 @@ export class EventsComponent implements OnInit {
       fecha_fin: ['', Validators.required],
       ubicacion: [''],
       enlace_acceso: [''],
-      capacidad_maxima: [null, [Validators.min(1), Validators.max(1000)]]
+      capacidad_maxima: [null, [Validators.min(1), Validators.max(1000)]],
     });
   }
 
@@ -92,25 +104,27 @@ export class EventsComponent implements OnInit {
     console.log('Iniciando carga de datos iniciales...');
 
     // Cargar tipos y estados primero, luego eventos y estadísticas
-    Promise.all([
-      this.cargarTiposEventos(),
-      this.cargarEstadosEventos()
-    ]).then(() => {
-      // Después de cargar tipos y estados, cargar eventos
-      return this.cargarEventos();
-    }).then(() => {
-      // Después de cargar eventos, calcular estadísticas
-      return this.cargarEstadisticas();
-    }).then(() => {
-      console.log('Todos los datos cargados exitosamente');
-      console.log('Eventos cargados:', this.eventos().length);
-      console.log('Estadísticas finales:', this.estadisticas());
-    }).catch((error) => {
-      console.error('Error en carga inicial de datos:', error);
-      this.mostrarError('Error al cargar los datos iniciales');
-    }).finally(() => {
-      this.isLoading.set(false);
-    });
+    Promise.all([this.cargarTiposEventos(), this.cargarEstadosEventos()])
+      .then(() => {
+        // Después de cargar tipos y estados, cargar eventos
+        return this.cargarEventos();
+      })
+      .then(() => {
+        // Después de cargar eventos, calcular estadísticas
+        return this.cargarEstadisticas();
+      })
+      .then(() => {
+        console.log('Todos los datos cargados exitosamente');
+        console.log('Eventos cargados:', this.eventos().length);
+        console.log('Estadísticas finales:', this.estadisticas());
+      })
+      .catch(error => {
+        console.error('Error en carga inicial de datos:', error);
+        this.mostrarError('Error al cargar los datos iniciales');
+      })
+      .finally(() => {
+        this.isLoading.set(false);
+      });
   }
 
   /**
@@ -122,9 +136,10 @@ export class EventsComponent implements OnInit {
 
     return new Promise((resolve, reject) => {
       this.eventsService.obtenerEventos().subscribe({
-        next: (response: any) => { // Usar any temporalmente para debug
+        next: (response: any) => {
+          // Usar any temporalmente para debug
           console.log('Respuesta del backend para eventos:', response); // Debug
-          
+
           // Verificar estructura de respuesta del backend
           if (response && Array.isArray(response)) {
             // Si el backend devuelve directamente un array
@@ -147,31 +162,33 @@ export class EventsComponent implements OnInit {
             this.eventos.set([]);
             this.totalPages.set(1);
           }
-          
+
           // Log de eventos cargados para debugging
           const eventosActuales = this.eventos();
           console.log(`Total eventos cargados: ${eventosActuales.length}`);
           if (eventosActuales.length > 0) {
             console.log('Primer evento como ejemplo:', eventosActuales[0]);
           }
-          
+
           resolve();
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al cargar eventos:', error);
-          
+
           if (error.status === 404) {
             // No es realmente un error, solo no hay resultados
             this.eventos.set([]);
             resolve(); // Resolver en lugar de rechazar
             return;
           } else {
-            this.mostrarError('Error al cargar los eventos: ' + (error.message || 'Error desconocido'));
+            this.mostrarError(
+              'Error al cargar los eventos: ' + (error.message || 'Error desconocido'),
+            );
           }
-          
+
           this.eventos.set([]); // Limpiar eventos en caso de error
           reject(error);
-        }
+        },
       });
     });
   }
@@ -182,22 +199,22 @@ export class EventsComponent implements OnInit {
   private cargarTiposEventos(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.eventsService.obtenerTiposEventos().subscribe({
-        next: (tipos) => {
+        next: tipos => {
           console.log('Tipos de eventos cargados:', tipos);
           this.tiposEventos.set(tipos);
-          
+
           // Establecer el primer tipo como valor por defecto si hay tipos disponibles
           if (tipos.length > 0) {
             this.createEventForm.patchValue({ event_type_id: tipos[0].id });
             this.editEventForm.patchValue({ event_type_id: tipos[0].id });
           }
-          
+
           resolve();
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al cargar tipos de eventos:', error);
           reject(error);
-        }
+        },
       });
     });
   }
@@ -208,14 +225,14 @@ export class EventsComponent implements OnInit {
   private cargarEstadosEventos(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.eventsService.obtenerEstadosEventos().subscribe({
-        next: (estados) => {
+        next: estados => {
           this.estadosEventos.set(estados);
           resolve();
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al cargar estados de eventos:', error);
           reject(error);
-        }
+        },
       });
     });
   }
@@ -224,19 +241,19 @@ export class EventsComponent implements OnInit {
    * Cargar estadísticas para el dashboard
    */
   private cargarEstadisticas(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.eventsService.obtenerEstadisticasEventos().subscribe({
-        next: (stats) => {
+        next: stats => {
           console.log('Estadísticas del backend:', stats);
           this.estadisticas.set(stats);
           resolve();
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al cargar estadísticas:', error);
           // Si no hay estadísticas del backend, calcular localmente
           this.calcularEstadisticasLocales();
           resolve();
-        }
+        },
       });
     });
   }
@@ -247,7 +264,7 @@ export class EventsComponent implements OnInit {
   private calcularEstadisticasLocales(): void {
     const eventos = this.eventos();
     const ahora = new Date();
-    
+
     const estadisticasCalculadas = {
       total_eventos: eventos.length,
       eventos_activos: eventos.filter(e => e.state_id === 1).length, // Estado activo
@@ -266,12 +283,11 @@ export class EventsComponent implements OnInit {
       capacidad_utilizada: eventos.reduce((total, evento) => {
         // Calcular capacidad utilizada basada en eventos
         return total + (evento.capacidad_maxima || 0);
-      }, 0)
+      }, 0),
     };
 
-    console.log('Estadísticas calculadas localmente:', estadisticasCalculadas); 
+    console.log('Estadísticas calculadas localmente:', estadisticasCalculadas);
     this.estadisticas.set(estadisticasCalculadas);
-    
   }
 
   /**
@@ -282,11 +298,11 @@ export class EventsComponent implements OnInit {
     console.log('Iniciando creación de evento...');
     console.log('Formulario válido:', this.createEventForm.valid);
     console.log('Valores del formulario:', this.createEventForm.value);
-    
+
     if (this.createEventForm.invalid) {
       console.log('Formulario inválido, marcando todos los campos como tocados');
       this.createEventForm.markAllAsTouched();
-      
+
       // Log de errores específicos
       Object.keys(this.createEventForm.controls).forEach(key => {
         const control = this.createEventForm.get(key);
@@ -298,10 +314,10 @@ export class EventsComponent implements OnInit {
     }
 
     this.isLoading.set(true);
-    
+
     // Preparar datos del evento con formato correcto
     const formData = this.createEventForm.value;
-    
+
     // Enviar solo campos básicos para debugging
     const eventoData: EventoCreacionRequest = {
       titulo: formData.titulo?.trim() || '',
@@ -312,7 +328,7 @@ export class EventsComponent implements OnInit {
       fecha_inicio: this.formatearFechaParaBackend(formData.fecha_inicio),
       fecha_fin: this.formatearFechaParaBackend(formData.fecha_fin),
       universidad_id: this.obtenerUniversidadId(),
-      creador_id: this.obtenerCreadorId() // Agregar el creador_id requerido
+      creador_id: this.obtenerCreadorId(), // Agregar el creador_id requerido
     };
 
     // Validaciones adicionales
@@ -338,11 +354,11 @@ export class EventsComponent implements OnInit {
     if (formData.ubicacion && formData.ubicacion.trim() !== '') {
       (eventoData as any).ubicacion = formData.ubicacion.trim();
     }
-    
+
     if (formData.enlace_acceso && formData.enlace_acceso.trim() !== '') {
       (eventoData as any).enlace_acceso = formData.enlace_acceso.trim();
     }
-    
+
     if (formData.capacidad_maxima && formData.capacidad_maxima > 0) {
       (eventoData as any).capacidad_maxima = Number(formData.capacidad_maxima);
     }
@@ -355,9 +371,9 @@ export class EventsComponent implements OnInit {
     });
 
     this.eventsService.crearEvento(eventoData).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Respuesta exitosa del backend:', response);
-        
+
         // Manejo resiliente de la respuesta
         let tituloEvento = 'evento';
         if (response && typeof response === 'object') {
@@ -367,20 +383,20 @@ export class EventsComponent implements OnInit {
             tituloEvento = (response as any).titulo;
           }
         }
-        
+
         this.mostrarExito(`Evento "${tituloEvento}" creado exitosamente`);
         this.cerrarModalCrear();
-        
+
         // Recargar eventos y recalcular estadísticas
         this.cargarEventos().then(() => {
           this.calcularEstadisticasLocales();
-          this.cdr.markForCheck();  
+          this.cdr.markForCheck();
         });
-        
+
         // Opcional: navegar al evento recién creado
         // this.router.navigate(['/admin-uni/eventos', response.evento.id]);
       },
-      error: (error) => {
+      error: error => {
         console.error('Error completo al crear evento:', error);
         console.error('Estado del error:', error.status);
         console.error('Mensaje del error:', error.message);
@@ -390,7 +406,7 @@ export class EventsComponent implements OnInit {
       complete: () => {
         console.log('Proceso de creación completado');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -403,11 +419,11 @@ export class EventsComponent implements OnInit {
     console.log('Formulario válido:', this.editEventForm.valid);
     console.log('Evento seleccionado:', this.selectedEvento());
     console.log('Valores del formulario:', this.editEventForm.value);
-    
+
     if (this.editEventForm.invalid || !this.selectedEvento()) {
       console.log('Formulario inválido o no hay evento seleccionado');
       this.editEventForm.markAllAsTouched();
-      
+
       // Log de errores específicos
       Object.keys(this.editEventForm.controls).forEach(key => {
         const control = this.editEventForm.get(key);
@@ -420,7 +436,7 @@ export class EventsComponent implements OnInit {
 
     this.isLoading.set(true);
     const eventoId = this.selectedEvento()!.id!;
-    
+
     // Preparar datos del evento con formato correcto usando EventoActualizacionRequest
     const formData = this.editEventForm.value;
     const eventoData: any = {
@@ -432,7 +448,7 @@ export class EventsComponent implements OnInit {
       fecha_inicio: this.formatearFechaParaBackend(formData.fecha_inicio),
       fecha_fin: this.formatearFechaParaBackend(formData.fecha_fin),
       universidad_id: this.obtenerUniversidadId(),
-      creador_id: this.obtenerCreadorId()
+      creador_id: this.obtenerCreadorId(),
     };
 
     // Validaciones adicionales
@@ -458,11 +474,11 @@ export class EventsComponent implements OnInit {
     if (formData.ubicacion && formData.ubicacion.trim() !== '') {
       eventoData.ubicacion = formData.ubicacion.trim();
     }
-    
+
     if (formData.enlace_acceso && formData.enlace_acceso.trim() !== '') {
       eventoData.enlace_acceso = formData.enlace_acceso.trim();
     }
-    
+
     if (formData.capacidad_maxima && formData.capacidad_maxima > 0) {
       eventoData.capacidad_maxima = Number(formData.capacidad_maxima);
     }
@@ -476,9 +492,9 @@ export class EventsComponent implements OnInit {
     });
 
     this.eventsService.actualizarEvento(eventoId, eventoData).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Respuesta exitosa de edición:', response);
-        
+
         // Manejo resiliente de la respuesta
         let tituloEvento = 'evento';
         if (response && typeof response === 'object') {
@@ -488,21 +504,21 @@ export class EventsComponent implements OnInit {
             tituloEvento = (response as any).titulo;
           }
         }
-        
+
         this.mostrarExito(`Evento "${tituloEvento}" actualizado exitosamente`);
         this.cerrarModalEditar();
-        
+
         // Recargar eventos y recalcular estadísticas
         this.cargarEventos().then(() => {
           this.calcularEstadisticasLocales();
         });
-        
+
         // Actualizar el evento seleccionado con los nuevos datos si está disponible
         if (response.evento) {
           this.selectedEvento.set(response.evento);
         }
       },
-      error: (error) => {
+      error: error => {
         console.error('Error completo al editar evento:', error);
         console.error('Estado del error:', error.status);
         console.error('Mensaje del error:', error.message);
@@ -512,7 +528,7 @@ export class EventsComponent implements OnInit {
       complete: () => {
         console.log('Proceso de edición completado');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -530,19 +546,19 @@ export class EventsComponent implements OnInit {
     this.eventsService.eliminarEvento(evento.id!).subscribe({
       next: () => {
         this.mostrarExito('Evento eliminado exitosamente');
-        
+
         // Recargar eventos y recalcular estadísticas
         this.cargarEventos().then(() => {
           this.calcularEstadisticasLocales();
         });
       },
-      error: (error) => {
+      error: error => {
         console.error('Error al eliminar evento:', error);
         this.mostrarError('Error al eliminar el evento');
       },
       complete: () => {
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -554,16 +570,16 @@ export class EventsComponent implements OnInit {
     this.eventsService.cambiarEstadoEvento(evento.id!, nuevoStateId).subscribe({
       next: () => {
         this.mostrarExito('Estado del evento actualizado');
-        
+
         // Recargar eventos y recalcular estadísticas
         this.cargarEventos().then(() => {
           this.calcularEstadisticasLocales();
         });
       },
-      error: (error) => {
+      error: error => {
         console.error('Error al cambiar estado:', error);
         this.mostrarError('Error al cambiar el estado del evento');
-      }
+      },
     });
   }
 
@@ -581,20 +597,21 @@ export class EventsComponent implements OnInit {
    */
   exportarAsistentes(evento: EventoUniversitario, formato: 'csv' | 'excel' = 'csv'): void {
     // Simulación temporal hasta que se implemente el método en el servicio
-    const content = formato === 'csv' 
-      ? `evento_id,titulo,nombre,email,universidad,asistio\n${evento.id},"${evento.titulo}",Sin datos disponibles,,,`
-      : `evento_id\ttitulo\tnombre\temail\tuniversidad\tasistio\n${evento.id}\t"${evento.titulo}"\tSin datos disponibles\t\t\t`;
-    
+    const content =
+      formato === 'csv'
+        ? `evento_id,titulo,nombre,email,universidad,asistio\n${evento.id},"${evento.titulo}",Sin datos disponibles,,,`
+        : `evento_id\ttitulo\tnombre\temail\tuniversidad\tasistio\n${evento.id}\t"${evento.titulo}"\tSin datos disponibles\t\t\t`;
+
     const mimeType = formato === 'csv' ? 'text/csv' : 'application/vnd.ms-excel';
     const blob = new Blob([content], { type: mimeType });
-    
+
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `asistentes_${evento.titulo.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.${formato}`;
     link.click();
     window.URL.revokeObjectURL(url);
-    
+
     this.mostrarExito('Lista de asistentes exportada exitosamente (simulación)');
   }
 
@@ -603,38 +620,40 @@ export class EventsComponent implements OnInit {
     if (nuevaPagina >= 1 && nuevaPagina <= this.totalPages()) {
       console.log(`Cambiando a página ${nuevaPagina}`);
       this.currentPage.set(nuevaPagina);
-      
+
       // Cargar eventos de la nueva página y recalcular estadísticas
-      this.cargarEventos().then(() => {
-        this.calcularEstadisticasLocales();
-        console.log(`Página ${nuevaPagina} cargada. Eventos: ${this.eventos().length}`);
-      }).catch((error) => {
-        console.error('Error al cambiar página:', error);
-        this.mostrarError('Error al cargar la página');
-      });
+      this.cargarEventos()
+        .then(() => {
+          this.calcularEstadisticasLocales();
+          console.log(`Página ${nuevaPagina} cargada. Eventos: ${this.eventos().length}`);
+        })
+        .catch(error => {
+          console.error('Error al cambiar página:', error);
+          this.mostrarError('Error al cargar la página');
+        });
     }
   }
 
   // Métodos de modal
   abrirModalCrear(): void {
     this.createEventForm.reset();
-    
+
     // Establecer valores por defecto
     this.createEventForm.patchValue({
-      state_id: 1
+      state_id: 1,
     });
-    
+
     // Si hay tipos de eventos disponibles, seleccionar el primero
     if (this.tiposEventos().length > 0) {
       this.createEventForm.patchValue({ event_type_id: this.tiposEventos()[0].id });
     }
-    
+
     // Si hay modalidades disponibles, seleccionar la primera
     const modalidades = this.modalidades;
     if (modalidades.length > 0) {
       this.createEventForm.patchValue({ tipo: modalidades[0].value });
     }
-    
+
     this.showCreateModal.set(true);
   }
 
@@ -646,7 +665,7 @@ export class EventsComponent implements OnInit {
   abrirModalEditar(evento: EventoUniversitario): void {
     console.log('Abriendo modal de edición para evento:', evento);
     this.selectedEvento.set(evento);
-    
+
     // Formatear fechas para inputs datetime-local
     const eventoFormateado = {
       titulo: evento.titulo || '',
@@ -658,19 +677,19 @@ export class EventsComponent implements OnInit {
       fecha_fin: this.formatearFechaParaInput(evento.fecha_fin),
       ubicacion: evento.ubicacion || '',
       enlace_acceso: evento.enlace_acceso || '',
-      capacidad_maxima: evento.capacidad_maxima || null
+      capacidad_maxima: evento.capacidad_maxima || null,
     };
-    
+
     console.log('Datos formateados para el formulario:', eventoFormateado);
-    
+
     // Resetear el formulario primero y luego establecer valores
     this.editEventForm.reset();
     this.editEventForm.patchValue(eventoFormateado);
-    
+
     // Validar que el formulario se cargó correctamente
     console.log('Estado del formulario después de cargar:', this.editEventForm.value);
     console.log('Formulario válido después de cargar:', this.editEventForm.valid);
-    
+
     this.showEditModal.set(true);
   }
 
@@ -694,7 +713,9 @@ export class EventsComponent implements OnInit {
         const errors = this.createEventForm.get('fecha_fin')?.errors;
         if (errors && errors['fechaInvalida']) {
           delete errors['fechaInvalida'];
-          this.createEventForm.get('fecha_fin')?.setErrors(Object.keys(errors).length ? errors : null);
+          this.createEventForm
+            .get('fecha_fin')
+            ?.setErrors(Object.keys(errors).length ? errors : null);
         }
       }
     };
@@ -711,7 +732,9 @@ export class EventsComponent implements OnInit {
         const errors = this.editEventForm.get('fecha_fin')?.errors;
         if (errors && errors['fechaInvalida']) {
           delete errors['fechaInvalida'];
-          this.editEventForm.get('fecha_fin')?.setErrors(Object.keys(errors).length ? errors : null);
+          this.editEventForm
+            .get('fecha_fin')
+            ?.setErrors(Object.keys(errors).length ? errors : null);
         }
       }
     };
@@ -719,7 +742,7 @@ export class EventsComponent implements OnInit {
     // Suscribirse a cambios en ambos formularios
     this.createEventForm.get('fecha_inicio')?.valueChanges.subscribe(validarFechasCreacion);
     this.createEventForm.get('fecha_fin')?.valueChanges.subscribe(validarFechasCreacion);
-    
+
     this.editEventForm.get('fecha_inicio')?.valueChanges.subscribe(validarFechasEdicion);
     this.editEventForm.get('fecha_fin')?.valueChanges.subscribe(validarFechasEdicion);
   }
@@ -743,34 +766,36 @@ export class EventsComponent implements OnInit {
   private manejarErrorCreacion(error: any): void {
     console.log('Manejando error de creación:', error);
     console.log('Error completo:', JSON.stringify(error, null, 2));
-    
+
     // Log específico de errores de validación
     if (error.error && error.error.details) {
       console.log('Detalles de validación:', error.error.details);
       console.log('Resumen del error:', error.error.summary);
     }
-    
+
     if (error.status === 409) {
       this.mostrarError('Ya existe un evento con ese nombre en las fechas seleccionadas');
     } else if (error.status === 400) {
       // Obtener mensaje específico del backend si está disponible
       let mensajeError = 'Datos del evento inválidos';
-      
+
       if (error.error && error.error.details && Array.isArray(error.error.details)) {
         // Construir mensaje con todos los errores de validación
-        const errores = error.error.details.map((detail: any) => {
-          if (detail.field && detail.message) {
-            return `${detail.field}: ${detail.message}`;
-          }
-          return detail.message || detail;
-        }).join('; ');
+        const errores = error.error.details
+          .map((detail: any) => {
+            if (detail.field && detail.message) {
+              return `${detail.field}: ${detail.message}`;
+            }
+            return detail.message || detail;
+          })
+          .join('; ');
         mensajeError = `Errores de validación: ${errores}`;
       } else if (error.error?.message) {
         mensajeError = error.error.message;
       } else if (error.message) {
         mensajeError = error.message;
       }
-      
+
       this.mostrarError(mensajeError);
     } else if (error.status === 401) {
       this.mostrarError('No tienes permisos para crear eventos');
@@ -810,7 +835,7 @@ export class EventsComponent implements OnInit {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
@@ -820,14 +845,14 @@ export class EventsComponent implements OnInit {
    */
   private formatearFechaParaInput(fecha: string): string {
     if (!fecha) return '';
-    
+
     const date = new Date(fecha);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
@@ -837,7 +862,7 @@ export class EventsComponent implements OnInit {
    */
   private formatearFechaParaBackend(fecha: string): string {
     if (!fecha) return '';
-    
+
     try {
       // Los inputs datetime-local devuelven formato 'YYYY-MM-DDTHH:mm'
       // Convertir a ISO string para el backend

@@ -11,10 +11,9 @@ import { ProjectService } from '../../../../core/services/project/project.servic
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './project-detail.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent implements OnInit {
-  
   // Servicios inyectados
   private projectService = inject(ProjectService);
   private fb = inject(FormBuilder);
@@ -26,7 +25,7 @@ export class ProjectDetailComponent implements OnInit {
   isLoading = signal(false);
   showVerificationModal = signal(false);
   showEditModal = signal(false);
-  
+
   // ID del proyecto obtenido de la ruta
   projectId = signal<number | null>(null);
 
@@ -38,20 +37,20 @@ export class ProjectDetailComponent implements OnInit {
   estadosVerificacion = [
     { value: 'pendiente', label: 'Pendiente', color: 'yellow', icon: 'clock' },
     { value: 'aprobado', label: 'Aprobado', color: 'green', icon: 'check-circle' },
-    { value: 'rechazado', label: 'Rechazado', color: 'red', icon: 'times-circle' }
+    { value: 'rechazado', label: 'Rechazado', color: 'red', icon: 'times-circle' },
   ];
 
   constructor() {
     // Inicializar formulario de verificación
     this.verificationForm = this.fb.group({
       estado_verificacion: ['', Validators.required],
-      comentario: ['', [Validators.maxLength(500)]]
+      comentario: ['', [Validators.maxLength(500)]],
     });
 
     // Inicializar formulario de edición
     this.editForm = this.fb.group({
       vista_publica: [false],
-      comentario_admin: ['', [Validators.maxLength(500)]]
+      comentario_admin: ['', [Validators.maxLength(500)]],
     });
   }
 
@@ -78,23 +77,23 @@ export class ProjectDetailComponent implements OnInit {
     console.log('Cargando proyecto con ID:', id);
 
     this.projectService.getById(id).subscribe({
-      next: (proyecto) => {
+      next: proyecto => {
         console.log('Proyecto cargado:', proyecto);
         console.log('repositorio_url:', proyecto.repositorio_url);
         console.log('demo_url:', proyecto.demo_url);
         console.log('Todas las propiedades del proyecto:', Object.keys(proyecto));
         this.project.set(proyecto);
-        
+
         // Precargar formularios con datos actuales
         this.verificationForm.patchValue({
-          estado_verificacion: proyecto.estado_verificacion
+          estado_verificacion: proyecto.estado_verificacion,
         });
-        
+
         this.editForm.patchValue({
-          vista_publica: proyecto.vista_publica
+          vista_publica: proyecto.vista_publica,
         });
       },
-      error: (error) => {
+      error: error => {
         console.error('Error al cargar proyecto:', error);
         if (error.status === 404) {
           this.mostrarError('Proyecto no encontrado');
@@ -105,7 +104,7 @@ export class ProjectDetailComponent implements OnInit {
       },
       complete: () => {
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -119,7 +118,7 @@ export class ProjectDetailComponent implements OnInit {
     console.log('Abriendo modal de verificación para proyecto:', proyecto.nombre);
     this.verificationForm.patchValue({
       estado_verificacion: proyecto.estado_verificacion,
-      comentario: ''
+      comentario: '',
     });
     this.showVerificationModal.set(true);
   }
@@ -144,29 +143,31 @@ export class ProjectDetailComponent implements OnInit {
 
     this.isLoading.set(true);
     const formData = this.verificationForm.value;
-    
+
     const updateData: any = {
-      estado_verificacion: formData.estado_verificacion
+      estado_verificacion: formData.estado_verificacion,
     };
 
     console.log('Verificando proyecto:', proyecto.id, updateData);
 
     this.projectService.update(proyecto.id, updateData).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Proyecto verificado exitosamente:', response);
-        const estadoLabel = this.estadosVerificacion.find(e => e.value === formData.estado_verificacion)?.label;
+        const estadoLabel = this.estadosVerificacion.find(
+          e => e.value === formData.estado_verificacion,
+        )?.label;
         this.mostrarExito(`Proyecto ${estadoLabel?.toLowerCase()} exitosamente`);
-        
+
         this.cerrarModalVerificacion();
         this.cargarProyecto(); // Recargar datos actualizados
       },
-      error: (error) => {
+      error: error => {
         console.error('Error al verificar proyecto:', error);
         this.manejarErrorVerificacion(error);
       },
       complete: () => {
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -180,7 +181,7 @@ export class ProjectDetailComponent implements OnInit {
     console.log('Abriendo modal de edición para proyecto:', proyecto.nombre);
     this.editForm.patchValue({
       vista_publica: proyecto.vista_publica,
-      comentario_admin: ''
+      comentario_admin: '',
     });
     this.showEditModal.set(true);
   }
@@ -205,28 +206,28 @@ export class ProjectDetailComponent implements OnInit {
 
     this.isLoading.set(true);
     const formData = this.editForm.value;
-    
+
     const updateData: any = {
-      vista_publica: formData.vista_publica
+      vista_publica: formData.vista_publica,
     };
 
     console.log('Actualizando proyecto:', proyecto.id, updateData);
 
     this.projectService.update(proyecto.id, updateData).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Proyecto actualizado exitosamente:', response);
         this.mostrarExito('Configuración del proyecto actualizada exitosamente');
-        
+
         this.cerrarModalEdicion();
         this.cargarProyecto(); // Recargar datos actualizados
       },
-      error: (error) => {
+      error: error => {
         console.error('Error al actualizar proyecto:', error);
         this.manejarErrorVerificacion(error);
       },
       complete: () => {
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -241,12 +242,14 @@ export class ProjectDetailComponent implements OnInit {
    * Obtener configuración del estado de verificación
    */
   obtenerConfigEstado(estado: string) {
-    return this.estadosVerificacion.find(e => e.value === estado) || {
-      value: estado,
-      label: estado,
-      color: 'gray',
-      icon: 'question'
-    };
+    return (
+      this.estadosVerificacion.find(e => e.value === estado) || {
+        value: estado,
+        label: estado,
+        color: 'gray',
+        icon: 'question',
+      }
+    );
   }
 
   /**
@@ -266,7 +269,7 @@ export class ProjectDetailComponent implements OnInit {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
@@ -276,8 +279,10 @@ export class ProjectDetailComponent implements OnInit {
   formatearFechaRelativa(fecha: string): string {
     const fechaCreacion = new Date(fecha);
     const ahora = new Date();
-    const diferenciaDias = Math.floor((ahora.getTime() - fechaCreacion.getTime()) / (1000 * 60 * 60 * 24));
-    
+    const diferenciaDias = Math.floor(
+      (ahora.getTime() - fechaCreacion.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
     if (diferenciaDias === 0) {
       return 'Hoy';
     } else if (diferenciaDias === 1) {
@@ -324,7 +329,7 @@ export class ProjectDetailComponent implements OnInit {
   tieneEnlaces(): boolean {
     const proyecto = this.project();
     if (!proyecto) return false;
-    
+
     return this.tieneRepositorio() || this.tieneDemo();
   }
 
@@ -333,7 +338,11 @@ export class ProjectDetailComponent implements OnInit {
    */
   tieneRepositorio(): boolean {
     const proyecto = this.project();
-    return !!(proyecto?.repositorio_url && proyecto.repositorio_url.trim() && proyecto.repositorio_url !== 'null');
+    return !!(
+      proyecto?.repositorio_url &&
+      proyecto.repositorio_url.trim() &&
+      proyecto.repositorio_url !== 'null'
+    );
   }
 
   /**
@@ -349,12 +358,12 @@ export class ProjectDetailComponent implements OnInit {
    */
   obtenerUrlCompleta(url: string): string {
     if (!url) return '';
-    
+
     // Si ya tiene protocolo, devolverla tal como está
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    
+
     // Si no tiene protocolo, agregar https://
     return `https://${url}`;
   }
@@ -362,7 +371,7 @@ export class ProjectDetailComponent implements OnInit {
   // Métodos de utilidad
   private manejarErrorVerificacion(error: any): void {
     console.log('Manejando error:', error);
-    
+
     if (error.status === 404) {
       this.mostrarError('El proyecto no fue encontrado');
     } else if (error.status === 400) {

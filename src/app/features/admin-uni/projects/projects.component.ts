@@ -1,6 +1,12 @@
-
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Project, ProjectsFilters } from '../../../core/models/project/project.interface';
@@ -13,7 +19,7 @@ import { UserService } from '../../../core/services/user/user.service';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './projects.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
@@ -39,7 +45,7 @@ export class ProjectsComponent implements OnInit {
     }
     ids.forEach(id => {
       this.userService.getById(id).subscribe({
-        next: (user) => {
+        next: user => {
           this.userNames[id] = user.nombre || 'Desconocido';
           pending--;
           if (pending === 0) this.cdr.markForCheck();
@@ -48,7 +54,7 @@ export class ProjectsComponent implements OnInit {
           this.userNames[id] = 'Desconocido';
           pending--;
           if (pending === 0) this.cdr.markForCheck();
-        }
+        },
       });
     });
   }
@@ -75,7 +81,7 @@ export class ProjectsComponent implements OnInit {
     proyectos_aprobados: 0,
     proyectos_rechazados: 0,
     proyectos_publicos: 0,
-    nuevos_este_mes: 0
+    nuevos_este_mes: 0,
   });
 
   // Paginación
@@ -90,14 +96,14 @@ export class ProjectsComponent implements OnInit {
   estadosVerificacion = [
     { value: 'pendiente', label: 'Pendiente', color: 'yellow' },
     { value: 'aprobado', label: 'Aprobado', color: 'green' },
-    { value: 'rechazado', label: 'Rechazado', color: 'red' }
+    { value: 'rechazado', label: 'Rechazado', color: 'red' },
   ];
 
   constructor() {
     // Inicializar formulario de verificación
     this.verificationForm = this.fb.group({
       estado_verificacion: ['', Validators.required],
-      comentario: ['', [Validators.maxLength(500)]]
+      comentario: ['', [Validators.maxLength(500)]],
     });
   }
 
@@ -109,16 +115,16 @@ export class ProjectsComponent implements OnInit {
     const filtros: ProjectsFilters = {
       universidad_id: this.obtenerUniversidadId(),
       limit: this.itemsPerPage,
-      offset: (this.currentPage() - 1) * this.itemsPerPage
+      offset: (this.currentPage() - 1) * this.itemsPerPage,
     };
 
     console.log('Cargando proyectos con filtros:', filtros);
 
     return new Promise((resolve, reject) => {
       this.projectService.getAll(filtros).subscribe({
-        next: (response) => {
+        next: response => {
           console.log('Respuesta del backend para proyectos:', response);
-          
+
           if (response && response.data) {
             this.projects.set(response.data);
             this.totalPages.set(response.pagination?.totalPages || 1);
@@ -133,26 +139,28 @@ export class ProjectsComponent implements OnInit {
             this.projects.set([]);
             this.totalPages.set(1);
           }
-          
+
           resolve();
           // Cargar nombres de creadores cada vez que se actualizan los proyectos
           this.cargarNombresCreadores();
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al cargar proyectos:', error);
-          
+
           if (error.status === 404) {
             // No hay proyectos, no es un error real
             this.projects.set([]);
             resolve();
             return;
           } else {
-            this.mostrarError('Error al cargar los proyectos: ' + (error.message || 'Error desconocido'));
+            this.mostrarError(
+              'Error al cargar los proyectos: ' + (error.message || 'Error desconocido'),
+            );
           }
-          
+
           this.projects.set([]);
           reject(error);
-        }
+        },
       });
     });
   }
@@ -161,11 +169,11 @@ export class ProjectsComponent implements OnInit {
    * Calcular estadísticas basadas en los proyectos cargados
    */
   private calcularEstadisticas(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const proyectos = this.projects();
       const ahora = new Date();
       const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-      
+
       const estadisticasCalculadas = {
         total_proyectos: proyectos.length,
         proyectos_pendientes: proyectos.filter(p => p.estado_verificacion === 'pendiente').length,
@@ -175,7 +183,7 @@ export class ProjectsComponent implements OnInit {
         nuevos_este_mes: proyectos.filter(p => {
           const fechaCreacion = new Date(p.creado_en);
           return fechaCreacion >= inicioMes;
-        }).length
+        }).length,
       };
 
       console.log('Estadísticas de proyectos calculadas:', estadisticasCalculadas);
@@ -191,13 +199,13 @@ export class ProjectsComponent implements OnInit {
   abrirModalVerificacion(proyecto: Project): void {
     console.log('Abriendo modal de verificación para proyecto:', proyecto);
     this.selectedProject.set(proyecto);
-    
+
     // Precargar el estado actual del proyecto
     this.verificationForm.patchValue({
       estado_verificacion: proyecto.estado_verificacion,
-      comentario: ''
+      comentario: '',
     });
-    
+
     this.showVerificationModal.set(true);
   }
 
@@ -219,7 +227,7 @@ export class ProjectsComponent implements OnInit {
     console.log('Formulario válido:', this.verificationForm.valid);
     console.log('Proyecto seleccionado:', this.selectedProject());
     console.log('Valores del formulario:', this.verificationForm.value);
-    
+
     if (this.verificationForm.invalid || !this.selectedProject()) {
       console.log('Formulario inválido o no hay proyecto seleccionado');
       this.verificationForm.markAllAsTouched();
@@ -229,30 +237,32 @@ export class ProjectsComponent implements OnInit {
     this.isLoading.set(true);
     const proyectoId = this.selectedProject()!.id;
     const formData = this.verificationForm.value;
-    
+
     // Preparar datos de actualización
     const updateData: any = {
-      estado_verificacion: formData.estado_verificacion
+      estado_verificacion: formData.estado_verificacion,
     };
 
     console.log('ID del proyecto a verificar:', proyectoId);
     console.log('Datos a enviar:', updateData);
 
     this.projectService.update(proyectoId, updateData).subscribe({
-      next: (response) => {
+      next: response => {
         console.log('Respuesta exitosa de verificación:', response);
-        
-        const estadoLabel = this.estadosVerificacion.find(e => e.value === formData.estado_verificacion)?.label;
+
+        const estadoLabel = this.estadosVerificacion.find(
+          e => e.value === formData.estado_verificacion,
+        )?.label;
         this.mostrarExito(`Proyecto ${estadoLabel?.toLowerCase()} exitosamente`);
-        
+
         this.cerrarModalVerificacion();
-        
+
         // Recargar proyectos y recalcular estadísticas
         this.cargarProyectos().then(() => {
           this.calcularEstadisticas();
         });
       },
-      error: (error) => {
+      error: error => {
         console.error('Error completo al verificar proyecto:', error);
         console.error('Estado del error:', error.status);
         console.error('Mensaje del error:', error.message);
@@ -262,7 +272,7 @@ export class ProjectsComponent implements OnInit {
       complete: () => {
         console.log('Proceso de verificación completado');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -281,14 +291,16 @@ export class ProjectsComponent implements OnInit {
     if (nuevaPagina >= 1 && nuevaPagina <= this.totalPages()) {
       console.log(`Cambiando a página ${nuevaPagina}`);
       this.currentPage.set(nuevaPagina);
-      
-      this.cargarProyectos().then(() => {
-        this.calcularEstadisticas();
-        console.log(`Página ${nuevaPagina} cargada. Proyectos: ${this.projects().length}`);
-      }).catch((error) => {
-        console.error('Error al cambiar página:', error);
-        this.mostrarError('Error al cargar la página');
-      });
+
+      this.cargarProyectos()
+        .then(() => {
+          this.calcularEstadisticas();
+          console.log(`Página ${nuevaPagina} cargada. Proyectos: ${this.projects().length}`);
+        })
+        .catch(error => {
+          console.error('Error al cambiar página:', error);
+          this.mostrarError('Error al cargar la página');
+        });
     }
   }
 
@@ -298,7 +310,7 @@ export class ProjectsComponent implements OnInit {
   obtenerClaseEstado(estado: string): string {
     const estadoConfig = this.estadosVerificacion.find(e => e.value === estado);
     const color = estadoConfig?.color || 'gray';
-    
+
     return `bg-${color}-100 text-${color}-800`;
   }
 
@@ -316,7 +328,7 @@ export class ProjectsComponent implements OnInit {
     return new Date(fecha).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
@@ -341,7 +353,7 @@ export class ProjectsComponent implements OnInit {
 
   private manejarErrorVerificacion(error: any): void {
     console.log('Manejando error de verificación:', error);
-    
+
     if (error.status === 404) {
       this.mostrarError('El proyecto no fue encontrado');
     } else if (error.status === 400) {

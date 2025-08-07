@@ -109,93 +109,95 @@ export class StudentRegister2Component {
       console.log('=== INICIANDO REGISTRO COMPLETO ===');
 
       // Primero buscar el token para obtener el usuario_id
-      this.apiClient.get(`/tokens-iniciales-acceso/token-acceso?token_acceso=${this.token}`).subscribe({
-        next: (tokenSearchResponse: any) => {
-          console.log('Respuesta de búsqueda del token:', tokenSearchResponse);
+      this.apiClient
+        .get(`/tokens-iniciales-acceso/token-acceso?token_acceso=${this.token}`)
+        .subscribe({
+          next: (tokenSearchResponse: any) => {
+            console.log('Respuesta de búsqueda del token:', tokenSearchResponse);
 
-          let tokenEncontrado = null;
-          if (Array.isArray(tokenSearchResponse)) {
-            tokenEncontrado = tokenSearchResponse.find((t: any) => t.token_acceso === this.token);
-          } else if (tokenSearchResponse && tokenSearchResponse.token_acceso === this.token) {
-            tokenEncontrado = tokenSearchResponse;
-          }
+            let tokenEncontrado = null;
+            if (Array.isArray(tokenSearchResponse)) {
+              tokenEncontrado = tokenSearchResponse.find((t: any) => t.token_acceso === this.token);
+            } else if (tokenSearchResponse && tokenSearchResponse.token_acceso === this.token) {
+              tokenEncontrado = tokenSearchResponse;
+            }
 
-          if (tokenEncontrado && tokenEncontrado.usuario_id) {
-            // Datos para actualizar el usuario existente solo con la contraseña
-            const userData = {
-              contrasena: this.registerForm.value.password,
-            };
+            if (tokenEncontrado && tokenEncontrado.usuario_id) {
+              // Datos para actualizar el usuario existente solo con la contraseña
+              const userData = {
+                contrasena: this.registerForm.value.password,
+              };
 
-            console.log(
-              'Datos a actualizar para usuario ID:',
-              tokenEncontrado.usuario_id,
-              userData,
-            );
+              console.log(
+                'Datos a actualizar para usuario ID:',
+                tokenEncontrado.usuario_id,
+                userData,
+              );
 
-            // Actualizar el usuario existente
-            this.apiClient.put(`/usuarios/${tokenEncontrado.usuario_id}`, userData).subscribe({
-              next: (userResponse: any) => {
-                console.info('Usuario actualizado exitosamente:', userResponse);
+              // Actualizar el usuario existente
+              this.apiClient.put(`/usuarios/${tokenEncontrado.usuario_id}`, userData).subscribe({
+                next: (userResponse: any) => {
+                  console.info('Usuario actualizado exitosamente:', userResponse);
 
-                // Marcar el token como usado
-                const updateTokenData = { usado: true };
+                  // Marcar el token como usado
+                  const updateTokenData = { usado: true };
 
-                this.apiClient
-                  .put(`/tokens-iniciales-acceso/${tokenEncontrado.id}`, updateTokenData)
-                  .subscribe({
-                    next: (tokenResponse: any) => {
-                      console.info('Token marcado como usado:', tokenResponse);
-                      this.isLoading = false;
+                  this.apiClient
+                    .put(`/tokens-iniciales-acceso/${tokenEncontrado.id}`, updateTokenData)
+                    .subscribe({
+                      next: (tokenResponse: any) => {
+                        console.info('Token marcado como usado:', tokenResponse);
+                        this.isLoading = false;
 
-                      // Limpiar localStorage
-                      localStorage.removeItem('registrationToken');
-                      localStorage.removeItem('registrationData');
-                      localStorage.removeItem('completeRegistrationData');
-                      localStorage.removeItem('registrationUsuarioId');
+                        // Limpiar localStorage
+                        localStorage.removeItem('registrationToken');
+                        localStorage.removeItem('registrationData');
+                        localStorage.removeItem('completeRegistrationData');
+                        localStorage.removeItem('registrationUsuarioId');
 
-                      // Mostrar mensaje de éxito y redirigir
-                      alert('¡Registro completado exitosamente! Ya puedes iniciar sesión.');
-                      this.router.navigate(['/login']);
-                    },
-                    error: (tokenError: any) => {
-                      console.error('Error al actualizar el token:', tokenError);
-                      this.isLoading = false;
-                      alert(
-                        'Usuario actualizado, pero hubo un problema con el token. Contacta al administrador.',
-                      );
-                      this.router.navigate(['/login']);
-                    },
-                  });
-              },
-              error: (userError: any) => {
-                console.error('Error al actualizar el usuario:', userError);
-                this.isLoading = false;
+                        // Mostrar mensaje de éxito y redirigir
+                        alert('¡Registro completado exitosamente! Ya puedes iniciar sesión.');
+                        this.router.navigate(['/login']);
+                      },
+                      error: (tokenError: any) => {
+                        console.error('Error al actualizar el token:', tokenError);
+                        this.isLoading = false;
+                        alert(
+                          'Usuario actualizado, pero hubo un problema con el token. Contacta al administrador.',
+                        );
+                        this.router.navigate(['/login']);
+                      },
+                    });
+                },
+                error: (userError: any) => {
+                  console.error('Error al actualizar el usuario:', userError);
+                  this.isLoading = false;
 
-                // Manejar diferentes tipos de errores
-                if (userError.status === 409) {
-                  alert('Error: El correo electrónico ya está registrado.');
-                } else if (userError.status === 400) {
-                  alert('Error: Datos inválidos. Por favor verifica la información.');
-                } else if (userError.status === 404) {
-                  alert('Error: Usuario no encontrado. Contacta al administrador.');
-                } else {
-                  alert('Error en el servidor. Por favor intenta nuevamente.');
-                }
-              },
-            });
-          } else {
-            console.error('Token no encontrado o sin usuario_id asociado');
+                  // Manejar diferentes tipos de errores
+                  if (userError.status === 409) {
+                    alert('Error: El correo electrónico ya está registrado.');
+                  } else if (userError.status === 400) {
+                    alert('Error: Datos inválidos. Por favor verifica la información.');
+                  } else if (userError.status === 404) {
+                    alert('Error: Usuario no encontrado. Contacta al administrador.');
+                  } else {
+                    alert('Error en el servidor. Por favor intenta nuevamente.');
+                  }
+                },
+              });
+            } else {
+              console.error('Token no encontrado o sin usuario_id asociado');
+              this.isLoading = false;
+              alert('Token inválido. Por favor contacta al administrador.');
+              this.router.navigate(['/register/estudiante']);
+            }
+          },
+          error: (tokenSearchError: any) => {
+            console.error('Error al buscar el token:', tokenSearchError);
             this.isLoading = false;
-            alert('Token inválido. Por favor contacta al administrador.');
-            this.router.navigate(['/register/estudiante']);
-          }
-        },
-        error: (tokenSearchError: any) => {
-          console.error('Error al buscar el token:', tokenSearchError);
-          this.isLoading = false;
-          alert('Error al validar el token. Por favor intenta nuevamente.');
-        },
-      });
+            alert('Error al validar el token. Por favor intenta nuevamente.');
+          },
+        });
     } else {
       this.registerForm.markAllAsTouched();
       console.error('Formulario inválido');

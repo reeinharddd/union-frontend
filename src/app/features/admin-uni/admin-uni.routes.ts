@@ -28,18 +28,18 @@ export const ADMIN_UNI_ROUTES: Routes = [
       },
       {
         path: 'projects',
-        loadComponent: () =>
-          import('./projects/projects.component').then(m => m.ProjectsComponent),
+        loadComponent: () => import('./projects/projects.component').then(m => m.ProjectsComponent),
       },
       {
         path: 'project-detail/:id',
         loadComponent: () =>
-          import('./projects/project-detail/project-detail.component').then(m => m.ProjectDetailComponent),
+          import('./projects/project-detail/project-detail.component').then(
+            m => m.ProjectDetailComponent,
+          ),
       },
       {
         path: 'events',
-        loadComponent: () =>
-          import('./events/events.component').then(m => m.EventsComponent),
+        loadComponent: () => import('./events/events.component').then(m => m.EventsComponent),
       },
       // {
       //   path: 'reports',

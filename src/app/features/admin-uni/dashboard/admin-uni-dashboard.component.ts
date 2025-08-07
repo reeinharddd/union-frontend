@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ProjectService } from '@app/core/services/project/project.service';
 
 @Component({
   selector: 'app-admin-uni-dashboard',
@@ -117,7 +118,8 @@ import { RouterLink } from '@angular/router';
           <div class="p-6">
             <h3 class="mb-4 text-lg font-semibold text-gray-900">⚡ Acciones Rápidas</h3>
             <div class="space-y-3">
-              <button
+              <a
+                href="/admin-uni/projects"
                 class="flex w-full items-center space-x-3 rounded-lg bg-blue-50 p-3 text-left transition-colors hover:bg-blue-100"
               >
                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
@@ -125,11 +127,13 @@ import { RouterLink } from '@angular/router';
                 </div>
                 <div>
                   <p class="font-medium text-gray-900">Verificar Proyectos</p>
-                  <p class="text-sm text-gray-600">5 proyectos pendientes</p>
+                  <p class="text-sm text-gray-600">
+                    {{ stats().pendingProjects }} proyectos pendientes
+                  </p>
                 </div>
-              </button>
+              </a>
 
-              <button
+              <!-- <button
                 class="flex w-full items-center space-x-3 rounded-lg bg-green-50 p-3 text-left transition-colors hover:bg-green-100"
               >
                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
@@ -139,9 +143,10 @@ import { RouterLink } from '@angular/router';
                   <p class="font-medium text-gray-900">Aprobar Estudiantes</p>
                   <p class="text-sm text-gray-600">12 solicitudes pendientes</p>
                 </div>
-              </button>
+              </button> -->
 
-              <button
+              <a
+                href="/admin-uni/events"
                 class="flex w-full items-center space-x-3 rounded-lg bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100"
               >
                 <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
@@ -151,9 +156,9 @@ import { RouterLink } from '@angular/router';
                   <p class="font-medium text-gray-900">Crear Evento</p>
                   <p class="text-sm text-gray-600">Organizar actividad académica</p>
                 </div>
-              </button>
+              </a>
 
-              <button
+              <!-- <button
                 class="bg-orange-50 hover:bg-orange-100 flex w-full items-center space-x-3 rounded-lg p-3 text-left transition-colors"
               >
                 <div class="bg-orange-100 flex h-10 w-10 items-center justify-center rounded-lg">
@@ -163,7 +168,7 @@ import { RouterLink } from '@angular/router';
                   <p class="font-medium text-gray-900">Publicar Oportunidad</p>
                   <p class="text-sm text-gray-600">Becas, intercambios, programas</p>
                 </div>
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -189,20 +194,34 @@ export class AdminUniDashboardComponent {
   // Estado local para estadísticas
   private readonly _stats = signal({
     totalStudents: 156,
-    pendingProjects: 5,
+    pendingProjects: 0, // Inicializado en 0
     totalEvents: 3,
     totalOpportunities: 8,
   });
 
   readonly stats = this._stats.asReadonly();
 
-  constructor() {
-    // Cargar datos iniciales
+  constructor(private projectService: ProjectService) {}
+
+  ngOnInit() {
     this.loadDashboardData();
   }
 
   private loadDashboardData() {
-    // Aquí puedes cargar datos reales desde los servicios
-    // Por ahora usamos datos de ejemplo
+    this.projectService.getAll().subscribe({
+      next: projects => {
+        const pendientes = projects.data.filter(
+          p => p.estado_verificacion === 'pendiente', // ojo con la minúscula
+        );
+
+        this._stats.update(prev => ({
+          ...prev,
+          pendingProjects: pendientes.length,
+        }));
+      },
+      error: err => {
+        console.error('Error al cargar proyectos:', err);
+      },
+    });
   }
 }
