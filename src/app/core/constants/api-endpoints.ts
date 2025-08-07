@@ -1,4 +1,4 @@
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 export const API_CONFIG = {
   // 🔄 Cambiar entre desarrollo local y producción automáticamente
