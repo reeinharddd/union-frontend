@@ -161,7 +161,9 @@ interface DashboardEvent {
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-neutral-600">Eventos</p>
-                  <p class="text-2xl font-bold text-text-base">{{ stats().totalEvents | number }}</p>
+                  <p class="text-2xl font-bold text-text-base">
+                    {{ stats().totalEvents | number }}
+                  </p>
                   <div class="mt-2 flex space-x-2">
                     <span class="rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-800">
                       {{ stats().activeEvents }} activos
@@ -197,7 +199,9 @@ interface DashboardEvent {
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-neutral-600">Foros</p>
-                  <p class="text-2xl font-bold text-text-base">{{ stats().totalForums | number }}</p>
+                  <p class="text-2xl font-bold text-text-base">
+                    {{ stats().totalForums | number }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -248,7 +252,9 @@ interface DashboardEvent {
                     <span class="text-sm font-medium text-neutral-600">Estudiantes</span>
                   </div>
                   <div class="text-right">
-                    <span class="text-lg font-bold text-text-base">{{ stats().studentsCount }}</span>
+                    <span class="text-lg font-bold text-text-base">{{
+                      stats().studentsCount
+                    }}</span>
                     <div class="text-xs text-neutral-500">
                       {{ getPercentage(stats().studentsCount, stats().totalUsers) }}%
                     </div>

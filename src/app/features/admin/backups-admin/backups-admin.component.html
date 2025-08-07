@@ -24,7 +24,11 @@
         {{ cargandoRespaldoParcial ? 'Ejecutando...' : 'Respaldo parcial por tablas' }}
       </button>
 
-      <select multiple class="w-full rounded border p-2 md:w-64 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" [(ngModel)]="tablasSeleccionadas">
+      <select
+        multiple
+        class="w-full rounded border p-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 md:w-64"
+        [(ngModel)]="tablasSeleccionadas"
+      >
         <option *ngFor="let tabla of tablasDisponibles" [value]="tabla">
           {{ tabla }}
         </option>

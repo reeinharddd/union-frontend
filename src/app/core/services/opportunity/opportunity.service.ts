@@ -154,14 +154,14 @@ export class OpportunityService {
       );
   }
 
-  getByUniversity(universityId: number): Observable<Opportunity[]> {
-    console.log('🔄 OpportunityService - Getting opportunities by university ID:', universityId);
+  getByUniversity(universidadId: number): Observable<Opportunity[]> {
+    console.log('🔄 OpportunityService - Getting opportunities by university ID:', universidadId);
     return this.apiClient
-      .get<Opportunity[]>(`${API_ENDPOINTS.OPPORTUNITIES.BASE}?universidad_id=${universityId}`)
+      .get<Opportunity[]>(API_ENDPOINTS.OPPORTUNITIES.BY_UNIVERSITY(universidadId))
       .pipe(
         tap(opportunities => {
           console.log(
-            `✅ Loaded ${opportunities.length} opportunities for university ID ${universityId}`,
+            `✅ Loaded ${opportunities.length} opportunities for university ID ${universidadId}`,
           );
           this._opportunities.set(opportunities);
         }),

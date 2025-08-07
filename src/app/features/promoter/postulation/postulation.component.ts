@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '@app/core/services/auth/token.service';
 import {
@@ -18,6 +24,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './postulation.component.html',
   imports: [CommonModule, FormsModule],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush, // Añade esto
 })
 export class PostulationComponent implements OnInit {
   oportunidades: Opportunity[] = [];
@@ -32,6 +39,10 @@ export class PostulationComponent implements OnInit {
 
   userId: number | null = null;
   isLoading = false;
+  mensajeExito: string = '';
+  mensajeError: string = '';
+
+  private readonly cdr = inject(ChangeDetectorRef); // Añade esto
 
   constructor(
     private opportunityService: OpportunityService,
@@ -41,103 +52,97 @@ export class PostulationComponent implements OnInit {
     private typeOpportunityService: OpportunityTypeService,
     private postulationService: PostulationService,
     private userService: UserService,
-    //private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.userId = this.tokenService.getUserId();
     if (this.userId !== null) {
-      this.cargarOportunidades();
+      this.cargarDatosIniciales();
     }
-    this.cargarUniversidades();
-    this.cargarModalidades();
-    this.cargarTiposOportunidad();
   }
 
-  cargarOportunidades(): void {
-    if (this.userId === null) return;
+  cargarDatosIniciales(): void {
     this.isLoading = true;
 
-    this.opportunityService.getAll().subscribe({
-      next: data => {
-        // Solo oportunidades creadas por este promotor
-        this.oportunidades = data.filter(op => op.created_by === this.userId);
-        this.cargarPostulaciones(); // Después de cargar las oportunidades
-        this.isLoading = false;
+    // Carga todo en paralelo
+    forkJoin([
+      this.universityService.getAll(),
+      this.workModalityService.getAll(),
+      this.typeOpportunityService.getAll(),
+    ]).subscribe({
+      next: ([universidades, modalidades, tipos]) => {
+        // Mapea los datos
+        this.universidadesMap = this.crearMapa(universidades, 'id', 'nombre');
+        this.modalidadesMap = this.crearMapa(modalidades, 'id', 'name');
+        this.tiposOportunidadMap = this.crearMapa(tipos, 'id', 'name');
+
+        // Ahora carga oportunidades y postulaciones
+        this.cargarOportunidadesYPostulaciones();
       },
       error: () => {
         this.isLoading = false;
+        this.mensajeError = 'Error al cargar datos iniciales';
+        this.cdr.markForCheck();
       },
     });
   }
 
-  cargarPostulaciones(): void {
-    const userId = this.tokenService.getUserId();
+  private crearMapa(items: any[], keyProp: string, valueProp: string): { [key: number]: string } {
+    const mapa: { [key: number]: string } = {};
+    items.forEach(item => {
+      mapa[item[keyProp]] = item[valueProp];
+    });
+    return mapa;
+  }
 
-    if (userId === null) {
-      console.error('El ID del usuario es null');
-      return;
+  cargarOportunidadesYPostulaciones(): void {
+    forkJoin([this.opportunityService.getAll(), this.postulationService.getAll()]).subscribe({
+      next: ([oportunidades, postulaciones]) => {
+        // Filtra oportunidades creadas por este usuario
+        this.oportunidades = oportunidades.filter(op => op.created_by === this.userId);
+
+        // Procesa postulaciones
+        this.procesarPostulaciones(postulaciones);
+
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.mensajeError = 'Error al cargar oportunidades';
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  procesarPostulaciones(postulaciones: any[]): void {
+    const oportunidadesIds = this.oportunidades.map(o => o.id);
+    this.postulaciones = postulaciones.filter(p => oportunidadesIds.includes(p.oportunidad_id));
+    this.postulacionesFiltradas = [...this.postulaciones];
+
+    // Agrupa por oportunidad
+    this.postulacionesPorOportunidad = {};
+    oportunidadesIds.forEach(id => {
+      this.postulacionesPorOportunidad[id] = this.postulaciones.filter(
+        p => p.oportunidad_id === id,
+      );
+    });
+
+    // Obtiene información de usuarios
+    const usuariosIds = [...new Set(this.postulaciones.map(p => p.usuario_id))];
+    if (usuariosIds.length > 0) {
+      forkJoin(usuariosIds.map(id => this.userService.getById(id))).subscribe(usuarios => {
+        usuarios.forEach(usuario => {
+          this.postulaciones
+            .filter(p => p.usuario_id === usuario.id)
+            .forEach(p => {
+              p.nombre_usuario = usuario.nombre;
+              p.correo_usuario = usuario.correo;
+            });
+        });
+        this.cdr.markForCheck();
+      });
     }
-
-    this.opportunityService.getByPromoter(userId).subscribe(oportunidades => {
-      this.postulaciones = [];
-      this.postulacionesPorOportunidad = {};
-
-      this.postulationService.getAll().subscribe(todasLasPostulaciones => {
-        const oportunidadesIds = oportunidades.map(o => o.id);
-
-        const postulacionesFiltradas = todasLasPostulaciones.filter(p =>
-          oportunidadesIds.includes(p.oportunidad_id),
-        );
-
-        this.postulaciones = postulacionesFiltradas;
-
-        oportunidadesIds.forEach(id => {
-          this.postulacionesPorOportunidad[id] = postulacionesFiltradas.filter(
-            p => p.oportunidad_id === id,
-          );
-        });
-
-        const peticionesUsuarios = this.postulaciones.map(p =>
-          this.userService.getById(p.usuario_id),
-        );
-
-        forkJoin(peticionesUsuarios).subscribe(usuarios => {
-          this.postulaciones.forEach((postulacion, index) => {
-            const usuario = usuarios[index];
-            (postulacion as any).nombre_usuario = usuario.nombre;
-            (postulacion as any).correo_usuario = usuario.correo;
-          });
-        });
-      });
-    });
-  }
-
-  cargarUniversidades() {
-    this.universityService.getAll().subscribe(data => {
-      this.universidadesMap = {};
-      data.forEach((uni: any) => {
-        this.universidadesMap[uni.id] = uni.nombre;
-      });
-    });
-  }
-
-  cargarModalidades() {
-    this.workModalityService.getAll().subscribe(data => {
-      this.modalidadesMap = {};
-      data.forEach((mod: any) => {
-        this.modalidadesMap[mod.id] = mod.name;
-      });
-    });
-  }
-
-  cargarTiposOportunidad() {
-    this.typeOpportunityService.getAll().subscribe(data => {
-      this.tiposOportunidadMap = {};
-      data.forEach((tipo: any) => {
-        this.tiposOportunidadMap[tipo.id] = tipo.name;
-      });
-    });
   }
 
   filtrarPostulaciones(): void {
@@ -146,17 +151,28 @@ export class PostulationComponent implements OnInit {
         post => post.estado === this.estadoSeleccionado,
       );
     } else {
-      this.postulacionesFiltradas = this.postulaciones;
+      this.postulacionesFiltradas = [...this.postulaciones];
     }
+    this.cdr.markForCheck();
   }
 
   actualizarEstado(postulacionId: number, nuevoEstado: string): void {
     this.postulationService.update(postulacionId, { estado: nuevoEstado }).subscribe({
       next: () => {
-        this.cargarPostulaciones(); // Refresca la vista
+        // Actualiza el estado localmente sin recargar todo
+        const postulacion = this.postulaciones.find(p => p.id === postulacionId);
+        if (postulacion) {
+          postulacion.estado = nuevoEstado;
+          this.filtrarPostulaciones(); // Re-filtra
+        }
+        this.mensajeExito = 'Estado actualizado correctamente';
+        setTimeout(() => (this.mensajeExito = ''), 3000);
+        this.cdr.markForCheck();
       },
       error: () => {
-        alert('Error al actualizar el estado de la postulación');
+        this.mensajeError = 'Error al actualizar el estado';
+        setTimeout(() => (this.mensajeError = ''), 3000);
+        this.cdr.markForCheck();
       },
     });
   }

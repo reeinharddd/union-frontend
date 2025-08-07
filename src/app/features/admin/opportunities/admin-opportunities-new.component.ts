@@ -47,7 +47,6 @@ interface OpportunityStats {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminOpportunitiesComponent implements OnInit {
-
   readonly loading = signal(false);
   readonly opportunities = signal<AdminOpportunity[]>([]);
   readonly filteredOpportunities = signal<AdminOpportunity[]>([]);
@@ -62,7 +61,7 @@ export class AdminOpportunitiesComponent implements OnInit {
   currentPage = signal(1);
   readonly itemsPerPage = signal(10);
   readonly totalPages = computed(() =>
-    Math.ceil(this.filteredOpportunities().length / this.itemsPerPage())
+    Math.ceil(this.filteredOpportunities().length / this.itemsPerPage()),
   );
 
   readonly paginatedOpportunities = computed(() => {
@@ -82,12 +81,17 @@ export class AdminOpportunitiesComponent implements OnInit {
     const totalBudget = opps.reduce((sum, o) => sum + (o.budget || 0), 0);
 
     // Find most popular type
-    const typeCounts = opps.reduce((acc, o) => {
-      acc[o.type] = (acc[o.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    const mostPopularType = Object.keys(typeCounts).reduce((a, b) =>
-      typeCounts[a] > typeCounts[b] ? a : b, '');
+    const typeCounts = opps.reduce(
+      (acc, o) => {
+        acc[o.type] = (acc[o.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+    const mostPopularType = Object.keys(typeCounts).reduce(
+      (a, b) => (typeCounts[a] > typeCounts[b] ? a : b),
+      '',
+    );
 
     return {
       totalOpportunities,
@@ -97,7 +101,7 @@ export class AdminOpportunitiesComponent implements OnInit {
       averageApplications,
       internationalOpportunities,
       totalBudget,
-      mostPopularType
+      mostPopularType,
     };
   });
 
@@ -114,7 +118,8 @@ export class AdminOpportunitiesComponent implements OnInit {
         {
           id: 1,
           title: 'Beca de Excelencia Académica 2024',
-          description: 'Programa de becas para estudiantes destacados con apoyo económico completo para estudios de posgrado.',
+          description:
+            'Programa de becas para estudiantes destacados con apoyo económico completo para estudios de posgrado.',
           type: 'scholarship',
           university: { id: 1, name: 'Universidad de Tijuana' },
           requirements: ['Promedio mínimo 9.0', 'Carta de motivación', 'Referencias académicas'],
@@ -128,12 +133,13 @@ export class AdminOpportunitiesComponent implements OnInit {
           updatedAt: '2024-08-01T15:30:00Z',
           tags: ['beca', 'posgrado', 'excelencia'],
           budget: 500000,
-          isInternational: false
+          isInternational: false,
         },
         {
           id: 2,
           title: 'Programa de Intercambio Internacional',
-          description: 'Oportunidad de estudiar un semestre en universidades europeas con apoyo completo.',
+          description:
+            'Oportunidad de estudiar un semestre en universidades europeas con apoyo completo.',
           type: 'exchange',
           university: { id: 2, name: 'Instituto Tecnológico' },
           requirements: ['Nivel B2 de inglés', 'Promedio mínimo 8.5', 'Entrevista personal'],
@@ -147,8 +153,8 @@ export class AdminOpportunitiesComponent implements OnInit {
           updatedAt: '2024-07-15T12:00:00Z',
           tags: ['intercambio', 'internacional', 'europa'],
           budget: 1200000,
-          isInternational: true
-        }
+          isInternational: true,
+        },
       ];
 
       this.opportunities.set(mockOpportunities);
@@ -163,9 +169,9 @@ export class AdminOpportunitiesComponent implements OnInit {
     // Filter by search term
     if (this.searchTerm()) {
       const term = this.searchTerm().toLowerCase();
-      filtered = filtered.filter(opp =>
-        opp.title.toLowerCase().includes(term) ||
-        opp.description.toLowerCase().includes(term)
+      filtered = filtered.filter(
+        opp =>
+          opp.title.toLowerCase().includes(term) || opp.description.toLowerCase().includes(term),
       );
     }
 
@@ -213,7 +219,7 @@ export class AdminOpportunitiesComponent implements OnInit {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 

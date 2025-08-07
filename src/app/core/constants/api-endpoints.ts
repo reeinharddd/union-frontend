@@ -46,6 +46,7 @@ export const API_ENDPOINTS = {
     BASE: '/oportunidades',
     BY_ID: (id: number) => `/oportunidades/${id}`,
     BY_PROMOTER: (userId: number) => `/oportunidades/creadas-por/${userId}`,
+    BY_UNIVERSITY: (universidadId: number) => `/oportunidades/por-universidad/${universidadId}`,
     PENDING_REVIEW: '/oportunidades/pending-review',
     UPDATE: (id: number) => `/oportunidades/${id}`,
     DELETE: (id: number) => `/oportunidades/${id}`,

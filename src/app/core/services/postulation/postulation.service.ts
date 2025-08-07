@@ -123,6 +123,23 @@ export class PostulationService {
     );
   }
 
+  getByUserId(userId: number): Observable<Postulation[]> {
+    console.log('🔄 PostulationService - Getting postulation by user:', userId);
+    return this.apiClient
+      .get<Postulation[]>(`${API_ENDPOINTS.POSTULATIONS.BASE}?student=${userId}`)
+      .pipe(
+        tap(opportunities => {
+          console.log(`✅ Loaded ${opportunities.length} postulations of student ${userId}`);
+          this._postulations.set(opportunities);
+        }),
+        catchError(error => {
+          console.error('❌ Failed to load opportunities by student:', error);
+          this.toastService.showError('Error al cargar las postulaciones por student');
+          return throwError(() => error);
+        }),
+      );
+  }
+
   // Otros métodos como update, delete pueden ser implementados aquí
 
   // Otros métodos como getById, update, delete pueden ser implementados aquí

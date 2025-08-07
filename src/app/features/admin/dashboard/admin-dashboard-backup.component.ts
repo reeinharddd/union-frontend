@@ -66,7 +66,9 @@ interface DashboardEvent {
     <div class="min-h-screen bg-gray-50 p-4">
       <div class="mx-auto max-w-7xl space-y-6">
         <!-- Page Header -->
-        <div class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
+        <div
+          class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg"
+        >
           <div class="flex items-center justify-between">
             <div>
               <h1 class="mb-2 text-3xl font-bold">Panel de Administración</h1>
@@ -97,7 +99,9 @@ interface DashboardEvent {
                   <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
                   <p class="text-2xl font-bold text-gray-900">{{ stats().totalUsers | number }}</p>
                   <div class="mt-2">
-                    <span class="flex items-center rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
+                    <span
+                      class="flex items-center rounded-full bg-green-100 px-2 py-1 text-xs text-green-800"
+                    >
                       <i class="material-icons mr-1 text-xs">trending_up</i>
                       +{{ stats().recentUsers }} nuevos
                     </span>
@@ -114,7 +118,9 @@ interface DashboardEvent {
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Universidades</p>
-                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalUniversities | number }}</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    {{ stats().totalUniversities | number }}
+                  </p>
                   <div class="mt-2">
                     <span class="rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
                       Instituciones activas
@@ -127,12 +133,14 @@ interface DashboardEvent {
             <!-- Projects -->
             <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-indigo-100 p-3">
-                  <i class="material-icons text-2xl text-indigo-600">work</i>
+                <div class="bg-indigo-100 rounded-lg p-3">
+                  <i class="material-icons text-indigo-600 text-2xl">work</i>
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Proyectos</p>
-                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalProjects | number }}</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    {{ stats().totalProjects | number }}
+                  </p>
                   <div class="mt-2 flex space-x-2">
                     <span class="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
                       {{ stats().pendingProjects }} pendientes
@@ -169,12 +177,14 @@ interface DashboardEvent {
             <!-- Opportunities -->
             <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-teal-100 p-3">
-                  <i class="material-icons text-2xl text-teal-600">business_center</i>
+                <div class="bg-teal-100 rounded-lg p-3">
+                  <i class="material-icons text-teal-600 text-2xl">business_center</i>
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Oportunidades</p>
-                  <p class="text-2xl font-bold text-gray-900">{{ stats().totalOpportunities | number }}</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    {{ stats().totalOpportunities | number }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -182,8 +192,8 @@ interface DashboardEvent {
             <!-- Forums -->
             <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-pink-100 p-3">
-                  <i class="material-icons text-2xl text-pink-600">forum</i>
+                <div class="bg-pink-100 rounded-lg p-3">
+                  <i class="material-icons text-pink-600 text-2xl">forum</i>
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Foros</p>
@@ -200,7 +210,9 @@ interface DashboardEvent {
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Eventos Virtuales</p>
-                  <p class="text-2xl font-bold text-gray-900">{{ stats().virtualEvents | number }}</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    {{ stats().virtualEvents | number }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -208,12 +220,14 @@ interface DashboardEvent {
             <!-- Presential Events -->
             <div class="rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-xl">
               <div class="flex items-center">
-                <div class="rounded-lg bg-amber-100 p-3">
-                  <i class="material-icons text-2xl text-amber-600">place</i>
+                <div class="bg-amber-100 rounded-lg p-3">
+                  <i class="material-icons text-amber-600 text-2xl">place</i>
                 </div>
                 <div class="ml-4 flex-1">
                   <p class="text-sm font-medium text-gray-600">Eventos Presenciales</p>
-                  <p class="text-2xl font-bold text-gray-900">{{ stats().presentialEvents | number }}</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    {{ stats().presentialEvents | number }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -246,7 +260,9 @@ interface DashboardEvent {
                     <span class="text-sm font-medium text-gray-600">Graduados</span>
                   </div>
                   <div class="text-right">
-                    <span class="text-lg font-bold text-gray-900">{{ stats().graduatesCount }}</span>
+                    <span class="text-lg font-bold text-gray-900">{{
+                      stats().graduatesCount
+                    }}</span>
                     <div class="text-xs text-gray-500">
                       {{ getPercentage(stats().graduatesCount, stats().totalUsers) }}%
                     </div>
@@ -281,7 +297,9 @@ interface DashboardEvent {
                   </div>
                 } @else {
                   @for (activity of recentActivity(); track activity.id) {
-                    <div class="flex items-start space-x-3 rounded-lg p-3 transition-colors hover:bg-gray-50">
+                    <div
+                      class="flex items-start space-x-3 rounded-lg p-3 transition-colors hover:bg-gray-50"
+                    >
                       <div
                         class="rounded-lg p-2"
                         [ngClass]="{
@@ -291,7 +309,7 @@ interface DashboardEvent {
                           'bg-indigo-100': activity.type === 'project',
                           'bg-pink-100': activity.type === 'forum',
                           'bg-teal-100': activity.type === 'opportunity',
-                          'bg-orange-100': activity.type === 'system'
+                          'bg-orange-100': activity.type === 'system',
                         }"
                       >
                         <i
@@ -303,9 +321,10 @@ interface DashboardEvent {
                             'text-indigo-600': activity.type === 'project',
                             'text-pink-600': activity.type === 'forum',
                             'text-teal-600': activity.type === 'opportunity',
-                            'text-orange-600': activity.type === 'system'
+                            'text-orange-600': activity.type === 'system',
                           }"
-                        >{{ activity.icon }}</i>
+                          >{{ activity.icon }}</i
+                        >
                       </div>
                       <div class="min-w-0 flex-1">
                         <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
@@ -322,7 +341,7 @@ interface DashboardEvent {
           <!-- Quick Actions -->
           <div class="rounded-xl bg-white p-6 shadow-lg">
             <h3 class="mb-6 flex items-center text-lg font-semibold text-gray-900">
-              <i class="material-icons mr-2 text-orange-600">flash_on</i>
+              <i class="material-icons text-orange-600 mr-2">flash_on</i>
               Acciones Rápidas
             </h3>
             <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
@@ -330,7 +349,9 @@ interface DashboardEvent {
                 (click)="quickAction('users')"
                 class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50"
               >
-                <div class="mb-3 rounded-lg bg-blue-100 p-3 transition-colors group-hover:bg-blue-200">
+                <div
+                  class="mb-3 rounded-lg bg-blue-100 p-3 transition-colors group-hover:bg-blue-200"
+                >
                   <i class="material-icons text-blue-600">people</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Usuarios</span>
@@ -340,7 +361,9 @@ interface DashboardEvent {
                 (click)="quickAction('universities')"
                 class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-green-300 hover:bg-green-50"
               >
-                <div class="mb-3 rounded-lg bg-green-100 p-3 transition-colors group-hover:bg-green-200">
+                <div
+                  class="mb-3 rounded-lg bg-green-100 p-3 transition-colors group-hover:bg-green-200"
+                >
                   <i class="material-icons text-green-600">school</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Universidades</span>
@@ -350,7 +373,9 @@ interface DashboardEvent {
                 (click)="quickAction('events')"
                 class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-purple-300 hover:bg-purple-50"
               >
-                <div class="mb-3 rounded-lg bg-purple-100 p-3 transition-colors group-hover:bg-purple-200">
+                <div
+                  class="mb-3 rounded-lg bg-purple-100 p-3 transition-colors group-hover:bg-purple-200"
+                >
                   <i class="material-icons text-purple-600">event</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Eventos</span>
@@ -358,9 +383,11 @@ interface DashboardEvent {
 
               <button
                 (click)="quickAction('create-project')"
-                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-indigo-300 hover:bg-indigo-50"
+                class="hover:border-indigo-300 hover:bg-indigo-50 group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all"
               >
-                <div class="mb-3 rounded-lg bg-indigo-100 p-3 transition-colors group-hover:bg-indigo-200">
+                <div
+                  class="bg-indigo-100 group-hover:bg-indigo-200 mb-3 rounded-lg p-3 transition-colors"
+                >
                   <i class="material-icons text-indigo-600">work</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Proyectos</span>
@@ -368,9 +395,11 @@ interface DashboardEvent {
 
               <button
                 (click)="quickAction('create-forum')"
-                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-pink-300 hover:bg-pink-50"
+                class="hover:border-pink-300 hover:bg-pink-50 group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all"
               >
-                <div class="mb-3 rounded-lg bg-pink-100 p-3 transition-colors group-hover:bg-pink-200">
+                <div
+                  class="bg-pink-100 group-hover:bg-pink-200 mb-3 rounded-lg p-3 transition-colors"
+                >
                   <i class="material-icons text-pink-600">forum</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Foros</span>
@@ -378,9 +407,11 @@ interface DashboardEvent {
 
               <button
                 (click)="quickAction('manage-opportunities')"
-                class="group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all hover:border-teal-300 hover:bg-teal-50"
+                class="hover:border-teal-300 hover:bg-teal-50 group flex flex-col items-center rounded-lg border border-gray-200 p-4 transition-all"
               >
-                <div class="mb-3 rounded-lg bg-teal-100 p-3 transition-colors group-hover:bg-teal-200">
+                <div
+                  class="bg-teal-100 group-hover:bg-teal-200 mb-3 rounded-lg p-3 transition-colors"
+                >
                   <i class="material-icons text-teal-600">business_center</i>
                 </div>
                 <span class="text-center text-sm font-medium text-gray-900">Oportunidades</span>
@@ -497,7 +528,14 @@ export class AdminDashboardComponent implements OnInit {
         this.stats.set(newStats);
 
         // Generar actividad reciente
-        this.generateRecentActivity(usersArray, universitiesArray, eventsArray, projectsArray, forumsArray, opportunitiesArray);
+        this.generateRecentActivity(
+          usersArray,
+          universitiesArray,
+          eventsArray,
+          projectsArray,
+          forumsArray,
+          opportunitiesArray,
+        );
 
         this.isLoading.set(false);
       },
@@ -548,7 +586,7 @@ export class AdminDashboardComponent implements OnInit {
         }
         return acc;
       },
-      { students: 0, graduates: 0, admins: 0 }
+      { students: 0, graduates: 0, admins: 0 },
     );
   }
 
@@ -565,7 +603,7 @@ export class AdminDashboardComponent implements OnInit {
 
   private getRecentUsers(users: unknown[]): unknown[] {
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    
+
     return (users as DashboardUser[]).filter((user: DashboardUser) => {
       if (!user.fechaCreacion) return false;
       const creationDate = new Date(user.fechaCreacion);
@@ -574,14 +612,15 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private getVirtualEvents(events: unknown[]): unknown[] {
-    return (events as DashboardEvent[]).filter((event: DashboardEvent) => 
-      event.modalidad === 'virtual' || event.modalidad === 'Virtual'
+    return (events as DashboardEvent[]).filter(
+      (event: DashboardEvent) => event.modalidad === 'virtual' || event.modalidad === 'Virtual',
     );
   }
 
   private getPresentialEvents(events: unknown[]): unknown[] {
-    return (events as DashboardEvent[]).filter((event: DashboardEvent) => 
-      event.modalidad === 'presencial' || event.modalidad === 'Presencial'
+    return (events as DashboardEvent[]).filter(
+      (event: DashboardEvent) =>
+        event.modalidad === 'presencial' || event.modalidad === 'Presencial',
     );
   }
 
@@ -622,7 +661,12 @@ export class AdminDashboardComponent implements OnInit {
       .slice(0, 2);
 
     recentProjects.forEach((project: unknown) => {
-      const proj = project as { nombre?: string; titulo?: string; created_at?: string; fechaCreacion?: string };
+      const proj = project as {
+        nombre?: string;
+        titulo?: string;
+        created_at?: string;
+        fechaCreacion?: string;
+      };
       activities.push({
         id: activities.length + 1,
         type: 'project',
@@ -758,17 +802,18 @@ export class AdminDashboardComponent implements OnInit {
   private getPendingProjects(projects: unknown[]): unknown[] {
     return projects.filter((project: unknown) => {
       const proj = project as { estado_verificacion?: string };
-      return proj.estado_verificacion === 'pendiente' || 
-             proj.estado_verificacion === 'revision' ||
-             !proj.estado_verificacion;
+      return (
+        proj.estado_verificacion === 'pendiente' ||
+        proj.estado_verificacion === 'revision' ||
+        !proj.estado_verificacion
+      );
     });
   }
 
   private getVerifiedProjects(projects: unknown[]): unknown[] {
     return projects.filter((project: unknown) => {
       const proj = project as { estado_verificacion?: string };
-      return proj.estado_verificacion === 'aprobado' || 
-             proj.estado_verificacion === 'verificado';
+      return proj.estado_verificacion === 'aprobado' || proj.estado_verificacion === 'verificado';
     });
   }
 }

@@ -98,7 +98,7 @@ import { UserService } from '@app/core/services/user/user.service';
                       {{ postulation.oportunidad_titulo }}
                     </td>
                     <td class="px-4 py-3 text-sm text-neutral-500">
-                      {{ formatDate(postulation.fecha_postulacion) }}
+                      {{ formatDate(postulation.fecha) }}
                     </td>
                     <td class="px-4 py-3">
                       <span

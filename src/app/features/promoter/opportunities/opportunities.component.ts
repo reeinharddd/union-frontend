@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '@app/core/services/auth/token.service';
 import {
@@ -18,6 +24,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './opportunities.component.html',
   imports: [CommonModule],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush, // Añade esto
 })
 export class OpportunitiesComponent implements OnInit {
   oportunidades: Opportunity[] = [];
@@ -30,6 +37,8 @@ export class OpportunitiesComponent implements OnInit {
 
   userId: number | null = null;
   isLoading = false;
+
+  private cdr = inject(ChangeDetectorRef); // Añade esto
 
   constructor(
     private opportunityService: OpportunityService,
@@ -45,45 +54,73 @@ export class OpportunitiesComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this.tokenService.getUserId();
     if (this.userId !== null) {
-      this.cargarOportunidades();
+      this.cargarDatosIniciales();
     }
-    this.cargarUniversidades();
-    this.cargarModalidades();
-    this.cargarTiposOportunidad();
   }
 
-  cargarOportunidades(): void {
-    if (this.userId === null) return;
+  cargarDatosIniciales(): void {
     this.isLoading = true;
+    this.cdr.markForCheck();
 
-    this.opportunityService.getAll().subscribe({
-      next: data => {
-        // Solo oportunidades creadas por este promotor
-        this.oportunidades = data.filter(op => op.created_by === this.userId);
-        this.cargarPostulaciones(); // Después de cargar las oportunidades
+    // Carga todo en paralelo
+    forkJoin([
+      this.universityService.getAll(),
+      this.workModalityService.getAll(),
+      this.typeOpportunityService.getAll(),
+      this.opportunityService.getAll(),
+      this.postulationService.getAll(),
+    ]).subscribe({
+      next: ([universidades, modalidades, tipos, oportunidades, postulaciones]) => {
+        // Mapea los datos de referencia
+        this.universidadesMap = this.crearMapa(universidades, 'id', 'nombre');
+        this.modalidadesMap = this.crearMapa(modalidades, 'id', 'name');
+        this.tiposOportunidadMap = this.crearMapa(tipos, 'id', 'name');
+
+        // Filtra oportunidades del usuario
+        this.oportunidades = oportunidades.filter(op => op.created_by === this.userId);
+
+        // Procesa postulaciones
+        this.procesarPostulaciones(postulaciones);
+
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
-      error: () => {
+      error: err => {
         this.isLoading = false;
+        this.cdr.markForCheck();
+        console.error('Error al cargar datos:', err);
       },
     });
   }
 
-  cargarPostulaciones(): void {
-    this.postulationService.getAll().subscribe(postulaciones => {
-      this.postulaciones = postulaciones;
-      this.postulacionesPorOportunidad = {};
+  private crearMapa(items: any[], keyProp: string, valueProp: string): { [key: number]: string } {
+    const mapa: { [key: number]: string } = {};
+    items.forEach(item => {
+      mapa[item[keyProp]] = item[valueProp];
+    });
+    return mapa;
+  }
 
-      const peticionesUsuarios = postulaciones.map(p => this.userService.getById(p.usuario_id));
+  private procesarPostulaciones(postulaciones: any[]): void {
+    this.postulaciones = postulaciones;
+    this.postulacionesPorOportunidad = {};
 
-      // Trae todos los usuarios en paralelo
-      forkJoin(peticionesUsuarios).subscribe(usuarios => {
-        this.postulaciones.forEach((postulacion, index) => {
-          const usuario = usuarios[index];
+    const oportunidadesIds = this.oportunidades.map(o => o.id);
+    const postulacionesFiltradas = postulaciones.filter(p =>
+      oportunidadesIds.includes(p.oportunidad_id),
+    );
 
-          // Añade los datos directamente (sin necesidad de cambiar el modelo)
-          (postulacion as any).nombre_usuario = usuario.nombre;
-          (postulacion as any).correo_usuario = usuario.correo;
+    // Obtener usuarios únicos
+    const usuariosIds = [...new Set(postulacionesFiltradas.map(p => p.usuario_id))];
+
+    if (usuariosIds.length > 0) {
+      forkJoin(usuariosIds.map(id => this.userService.getById(id))).subscribe(usuarios => {
+        postulacionesFiltradas.forEach(postulacion => {
+          const usuario = usuarios.find(u => u.id === postulacion.usuario_id);
+          if (usuario) {
+            (postulacion as any).nombre_usuario = usuario.nombre;
+            (postulacion as any).correo_usuario = usuario.correo;
+          }
 
           const oportunidadId = postulacion.oportunidad_id;
           if (!this.postulacionesPorOportunidad[oportunidadId]) {
@@ -91,35 +128,10 @@ export class OpportunitiesComponent implements OnInit {
           }
           this.postulacionesPorOportunidad[oportunidadId].push(postulacion);
         });
-      });
-    });
-  }
 
-  cargarUniversidades() {
-    this.universityService.getAll().subscribe(data => {
-      this.universidadesMap = {};
-      data.forEach((uni: any) => {
-        this.universidadesMap[uni.id] = uni.nombre;
+        this.cdr.markForCheck();
       });
-    });
-  }
-
-  cargarModalidades() {
-    this.workModalityService.getAll().subscribe(data => {
-      this.modalidadesMap = {};
-      data.forEach((mod: any) => {
-        this.modalidadesMap[mod.id] = mod.name;
-      });
-    });
-  }
-
-  cargarTiposOportunidad() {
-    this.typeOpportunityService.getAll().subscribe(data => {
-      this.tiposOportunidadMap = {};
-      data.forEach((tipo: any) => {
-        this.tiposOportunidadMap[tipo.id] = tipo.name;
-      });
-    });
+    }
   }
 
   editarOportunidad(oportunidad: Opportunity): void {
@@ -131,6 +143,7 @@ export class OpportunitiesComponent implements OnInit {
       this.opportunityService.delete(id).subscribe({
         next: () => {
           this.oportunidades = this.oportunidades.filter(o => o.id !== id);
+          this.cdr.markForCheck();
         },
       });
     }

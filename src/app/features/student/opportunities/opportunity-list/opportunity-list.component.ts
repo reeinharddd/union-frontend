@@ -15,7 +15,6 @@ import {
 import { OpportunityTypeService } from '@app/core/services/opportunity/opportunityType.service';
 import { PostulationService } from '@app/core/services/postulation/postulation.service';
 import { UniversityService } from '@app/core/services/university/university.service';
-//import { UserService } from '@app/core/services/user/user.service';
 
 import { WorkModalityService } from '@app/core/services/workModality/workModality.service';
 
@@ -41,6 +40,7 @@ export class OpportunityListComponent implements OnInit {
   mensajeError: string = '';
 
   private readonly cdr = inject(ChangeDetectorRef);
+  universidad_id: number | null = null;
 
   constructor(
     private opportunityService: OpportunityService,
@@ -49,7 +49,6 @@ export class OpportunityListComponent implements OnInit {
     private typeOpportunityService: OpportunityTypeService,
     private postulationService: PostulationService,
     private tokenService: TokenService,
-    //private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -57,10 +56,17 @@ export class OpportunityListComponent implements OnInit {
     this.cargarModalidades();
     this.cargarTiposOportunidad();
     this.cargarOportunidades(); // aquí cargas la lista principal
+    this.cargarPostulacionEstudiante();
   }
 
   cargarOportunidades(): void {
-    this.opportunityService.getAll().subscribe({
+    const userData = this.tokenService.getUserData();
+    this.universidad_id = userData?.universidad_id || null;
+    if (!this.universidad_id) {
+      console.error('no se pudo obtener el id de la universidad');
+    }
+
+    this.opportunityService.getByUniversity(this.universidad_id!).subscribe({
       next: data => {
         this.oportunidades = data;
         this.oportunidadesFiltradas = [...data];
@@ -97,6 +103,20 @@ export class OpportunityListComponent implements OnInit {
       data.forEach((tipo: any) => {
         this.tiposOportunidadMap[tipo.id] = tipo.name;
       });
+    });
+  }
+
+  cargarPostulacionEstudiante() {
+    this.usuario_id = this.tokenService.getUserId();
+    if (!this.usuario_id) {
+      this.mensajeError = 'No se pudo obtener el ID del usuario.';
+      return;
+    }
+
+    this.postulationService.getByUserId(this.usuario_id).subscribe(data => {
+      // Guarda los IDs de oportunidades ya postuladas
+      this.postulacionesRealizadas = data.map((postulacion: any) => postulacion.oportunidad_id);
+      this.cdr.markForCheck();
     });
   }
 
@@ -138,11 +158,11 @@ export class OpportunityListComponent implements OnInit {
         this.postulacionesRealizadas.push(id);
         this.mensajeExito = '¡Postulación realizada con éxito!';
         this.mensajeError = '';
-
-        // 🔻 Eliminar la oportunidad de la lista filtrada
-        this.oportunidadesFiltradas = this.oportunidadesFiltradas.filter(
-          oportunidad => oportunidad.id !== id,
-        );
+        this.cargarPostulacionEstudiante();
+        // Eliminar la oportunidad de la lista filtrada
+        // this.oportunidadesFiltradas = this.oportunidadesFiltradas.filter(
+        //   oportunidad => oportunidad.id !== id,
+        // );
       },
       error: err => {
         console.error('❌ Error al postularse:', err);

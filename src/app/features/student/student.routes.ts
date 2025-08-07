@@ -115,6 +115,11 @@ export const STUDENT_ROUTES: Routes = [
           ),
       },
       {
+        path: 'postulation',
+        loadComponent: () =>
+          import('./postulation/postulation.component').then(m => m.PostulationStudentComponent),
+      },
+      {
         path: 'my-register',
         loadComponent: () =>
           import('./events/my-register/my-register.component').then(m => m.MyRegisterComponent),

@@ -298,6 +298,12 @@ export class LayoutConfigService {
           route: '/student/opportunities',
           color: 'text-teal-500',
         },
+        {
+          label: 'Mis Postulaciones',
+          icon: 'assignment_turned_in', // Ícono de Material Icons relacionado con postulaciones
+          route: '/student/postulation',
+          color: 'text-purple-500',
+        },
       ],
       rightSidebar: [
         {
