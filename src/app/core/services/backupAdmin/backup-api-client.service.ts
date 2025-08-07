@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_CONFIG } from '@app/core/constants/api-endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BackupApiClientService {
-  private baseUrl = 'http://localhost:3000/api/admin-backup';
+  private baseUrl = `${API_CONFIG.BASE_URL}/admin-backup`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_CONFIG } from '@app/core/constants/api-endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private apiUrl = 'http://localhost:3000/api/eventos';
+  private apiUrl = `${API_CONFIG.BASE_URL}/eventos`;
 
   constructor(private http: HttpClient) {}
 

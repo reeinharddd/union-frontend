@@ -1,6 +1,10 @@
 //Fabian Mendoza
+import { environment } from '../../../environments/environment';
+
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/api',
+  // 🔄 Cambiar entre desarrollo local y producción automáticamente
+  BASE_URL: environment.apiUrl,
+  WS_URL: environment.wsUrl,
   TIMEOUT: 30000,
 } as const;
 

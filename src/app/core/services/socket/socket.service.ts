@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { API_CONFIG } from '@app/core/constants/api-endpoints';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
@@ -25,7 +26,8 @@ export class SocketService {
 
     console.log('🔌 Connecting socket for user:', currentUser.id);
 
-    this.socket = io('http://localhost:3000', {
+    // 🔄 Usar la URL base centralizada para WebSocket
+    this.socket = io(API_CONFIG.WS_URL, {
       transports: ['websocket'],
     });
 

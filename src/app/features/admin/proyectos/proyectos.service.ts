@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_CONFIG } from '@app/core/constants/api-endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProyectosService {
-  private apiUrl = 'http://localhost:3000/api/proyectos';
+  private apiUrl = `${API_CONFIG.BASE_URL}/proyectos`;
 
   constructor(private http: HttpClient) {}
 

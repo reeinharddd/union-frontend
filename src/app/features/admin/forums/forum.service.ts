@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_CONFIG } from '@app/core/constants/api-endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ForumService {
-  private apiUrl = 'http://localhost:3000/api/foros';
+  private apiUrl = `${API_CONFIG.BASE_URL}/foros`;
 
   constructor(private http: HttpClient) {}
 
