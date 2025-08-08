@@ -1,9 +1,7 @@
-import { environment } from '@environments/environment';
-
 export const API_CONFIG = {
-  // 🔄 Cambiar entre desarrollo local y producción automáticamente
-  BASE_URL: environment.apiUrl,
-  WS_URL: environment.wsUrl,
+  // 🔄 URL de producción hardcodeada para Koyeb
+  BASE_URL: 'https://xerothermic-donni-union-67b28843.koyeb.app',
+  WS_URL: 'wss://xerothermic-donni-union-67b28843.koyeb.app',
   TIMEOUT: 30000,
 } as const;
 
