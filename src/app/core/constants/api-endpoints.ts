@@ -1,6 +1,6 @@
 export const API_CONFIG = {
   // 🔄 URL de producción hardcodeada para Koyeb
-  BASE_URL: 'fellow-rozina-union8b2025-c117752d.koyeb.app/api',
+  BASE_URL: 'https://fellow-rozina-union8b2025-c117752d.koyeb.app/api',
   WS_URL: 'wss://fellow-rozina-union8b2025-c117752d.koyeb.app/api',
   TIMEOUT: 30000,
 } as const;
